@@ -1,8 +1,8 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
-        android:fromXDelta="100%"  <!-- Start from the right -->
-    android:toXDelta="-100%"    <!-- Move to the left -->
-    android:duration="5000"     <!-- Duration of 5 seconds -->
-    android:repeatCount="infinite" <!-- Repeat infinitely -->
-    android:repeatMode="restart"/>
+        android:fromXDelta="100%"
+        android:toXDelta="-100%"
+        android:duration="5000"
+        android:repeatCount="infinite"
+        android:repeatMode="restart"/>
 </set>
