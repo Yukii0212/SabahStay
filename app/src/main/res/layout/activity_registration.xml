@@ -7,7 +7,7 @@
     android:background="@color/background_blue"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".RegistrationActivity">
 
     <!-- Logo -->
     <ImageView
@@ -17,72 +17,111 @@
         android:layout_marginBottom="20dp"/>
 
     <!-- Title -->
+
+    <!-- Name -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/inter"
         android:text="SABAH STAY"
         android:textColor="@android:color/white"
-        android:textSize="22sp"
-        android:fontFamily="@font/inter"
-        android:layout_marginBottom="30dp"/>
+        android:textSize="22sp" />
 
-    <!-- Email Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:fontFamily="@font/inter"/>
-
-    <!-- Email Input -->
     <EditText
-        android:id="@+id/emailEditText"
+        android:id="@+id/nameInput"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:hint="Enter your email"
+        android:background="@drawable/underline"
         android:textColor="@android:color/white"
+        android:hint="Full Name"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:textColorHint="#A0A0A0"/>
+
+    <!-- Passport -->
+    <EditText
+        android:id="@+id/passportInput"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/underline"
+        android:textColor="@android:color/white"
+        android:hint="Passport Number"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:textColorHint="#A0A0A0"/>
+
+    <!-- Gender Dropdown -->
+    <Spinner
+        android:id="@+id/genderSpinner"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/underline"
+        android:padding="10dp"/>
+
+    <!-- Phone Number -->
+    <EditText
+        android:id="@+id/phoneInput"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/underline"
+        android:textColor="@android:color/white"
+        android:hint="Phone Number"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:textColorHint="#A0A0A0"/>
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/emailInput"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/underline"
+        android:textColor="@android:color/white"
+        android:hint="Email Address"
         android:textSize="16sp"
         android:padding="10dp"
         android:inputType="textEmailAddress"
         android:textColorHint="#A0A0A0"/>
 
-    <!-- Password Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:fontFamily="@font/inter"
-        android:layout_marginTop="15dp"/>
-
-    <!-- Password Input -->
+    <!-- Password -->
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/passwordInput"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:hint="Enter your password"
+        android:background="@drawable/underline"
         android:textColor="@android:color/white"
+        android:hint="Password"
         android:textSize="16sp"
         android:padding="10dp"
         android:inputType="textPassword"
         android:textColorHint="#A0A0A0"/>
 
-    <!-- Login Button -->
-    <Button
-        android:id="@+id/loginButton"
+    <!-- Confirm Password -->
+    <EditText
+        android:id="@+id/confirmPasswordInput"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:background="@drawable/underline"
+        android:textColor="@android:color/white"
+        android:hint="Confirm Password"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:inputType="textPassword"
+        android:textColorHint="#A0A0A0"/>
+
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="REGISTER"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:background="@color/button_blue"
         android:layout_marginTop="20dp"/>
 
-    <!-- Sign Up Text -->
+    <!-- Login Text -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -92,15 +131,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have an account yet? "
+            android:text="Already have an account? "
             android:textColor="@android:color/white"
             android:textSize="14sp"/>
 
         <TextView
-            android:id="@+id/signUpText"
+            android:id="@+id/loginText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up now"
+            android:text="Login now"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:fontFamily="@font/inter"

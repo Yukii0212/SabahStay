@@ -7,6 +7,11 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.testversion.database.UserDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,23 +30,34 @@ class LoginActivity : AppCompatActivity() {
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
             } else {
-                mockLogin(email, password)
+                authenticateUser(email, password)
             }
         }
 
+        // Navigate to Registration Page when clicking "Sign up now"
         signUpText.setOnClickListener {
-            Toast.makeText(this, "Navigate to Registration Page", Toast.LENGTH_SHORT).show()
-            // TODO: Implement navigation to RegistrationActivity when it's ready
+            val intent = Intent(this, RegistrationActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
         }
     }
 
-    private fun mockLogin(email: String, password: String) {
-        if (email == "admin@example.com" && password == "password123") {
-            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, FakeMainActivity::class.java))
-            finish()
-        } else {
-            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
+    private fun authenticateUser(email: String, password: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val userDao = UserDatabase.getDatabase(applicationContext).userDao()
+            val user = userDao.getUserByEmail(email)
+
+            withContext(Dispatchers.Main) {
+                if (user != null && user.password == password) {
+                    Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@LoginActivity, FakeMainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

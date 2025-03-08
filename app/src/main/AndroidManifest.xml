@@ -23,6 +23,9 @@
         <!-- Login Page -->
         <activity android:name=".LoginActivity" android:exported="true"/>
 
+        <!-- Registration Page -->
+        <activity android:name=".RegistrationActivity" android:exported="true"/>
+
         <!-- Fake Main Page -->
         <activity android:name=".FakeMainActivity" android:exported="false"/>
 

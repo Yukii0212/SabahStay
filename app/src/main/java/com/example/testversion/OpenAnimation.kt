@@ -1,7 +1,10 @@
 package com.example.testversion
 
-import android.util.Log // ✅ Import Log
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.View
@@ -13,16 +16,16 @@ class OpenAnimation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("DEBUG", "MainActivity started")  // ✅ Log that MainActivity is launching
+        Log.d("DEBUG", "OpenAnimation started")
 
         setContentView(R.layout.main_activity)
 
-        // Load animation resources
+        // Load animations
         val cloudAnimation = AnimationUtils.loadAnimation(this, R.anim.cloud_move)
         val mountainAnimation = AnimationUtils.loadAnimation(this, R.anim.mountain_zoom)
         val textAnimation = AnimationUtils.loadAnimation(this, R.anim.text_fade_in)
 
-        Log.d("DEBUG", "Animations loaded")  // ✅ Log that animations are loaded
+        Log.d("DEBUG", "Animations loaded")
 
         // Find views
         val cloudsView: ImageView = findViewById(R.id.cloudsView)
@@ -34,7 +37,7 @@ class OpenAnimation : AppCompatActivity() {
         val titleText: TextView = findViewById(R.id.titleText)
         val subtitleText: TextView = findViewById(R.id.subtitleText)
 
-        Log.d("DEBUG", "Views found")  // ✅ Log that UI elements were found
+        Log.d("DEBUG", "Views found")
 
         // Start animations
         cloudsView.startAnimation(cloudAnimation)
@@ -43,13 +46,13 @@ class OpenAnimation : AppCompatActivity() {
         cloudsView3.startAnimation(cloudAnimation)
         mountainView.startAnimation(mountainAnimation)
 
-        Log.d("DEBUG", "Animations started")  // ✅ Log that animations have started
+        Log.d("DEBUG", "Animations started")
 
         mountainAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-                // ✅ Show text halfway through the mountain zoom animation
+                // Show text halfway through the animation
                 titleText.postDelayed({
-                    Log.d("DEBUG", "Making text visible early")
+                    Log.d("DEBUG", "Showing text animations")
                     titleText.visibility = View.VISIBLE
                     subtitleText.visibility = View.VISIBLE
                     titleText.startAnimation(textAnimation)
@@ -58,19 +61,24 @@ class OpenAnimation : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
+                Log.d("DEBUG", "Animation finished, transitioning to FakeMainActivity")
+
+                // Hide clouds after animation
                 cloudsView.visibility = View.GONE
                 cloudsView1.visibility = View.GONE
                 cloudsView2.visibility = View.GONE
                 cloudsView3.visibility = View.GONE
                 mountainView.visibility = View.VISIBLE
+
+                // Move to FakeMainActivity
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val intent = Intent(this@OpenAnimation, FakeMainActivity::class.java)
+                    startActivity(intent)
+                    finish() // Close animation screen
+                }, 1000) // Short delay before switching screen
             }
-
-
 
             override fun onAnimationRepeat(animation: Animation?) {}
         })
-
-
-
     }
 }
