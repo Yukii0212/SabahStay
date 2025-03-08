@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
     private fun mockLogin(email: String, password: String) {
         if (email == "admin@example.com" && password == "password123") {
             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, FakeMainActivity::class.java))
             finish()
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()

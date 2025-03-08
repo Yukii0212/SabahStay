@@ -23,5 +23,8 @@
         <!-- Login Page -->
         <activity android:name=".LoginActivity" android:exported="true"/>
 
+        <!-- Fake Main Page -->
+        <activity android:name=".FakeMainActivity" android:exported="false"/>
+
     </application>
 </manifest>
