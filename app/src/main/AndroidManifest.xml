@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.testversion">
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <!-- Splash / Opening Animation -->
+        <activity
+            android:name=".OpenAnimation"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Main Page -->
+        <activity android:name=".MainActivity" android:exported="true" />
+
+        <!-- Login Page -->
+        <activity android:name=".LoginActivity" android:exported="true"/>
+
+        <!-- Registration Page -->
+        <activity android:name=".RegistrationActivity" android:exported="true"/>
+
+        <!-- Fake Main Page -->
+        <activity android:name=".FakeMainActivity" android:exported="false"/>
+
+    </application>
+</manifest>
