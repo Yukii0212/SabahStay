@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +21,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         val nameInput = findViewById<EditText>(R.id.nameInput)
         val passportInput = findViewById<EditText>(R.id.passportInput)
-        val genderSpinner = findViewById<Spinner>(R.id.genderSpinner)
+        val genderInput = findViewById<EditText>(R.id.genderInput)
         val phoneInput = findViewById<EditText>(R.id.phoneInput)
         val emailInput = findViewById<EditText>(R.id.emailInput)
         val passwordInput = findViewById<EditText>(R.id.passwordInput)
@@ -31,12 +30,7 @@ class RegistrationActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.registerButton)
         val loginText = findViewById<TextView>(R.id.loginText)
 
-        // Gender dropdown setup
-        val genders = arrayOf("Male", "Female", "Other")
-        val adapter = ArrayAdapter(this, R.layout.spinner_item, genders)
-        genderSpinner.adapter = adapter
-
-        // Password validation feedback (Checks while typing)
+        // Password validation feedback
         val passwordTextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 updatePasswordRequirements(
@@ -45,7 +39,6 @@ class RegistrationActivity : AppCompatActivity() {
                     passwordRequirementsText
                 )
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
@@ -56,25 +49,33 @@ class RegistrationActivity : AppCompatActivity() {
         registerButton.setOnClickListener {
             val name = nameInput.text.toString().trim()
             val passport = passportInput.text.toString().trim()
-            val gender = genderSpinner.selectedItem.toString()
+            val gender = genderInput.text.toString().trim().lowercase()
             val phone = phoneInput.text.toString().trim()
-            val email = emailInput.text.toString().trim().toLowerCase() // Case-insensitive email
+            val email = emailInput.text.toString().trim().lowercase()
             val password = passwordInput.text.toString().trim()
             val confirmPassword = confirmPasswordInput.text.toString().trim()
 
-            // Validate email
+            // Validate inputs
+            if (name.isEmpty() || passport.isEmpty() || gender.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "All fields must be filled", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!isValidGender(gender)) {
+                Toast.makeText(this, "Invalid gender. Enter Male, Female, or Other", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (!isValidEmail(email)) {
                 Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validate password requirements
             if (!isPasswordValid(password)) {
                 Toast.makeText(this, "Password does not meet requirements", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validate password match
             if (password != confirmPassword) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -82,7 +83,7 @@ class RegistrationActivity : AppCompatActivity() {
 
             lifecycleScope.launch(Dispatchers.IO) {
                 val userDao = UserDatabase.getDatabase(applicationContext).userDao()
-                val existingUser = userDao.getUserByEmailOrPhoneOrPassport(email, phone, passport) // Check all three
+                val existingUser = userDao.getUserByEmailOrPhoneOrPassport(email, phone, passport)
 
                 if (existingUser == null) {
                     userDao.insert(User(name, passport, gender, phone, email, password))
@@ -98,8 +99,6 @@ class RegistrationActivity : AppCompatActivity() {
                 }
             }
         }
-
-
 
         loginText.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -117,6 +116,11 @@ class RegistrationActivity : AppCompatActivity() {
                 password.any { it.isUpperCase() } &&
                 password.any { it.isLowerCase() } &&
                 password.any { it.isDigit() }
+    }
+
+    // Validate gender input
+    private fun isValidGender(gender: String): Boolean {
+        return gender == "male" || gender == "female" || gender == "other"
     }
 
     // Updates Password Requirements dynamically ✅/❌
