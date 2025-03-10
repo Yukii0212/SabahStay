@@ -2,7 +2,10 @@ package com.example.testversion
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RegistrationActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
@@ -23,82 +27,110 @@ class RegistrationActivity : AppCompatActivity() {
         val emailInput = findViewById<EditText>(R.id.emailInput)
         val passwordInput = findViewById<EditText>(R.id.passwordInput)
         val confirmPasswordInput = findViewById<EditText>(R.id.confirmPasswordInput)
+        val passwordRequirementsText = findViewById<TextView>(R.id.passwordRequirementsText)
         val registerButton = findViewById<Button>(R.id.registerButton)
         val loginText = findViewById<TextView>(R.id.loginText)
 
-        // Setup gender dropdown with custom styles
+        // Gender dropdown setup
         val genders = arrayOf("Male", "Female", "Other")
         val adapter = ArrayAdapter(this, R.layout.spinner_item, genders)
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         genderSpinner.adapter = adapter
+
+        // Password validation feedback (Checks while typing)
+        val passwordTextWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                updatePasswordRequirements(
+                    passwordInput.text.toString(),
+                    confirmPasswordInput.text.toString(),
+                    passwordRequirementsText
+                )
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        passwordInput.addTextChangedListener(passwordTextWatcher)
+        confirmPasswordInput.addTextChangedListener(passwordTextWatcher)
 
         registerButton.setOnClickListener {
             val name = nameInput.text.toString().trim()
             val passport = passportInput.text.toString().trim()
             val gender = genderSpinner.selectedItem.toString()
             val phone = phoneInput.text.toString().trim()
-            val email = emailInput.text.toString().trim()
+            val email = emailInput.text.toString().trim().toLowerCase() // Case-insensitive email
             val password = passwordInput.text.toString().trim()
             val confirmPassword = confirmPasswordInput.text.toString().trim()
 
-            // Validation
-            if (name.isEmpty() || passport.isEmpty() || phone.isEmpty() || email.isEmpty() ||
-                password.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
+            // Validate email
+            if (!isValidEmail(email)) {
+                Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (password.length < 6) {
-                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+            // Validate password requirements
+            if (!isPasswordValid(password)) {
+                Toast.makeText(this, "Password does not meet requirements", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // Validate password match
             if (password != confirmPassword) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Save user to database
-            val user = User(name, passport, gender, phone, email, password)
-
             lifecycleScope.launch(Dispatchers.IO) {
-                try {
-                    val userDao = UserDatabase.getDatabase(applicationContext).userDao()
-                    val existingUser = userDao.getUserByEmail(email)
+                val userDao = UserDatabase.getDatabase(applicationContext).userDao()
+                val existingUser = userDao.getUserByEmailOrPhoneOrPassport(email, phone, passport) // Check all three
 
-                    Log.d("DEBUG", "Checking for existing user with email: $email")
-
-                    if (existingUser == null) {
-                        Log.d("DEBUG", "User not found, inserting new user.")
-                        userDao.insert(user)
-
-                        runOnUiThread {
-                            Toast.makeText(this@RegistrationActivity, "Registration Successful", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                    } else {
-                        Log.d("DEBUG", "User already exists!")
-                        runOnUiThread {
-                            Toast.makeText(this@RegistrationActivity, "Email already exists", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("ERROR", "Exception during registration: ${e.localizedMessage}", e)
+                if (existingUser == null) {
+                    userDao.insert(User(name, passport, gender, phone, email, password))
                     runOnUiThread {
-                        Toast.makeText(this@RegistrationActivity, "An error occurred", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RegistrationActivity, "Registration Successful", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@RegistrationActivity, LoginActivity::class.java))
+                        finish()
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@RegistrationActivity, "Email, phone, or passport already exists", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
 
-        // Redirect to Login when "Login now" is clicked
+
+
         loginText.setOnClickListener {
-            val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
+
+    // Validate email format
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    // Validate password rules
+    private fun isPasswordValid(password: String): Boolean {
+        return password.length >= 6 &&
+                password.any { it.isUpperCase() } &&
+                password.any { it.isLowerCase() } &&
+                password.any { it.isDigit() }
+    }
+
+    // Updates Password Requirements dynamically ✅/❌
+    private fun updatePasswordRequirements(password: String, confirmPassword: String, textView: TextView) {
+        val requirements = listOf(
+            Pair("6 Characters long", password.length >= 6),
+            Pair("1 Uppercase letter", password.any { it.isUpperCase() }),
+            Pair("1 Lowercase letter", password.any { it.isLowerCase() }),
+            Pair("1 Number", password.any { it.isDigit() }),
+            Pair("Passwords match", password == confirmPassword)
+        )
+
+        textView.text = requirements.joinToString("\n") { (req, met) ->
+            if (met) "✅ $req" else "❌ $req"
         }
     }
 }

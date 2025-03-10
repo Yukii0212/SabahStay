@@ -17,8 +17,6 @@
         android:layout_marginBottom="20dp"/>
 
     <!-- Title -->
-
-    <!-- Name -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,6 +26,7 @@
         android:textColor="@android:color/white"
         android:textSize="22sp" />
 
+    <!-- Name -->
     <EditText
         android:id="@+id/nameInput"
         android:layout_width="300dp"
@@ -39,14 +38,14 @@
         android:padding="10dp"
         android:textColorHint="#A0A0A0"/>
 
-    <!-- Passport -->
+    <!-- IC/Passport -->
     <EditText
         android:id="@+id/passportInput"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:background="@drawable/underline"
         android:textColor="@android:color/white"
-        android:hint="Passport Number"
+        android:hint="IC/Passport Number"
         android:textSize="16sp"
         android:padding="10dp"
         android:textColorHint="#A0A0A0"/>
@@ -57,7 +56,9 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:background="@drawable/underline"
-        android:padding="10dp"/>
+        android:padding="12dp"
+        android:textAlignment="center"
+        android:gravity="center_vertical"/>
 
     <!-- Phone Number -->
     <EditText
@@ -95,7 +96,8 @@
         android:textSize="16sp"
         android:padding="10dp"
         android:inputType="textPassword"
-        android:textColorHint="#A0A0A0"/>
+        android:textColorHint="#A0A0A0"
+        android:layout_marginTop="10dp"/>
 
     <!-- Confirm Password -->
     <EditText
@@ -108,7 +110,20 @@
         android:textSize="16sp"
         android:padding="10dp"
         android:inputType="textPassword"
-        android:textColorHint="#A0A0A0"/>
+        android:textColorHint="#A0A0A0"
+        android:layout_marginTop="5dp"/>
+
+    <!-- Password Requirements -->
+    <TextView
+        android:id="@+id/passwordRequirementsText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:text="❌ 6 Characters long\n❌ 1 Uppercase letter\n❌ 1 Lowercase letter\n❌ 1 Number\n❌ Passwords do NOT match"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
     <!-- Register Button -->
     <Button

@@ -2,62 +2,60 @@ package com.example.testversion
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.UserDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.util.Patterns
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val emailEditText = findViewById<EditText>(R.id.emailEditText)
+        val userInput = findViewById<EditText>(R.id.userInput)
         val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
         val loginButton = findViewById<Button>(R.id.loginButton)
         val signUpText = findViewById<TextView>(R.id.signUpText)
 
         loginButton.setOnClickListener {
-            val email = emailEditText.text.toString().trim()
+            val userIdentifier = userInput.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+            if (userIdentifier.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter credentials", Toast.LENGTH_SHORT).show()
             } else {
-                authenticateUser(email, password)
+                authenticateUser(userIdentifier, password)
             }
         }
 
-        // Navigate to Registration Page when clicking "Sign up now"
         signUpText.setOnClickListener {
-            val intent = Intent(this, RegistrationActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
+            startActivity(Intent(this, RegistrationActivity::class.java))
         }
     }
 
-    private fun authenticateUser(email: String, password: String) {
+    private fun authenticateUser(identifier: String, password: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val userDao = UserDatabase.getDatabase(applicationContext).userDao()
-            val user = userDao.getUserByEmail(email)
+            val user = if (Patterns.EMAIL_ADDRESS.matcher(identifier).matches()) {
+                userDao.getUserByEmail(identifier.toLowerCase()) // Convert email to lowercase
+            } else {
+                userDao.getUserByPhone(identifier)
+            }
 
             withContext(Dispatchers.Main) {
                 if (user != null && user.password == password) {
                     Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@LoginActivity, FakeMainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
+                    startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
                     finish()
                 } else {
-                    Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Invalid credentials", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
 }
