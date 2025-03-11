@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="44dp"
                 android:background="@android:color/transparent"
-                android:text="SABAH STAY"
+                android:text="S A B A H   S T A Y"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -60,7 +60,7 @@
             android:id="@+id/nameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/input_default_border"
             android:hint="Enter your full name"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -81,7 +81,7 @@
             android:id="@+id/passportInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/input_default_border"
             android:hint="Enter your IC or passport number"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -91,25 +91,46 @@
 
         <!-- Gender -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="374dp"
             android:layout_height="wrap_content"
-            android:text="Gender (Male, Female, Other)"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"/>
-
-        <EditText
-            android:id="@+id/genderInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="Enter Gender (Male, Female, Other)"
+            android:fontFamily="@font/inter"
+            android:text="Gender"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:padding="10dp"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#A0A0A0"/>
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/genderRadioGroup"
+            android:layout_width="match_parent"
+            android:background="@drawable/input_default_border"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/genderMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:textColor="@android:color/white"
+                android:layout_marginEnd="16dp"/>
+
+            <RadioButton
+                android:id="@+id/genderFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textColor="@android:color/white"
+                android:layout_marginEnd="16dp"/>
+
+            <RadioButton
+                android:id="@+id/genderOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:textColor="@android:color/white"/>
+        </RadioGroup>
+
+
 
         <!-- Phone Number -->
         <TextView
@@ -125,7 +146,7 @@
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/input_default_border"
             android:hint="Enter your phone number"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -147,7 +168,7 @@
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/input_default_border"
             android:hint="Enter your email"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -169,7 +190,7 @@
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/input_default_border"
             android:hint="Enter your password"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -191,7 +212,7 @@
             android:id="@+id/confirmPasswordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@drawable/input_default_border"
             android:hint="Confirm your password"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -219,8 +240,10 @@
             android:text="Register"
             android:textSize="18sp"
             android:textColor="@android:color/white"
-            android:background="@color/button_blue"
+            android:background="@color/grey"
+            android:enabled="false"
             android:layout_marginTop="20dp"/>
+
 
         <!-- Login Text -->
         <LinearLayout

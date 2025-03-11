@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background_blue">#002B7F</color>
     <color name="button_blue">#0047AB</color>
+    <color name="input_background">#F5F5F5</color>
+    <color name="temporary">#FFA500</color>
+    <color name="grey">#8A8D8F</color>
+    <color name="error_red">#FF0000</color>
+    <color name="border_white">#FFFFFF</color>
 </resources>
