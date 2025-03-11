@@ -41,6 +41,11 @@ class RegistrationActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
         passwordRequirementsText = findViewById(R.id.passwordRequirementsText)
 
+        // Set register button to disabled immediately when page loads
+        registerButton.isEnabled = false
+        registerButton.alpha = 0.5f
+        registerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
+
         // Add Listeners to Fields
         val inputFields = listOf(nameInput, passportInput, phoneInput, emailInput, passwordInput, confirmPasswordInput)
         inputFields.forEach { it.addTextChangedListener(inputTextWatcher) }
