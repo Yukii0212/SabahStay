@@ -14,4 +14,5 @@
     <color name="grey">#8A8D8F</color>
     <color name="error_red">#FF0000</color>
     <color name="border_white">#FFFFFF</color>
+    <color name="background_box">#002873</color>
 </resources>

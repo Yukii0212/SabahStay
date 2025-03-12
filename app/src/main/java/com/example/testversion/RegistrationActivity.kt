@@ -3,6 +3,7 @@ package com.example.testversion
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.*
@@ -13,6 +14,7 @@ import com.example.testversion.database.User
 import com.example.testversion.database.UserDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
 
 class RegistrationActivity : AppCompatActivity() {
     private var hasAttemptedRegister = false
@@ -25,10 +27,13 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var genderRadioGroup: RadioGroup
     private lateinit var registerButton: Button
     private lateinit var passwordRequirementsText: TextView
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
+
+        auth = FirebaseAuth.getInstance()
 
         // Initialize Views
         nameInput = findViewById(R.id.nameInput)
@@ -55,7 +60,21 @@ class RegistrationActivity : AppCompatActivity() {
         passwordInput.addTextChangedListener(passwordTextWatcher)
         confirmPasswordInput.addTextChangedListener(passwordTextWatcher)
 
-        //Allows greyed out button to trigger showInputErrors()
+        // Show Password Toggle
+        val showPasswordCheckBox = findViewById<CheckBox>(R.id.showPasswordCheckBox)
+        showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            val inputType = if (isChecked) InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+
+            passwordInput.inputType = inputType
+            confirmPasswordInput.inputType = inputType
+
+            // Keep cursor at the end after toggling visibility
+            passwordInput.setSelection(passwordInput.text.length)
+            confirmPasswordInput.setSelection(confirmPasswordInput.text.length)
+        }
+
+        // Allows greyed-out button to trigger showInputErrors()
         registerButton.setOnClickListener {
             hasAttemptedRegister = true
             if (validateInputs()) {
@@ -64,7 +83,17 @@ class RegistrationActivity : AppCompatActivity() {
                 showInputErrors()
             }
         }
+
+        val loginText: TextView = findViewById(R.id.loginText)
+        loginText.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        setupKeyboardScrolling()
     }
+
 
     // Watcher to Listen to Input Changes
     private val inputTextWatcher = object : TextWatcher {
@@ -102,7 +131,6 @@ class RegistrationActivity : AppCompatActivity() {
 
         resetValidInputs()
     }
-
 
     private fun showInputErrors() {
         if (!hasAttemptedRegister) return  // Only show errors if user has attempted to register
@@ -210,7 +238,22 @@ class RegistrationActivity : AppCompatActivity() {
         }
 
         return isValid
+    }
 
+    private fun setupKeyboardScrolling() {
+        val scrollView = findViewById<ScrollView>(R.id.scrollView)
+
+        val editTextList = listOf(nameInput, passportInput, phoneInput, emailInput, passwordInput, confirmPasswordInput)
+
+        editTextList.forEach { editText ->
+            editText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    scrollView.postDelayed({
+                        scrollView.smoothScrollTo(0, editText.bottom + 200)
+                    }, 200)
+                }
+            }
+        }
     }
 
     // Validate Email Format
@@ -250,7 +293,6 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-
     // Registration Logic
     private fun registerUser() {
         if (!validateInputs()) {
@@ -266,24 +308,26 @@ class RegistrationActivity : AppCompatActivity() {
         val selectedGenderId = genderRadioGroup.checkedRadioButtonId
         val gender = findViewById<RadioButton>(selectedGenderId).text.toString().lowercase()
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            val userDao = UserDatabase.getDatabase(applicationContext).userDao()
-            val existingUser = userDao.getUserByEmailOrPhoneOrPassport(email, phone, passport)
-
-            runOnUiThread {
-                if (existingUser == null) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        userDao.insert(User(name, passport, gender, phone, email, password))
-                        runOnUiThread {
-                            Toast.makeText(this@RegistrationActivity, "Registration Successful", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@RegistrationActivity, LoginActivity::class.java))
+        // Firebase Authentication - Create User
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Send Email Verification
+                    auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
+                        if (verifyTask.isSuccessful) {
+                            // Redirect to Email Verification Page
+                            val intent = Intent(this, EmailVerificationActivity::class.java)
+                            intent.putExtra("email", email)
+                            startActivity(intent)
                             finish()
+                        } else {
+                            Toast.makeText(this, "Failed to send verification email", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
-                    Toast.makeText(this@RegistrationActivity, "Email, phone, or passport already exists", Toast.LENGTH_SHORT).show()
+                    // Firebase registration failed
+                    Toast.makeText(this, "Firebase Registration Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             }
-        }
     }
 }

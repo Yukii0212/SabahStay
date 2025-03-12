@@ -14,8 +14,6 @@
         android:layout_height="wrap_content">
 
         <!-- Logo -->
-
-        <!-- Title Text Overlapping Logo -->
         <ImageView
             android:id="@+id/logo"
             android:layout_width="199dp"
@@ -27,6 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Title Text Overlapping Logo -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
@@ -50,14 +49,15 @@
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:fontFamily="@font/inter"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:gravity="start"/>
 
     <!-- User Input (Email or Phone) -->
     <EditText
         android:id="@+id/userInput"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@drawable/input_default_border"
         android:hint="Enter your email or phone number"
         android:textColor="@android:color/white"
         android:textSize="16sp"
@@ -80,13 +80,23 @@
         android:id="@+id/passwordEditText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@drawable/input_default_border"
         android:hint="Enter your password"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:padding="10dp"
         android:inputType="textPassword"
         android:textColorHint="#A0A0A0"/>
+
+    <!-- Show Password Checkbox -->
+    <CheckBox
+        android:id="@+id/showPasswordCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Password"
+        android:textColor="@android:color/white"
+        android:buttonTint="@color/white"
+        android:layout_marginTop="5dp"/>
 
     <!-- Login Button -->
     <Button
@@ -125,5 +135,18 @@
             android:clickable="true"
             android:focusable="true"/>
     </LinearLayout>
+
+    <!-- Forgot Password -->
+    <TextView
+        android:id="@+id/forgotPasswordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </LinearLayout>

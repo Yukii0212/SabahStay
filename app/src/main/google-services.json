@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "424687294127",
+    "project_id": "sabahstay-df7c3",
+    "storage_bucket": "sabahstay-df7c3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424687294127:android:2075c7b3bb50db23a1265a",
+        "android_client_info": {
+          "package_name": "com.example.testversion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYc4mVqXklLTYJKFgUw6QuRZi2cDNV_rM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
