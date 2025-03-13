@@ -1,39 +1,120 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#232946">
 
-    <!-- Mountain Image -->
-    <ImageView
-        android:id="@+id/mountainImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/mountain"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!-- Cloud Images -->
+        <!-- Mountain Image -->
+        <ImageView
+            android:id="@+id/mountainImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="256dp"
+            android:src="@drawable/mountain"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Title Text-->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="196dp"
+            android:text="S A B A H   S T A Y"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/mountainImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Subtitle Text-->
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome to Sabah"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/titleText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"
+            android:layout_marginTop="10dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!-- Clouds-->
     <ImageView
         android:id="@+id/cloud1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:src="@drawable/clouds"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentStart="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="180dp" />
 
     <ImageView
         android:id="@+id/cloud2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:src="@drawable/clouds"
-        android:layout_marginTop="150dp"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="200dp" />
 
     <ImageView
         android:id="@+id/cloud3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:src="@drawable/clouds"
-        android:layout_marginTop="250dp"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="220dp" />
+
+    <ImageView
+        android:id="@+id/cloud4"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/clouds"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="240dp" />
+
+    <ImageView
+        android:id="@+id/cloud5"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/clouds"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="260dp" />
+
+    <ImageView
+        android:id="@+id/cloud6"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/clouds"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="280dp" />
+
+    <ImageView
+        android:id="@+id/cloud7"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/clouds"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp" />
+
+    <ImageView
+        android:id="@+id/cloud8"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/clouds"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="320dp" />
+
 </RelativeLayout>
