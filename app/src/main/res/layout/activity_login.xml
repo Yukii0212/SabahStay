@@ -14,8 +14,6 @@
         android:layout_height="wrap_content">
 
         <!-- Logo -->
-
-        <!-- Title Text Overlapping Logo -->
         <ImageView
             android:id="@+id/logo"
             android:layout_width="199dp"
@@ -27,12 +25,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Title Text Overlapping Logo -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:text="SABAH STAY"
+            android:text="S A B A H   S T A Y"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -50,20 +49,25 @@
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:fontFamily="@font/inter"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="30dp"/>
 
     <!-- User Input (Email or Phone) -->
     <EditText
         android:id="@+id/userInput"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:background="@null"
+        android:layout_width="360dp"
+        android:layout_height="50dp"
+        android:background="@drawable/input_default_border"
         android:hint="Enter your email or phone number"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:padding="10dp"
+        android:paddingStart="10dp"
+        android:drawableStart="@drawable/email_logo"
+        android:drawablePadding="12dp"
         android:inputType="textEmailAddress"
         android:textColorHint="#A0A0A0"/>
+
 
     <!-- Password Label -->
     <TextView
@@ -73,20 +77,55 @@
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:fontFamily="@font/inter"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="30dp"/>
+
 
     <!-- Password Input -->
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:background="@null"
+        android:layout_width="360dp"
+        android:layout_height="50dp"
+        android:background="@drawable/input_default_border"
         android:hint="Enter your password"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:padding="10dp"
+        android:paddingStart="10dp"
+        android:drawableStart="@drawable/password_logo"
+        android:drawablePadding="12dp"
         android:inputType="textPassword"
         android:textColorHint="#A0A0A0"/>
+
+
+    <LinearLayout
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical">
+
+        <CheckBox
+            android:id="@+id/showPasswordCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Password"
+            android:textColor="@android:color/white"
+            android:buttonTint="@color/white"/>
+
+        <TextView
+            android:id="@+id/forgotPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:layout_marginStart="102dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
 
     <!-- Login Button -->
     <Button
@@ -125,5 +164,4 @@
             android:clickable="true"
             android:focusable="true"/>
     </LinearLayout>
-
 </LinearLayout>

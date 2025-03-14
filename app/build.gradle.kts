@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services") //Firebase Plugin
     id("kotlin-kapt") // Required for Room
 }
 
@@ -59,6 +60,9 @@ dependencies {
     implementation(libs.androidx.room.runtime.v261)
     implementation(libs.androidx.room.ktx)
     kapt("androidx.room:room-compiler:2.6.1")
+
+    implementation(platform(libs.firebase.bom)) // 🔥 Firebase BOM (Manages versions automatically)
+    implementation(libs.firebase.auth) // 🔥 Firebase Authentication
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
