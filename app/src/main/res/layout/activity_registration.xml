@@ -22,45 +22,45 @@
             <!-- Logo -->
             <ImageView
                 android:id="@+id/logo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/mountain" />
+                android:src="@drawable/mountain"
+                app:layout_constraintWidth_percent="0.8"
+                app:layout_constraintDimensionRatio="1:0.8"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <!-- Title Text Overlapping Logo -->
             <TextView
                 android:id="@+id/titleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="44dp"
-                android:background="@android:color/transparent"
+                android:layout_marginBottom="72dp"
                 android:text="S A B A H   S T A Y"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/logo"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <!-- Full Name -->
+        <!-- Full Name -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Full Name"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            android:fontFamily="@font/inter"/>
+            android:gravity="start"/>
 
         <EditText
             android:id="@+id/nameInput"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/input_default_border"
             android:hint="Enter your full name"
@@ -69,22 +69,22 @@
             android:paddingStart="10dp"
             android:drawableStart="@drawable/name_logo"
             android:drawablePadding="12dp"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords"
             android:textColorHint="#A0A0A0"/>
 
         <!-- IC/Passport -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="IC/Passport Number"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"/>
+            android:gravity="start"/>
 
         <EditText
             android:id="@+id/passportInput"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/input_default_border"
             android:hint="Enter your IC or passport number"
@@ -93,18 +93,20 @@
             android:paddingStart="10dp"
             android:drawableStart="@drawable/identification_logo"
             android:drawablePadding="12dp"
+            android:maxLength="12"
             android:inputType="text"
             android:textColorHint="#A0A0A0"/>
 
         <!-- Gender -->
         <TextView
-            android:layout_width="374dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"
             android:text="Gender"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="start"/>
 
         <RadioGroup
             android:id="@+id/genderRadioGroup"
@@ -119,8 +121,7 @@
                 android:text="Male"
                 android:textColor="@android:color/white"
                 android:button="@drawable/custom_radio_button"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="6dp"/>
+                android:layout_marginEnd="20dp"/>
 
             <RadioButton
                 android:id="@+id/genderFemale"
@@ -129,56 +130,30 @@
                 android:text="Female"
                 android:textColor="@android:color/white"
                 android:button="@drawable/custom_radio_button"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="6dp"/>
+                android:layout_marginEnd="20dp"/>
 
             <RadioButton
                 android:id="@+id/genderOther"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Other"
-                android:button="@drawable/custom_radio_button"
                 android:textColor="@android:color/white"
-                android:paddingStart="6dp"/>
+                android:button="@drawable/custom_radio_button"/>
         </RadioGroup>
-
-        <!-- Phone Number -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phone Number"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"/>
-
-        <EditText
-            android:id="@+id/phoneInput"
-            android:layout_width="360dp"
-            android:layout_height="50dp"
-            android:background="@drawable/input_default_border"
-            android:hint="Enter your phone number"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:paddingStart="10dp"
-            android:drawableStart="@drawable/phone_logo"
-            android:drawablePadding="12dp"
-            android:inputType="phone"
-            android:textColorHint="#A0A0A0"/>
 
         <!-- Email -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Email"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"/>
+            android:gravity="start"/>
 
         <EditText
             android:id="@+id/emailInput"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/input_default_border"
             android:hint="Enter your email"
@@ -190,20 +165,44 @@
             android:inputType="textEmailAddress"
             android:textColorHint="#A0A0A0"/>
 
+        <!-- Phone Number -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone Number"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="15dp"
+            android:gravity="start"/>
+
+        <EditText
+            android:id="@+id/phoneInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/input_default_border"
+            android:hint="Enter your phone number"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:paddingStart="10dp"
+            android:drawableStart="@drawable/phone_logo"
+            android:drawablePadding="12dp"
+            android:maxLength="15"
+            android:inputType="number"
+            android:textColorHint="#A0A0A0"/>
 
         <!-- Password -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Password"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"/>
+            android:gravity="start"/>
 
         <EditText
             android:id="@+id/passwordInput"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/input_default_border"
             android:hint="Enter your password"
@@ -217,17 +216,17 @@
 
         <!-- Confirm Password -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Confirm Password"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"/>
+            android:gravity="start"/>
 
         <EditText
             android:id="@+id/confirmPasswordInput"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/input_default_border"
             android:hint="Confirm your password"
@@ -239,27 +238,27 @@
             android:inputType="textPassword"
             android:textColorHint="#A0A0A0"/>
 
-
-        <!-- Show Password Box -->
+        <!-- Show Password -->
         <CheckBox
             android:id="@+id/showPasswordCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Show Password"
             android:textColor="@android:color/white"
-            android:buttonTint="@color/white"/>
+            android:buttonTint="@color/white"
+            android:layout_marginTop="10dp"/>
 
         <!-- Password Requirements -->
         <TextView
             android:id="@+id/passwordRequirementsText"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:padding="5dp"
             android:text="❌ 6 Characters long\n❌ 1 Uppercase letter\n❌ 1 Lowercase letter\n❌ 1 Number\n❌ Passwords do NOT match"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <!-- Register Button -->
         <Button
@@ -272,7 +271,6 @@
             android:background="@color/grey"
             android:enabled="false"
             android:layout_marginTop="20dp"/>
-
 
         <!-- Login Text -->
         <LinearLayout
@@ -296,7 +294,6 @@
                 android:text="Login now"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:fontFamily="@font/inter"
                 android:textStyle="italic"
                 android:clickable="true"
                 android:focusable="true"/>
