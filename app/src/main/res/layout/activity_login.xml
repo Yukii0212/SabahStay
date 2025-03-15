@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_blue"
     android:gravity="center"
+    android:padding="16dp"
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
@@ -16,47 +17,48 @@
         <!-- Logo -->
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="199dp"
-            android:layout_height="154dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/mountain"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintDimensionRatio="1:0.8"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <!-- Title Text Overlapping Logo -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="56dp"
             android:text="S A B A H   S T A Y"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/logo"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Email/Phone Label with Extra Margin -->
+    <!-- Email/Phone Label -->
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Email / Phone Number"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:fontFamily="@font/inter"
         android:layout_marginTop="15dp"
-        android:layout_gravity="start"
-        android:layout_marginStart="30dp"/>
+        android:gravity="start"/>
 
     <!-- User Input (Email or Phone) -->
     <EditText
         android:id="@+id/userInput"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/input_default_border"
         android:hint="Enter your email or phone number"
@@ -68,24 +70,21 @@
         android:inputType="textEmailAddress"
         android:textColorHint="#A0A0A0"/>
 
-
     <!-- Password Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:fontFamily="@font/inter"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="start"
-        android:layout_marginStart="30dp"/>
-
 
     <!-- Password Input -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="start"
+        android:text="Password"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/input_default_border"
         android:hint="Enter your password"
@@ -97,13 +96,12 @@
         android:inputType="textPassword"
         android:textColorHint="#A0A0A0"/>
 
-
+    <!-- Show Password & Forgot Password Section -->
     <LinearLayout
-        android:layout_width="360dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp"
-        android:gravity="center_vertical">
+        android:layout_marginTop="5dp">
 
         <CheckBox
             android:id="@+id/showPasswordCheckBox"
@@ -113,6 +111,11 @@
             android:textColor="@android:color/white"
             android:buttonTint="@color/white"/>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/forgotPasswordText"
             android:layout_width="wrap_content"
@@ -121,16 +124,15 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="italic"
-            android:layout_marginStart="102dp"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:layout_marginEnd="10dp"/>
     </LinearLayout>
-
 
     <!-- Login Button -->
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
         android:textSize="18sp"
@@ -159,9 +161,9 @@
             android:text="Sign up now"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            android:fontFamily="@font/inter"
             android:textStyle="italic"
             android:clickable="true"
             android:focusable="true"/>
     </LinearLayout>
+
 </LinearLayout>
