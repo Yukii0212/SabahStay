@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
-import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.*
@@ -85,27 +84,6 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
 
-        // Limit max characters for IC/Passport & Phone Number
-        passportInput.filters = arrayOf(InputFilter.LengthFilter(12))
-        phoneInput.filters = arrayOf(
-            InputFilter.LengthFilter(15),
-            InputFilter { source, _, _, _, _, _ ->
-                if (source.matches(Regex("[0-9]+"))) source else ""
-            }
-        )
-
-        // Convert IC/Passport to Uppercase on Input
-        passportInput.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                passportInput.removeTextChangedListener(this)
-                passportInput.setText(s.toString().uppercase())  // Force uppercase
-                passportInput.setSelection(passportInput.text.length)
-                passportInput.addTextChangedListener(this)
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
         val loginText: TextView = findViewById(R.id.loginText)
         loginText.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
@@ -115,6 +93,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         setupKeyboardScrolling()
     }
+
 
     // Watcher to Listen to Input Changes
     private val inputTextWatcher = object : TextWatcher {
@@ -159,48 +138,30 @@ class RegistrationActivity : AppCompatActivity() {
         val missingFields = mutableListOf<String>()
         val viewsToHighlight = mutableListOf<EditText>()
 
-        // Full Name Validation
-        val name = nameInput.text.toString().trim()
-        if (name.isEmpty() || !isValidName(name)) {
-            missingFields.add("Valid Name")
+        if (nameInput.text.toString().trim().isEmpty()) {
+            missingFields.add("Name")
             viewsToHighlight.add(nameInput)
         }
-
-        // IC/Passport Validation
-        val passport = passportInput.text.toString().trim().uppercase()
-        if (passport.isEmpty() || !isValidPassport(passport)) {
-            missingFields.add("Valid IC/Passport")
+        if (passportInput.text.toString().trim().isEmpty()) {
+            missingFields.add("Passport")
             viewsToHighlight.add(passportInput)
         }
-
-        // Phone Number Validation
         if (phoneInput.text.toString().trim().isEmpty()) {
             missingFields.add("Phone")
             viewsToHighlight.add(phoneInput)
         }
-
-        // Email Validation
-        val email = emailInput.text.toString().trim()
-        if (email.isEmpty() || !isValidEmail(email)) {
+        if (emailInput.text.toString().trim().isEmpty() || !isValidEmail(emailInput.text.toString().trim())) {
             missingFields.add("Valid Email")
             viewsToHighlight.add(emailInput)
         }
-
-        // Password Validation
-        val password = passwordInput.text.toString().trim()
-        if (password.isEmpty() || !isPasswordValid(password)) {
+        if (passwordInput.text.toString().trim().isEmpty() || !isPasswordValid(passwordInput.text.toString().trim())) {
             missingFields.add("Strong Password")
             viewsToHighlight.add(passwordInput)
         }
-
-        // Confirm Password Validation
-        val confirmPassword = confirmPasswordInput.text.toString().trim()
-        if (confirmPassword.isEmpty() || confirmPassword != password) {
+        if (confirmPasswordInput.text.toString().trim().isEmpty() || confirmPasswordInput.text.toString().trim() != passwordInput.text.toString().trim()) {
             missingFields.add("Matching Passwords")
             viewsToHighlight.add(confirmPasswordInput)
         }
-
-        // Gender Selection Validation
         if (genderRadioGroup.checkedRadioButtonId == -1) {
             missingFields.add("Gender Selection")
             genderRadioGroup.setBackgroundResource(R.drawable.input_error_border) // Highlight gender selection
@@ -264,8 +225,8 @@ class RegistrationActivity : AppCompatActivity() {
         val selectedGenderId = genderRadioGroup.checkedRadioButtonId
         val isGenderSelected = selectedGenderId != -1
 
-        val isValid = isValidName(name) &&
-                isValidPassport(passport) &&
+        val isValid = name.isNotEmpty() &&
+                passport.isNotEmpty() &&
                 phone.isNotEmpty() &&
                 isGenderSelected &&
                 isValidEmail(email) &&
@@ -279,27 +240,16 @@ class RegistrationActivity : AppCompatActivity() {
         return isValid
     }
 
-    // Validate Full Name
-    private fun isValidName(name: String): Boolean {
-        val regex = "^[a-zA-Z @'-]{3,}\$".toRegex()
-        return regex.matches(name)
-    }
-
-    // Validate IC/Passport (Now accepts lowercase input)
-    private fun isValidPassport(passport: String): Boolean {
-        val regex = "^[A-Z0-9]{6,12}\$".toRegex()
-        return regex.matches(passport.uppercase())  // Convert to uppercase
-    }
-
     private fun setupKeyboardScrolling() {
         val scrollView = findViewById<ScrollView>(R.id.scrollView)
+
         val editTextList = listOf(nameInput, passportInput, phoneInput, emailInput, passwordInput, confirmPasswordInput)
 
         editTextList.forEach { editText ->
             editText.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus && hasAttemptedRegister) {
+                if (hasFocus) {
                     scrollView.postDelayed({
-                        scrollView.smoothScrollTo(0, editText.top - 100)
+                        scrollView.smoothScrollTo(0, editText.bottom + 200)
                     }, 200)
                 }
             }
@@ -358,47 +308,26 @@ class RegistrationActivity : AppCompatActivity() {
         val selectedGenderId = genderRadioGroup.checkedRadioButtonId
         val gender = findViewById<RadioButton>(selectedGenderId).text.toString().lowercase()
 
-        // Show loading UI
-        registerButton.isEnabled = false
-        registerButton.text = "Registering..."
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
-                            lifecycleScope.launch(Dispatchers.Main) {
-                                if (verifyTask.isSuccessful) {
-                                    val intent = Intent(this@RegistrationActivity, EmailVerificationActivity::class.java)
-                                    intent.putExtra("email", email)
-                                    startActivity(intent)
-                                    finish()
-                                } else {
-                                    showToast("Failed to send verification email")
-                                    resetRegisterButton()
-                                }
-                            }
-                        }
-                    } else {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            showToast("Registration Failed: ${task.exception?.message}")
-                            resetRegisterButton()
+        // Firebase Authentication - Create User
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Send Email Verification
+                    auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
+                        if (verifyTask.isSuccessful) {
+                            // Redirect to Email Verification Page
+                            val intent = Intent(this, EmailVerificationActivity::class.java)
+                            intent.putExtra("email", email)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Failed to send verification email", Toast.LENGTH_SHORT).show()
                         }
                     }
+                } else {
+                    // Firebase registration failed
+                    Toast.makeText(this, "Firebase Registration Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
-        }
-    }
-
-    // Utility function to reset button state
-    private fun resetRegisterButton() {
-        registerButton.isEnabled = true
-        registerButton.text = "Register"
-    }
-
-    // Utility function to show toasts safely on the main thread
-    private fun showToast(message: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            Toast.makeText(this@RegistrationActivity, message, Toast.LENGTH_SHORT).show()
-        }
+            }
     }
 }
