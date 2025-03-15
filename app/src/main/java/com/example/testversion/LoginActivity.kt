@@ -14,15 +14,13 @@ import android.util.Patterns
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var loginButton: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         val userInput = findViewById<EditText>(R.id.userInput)
         val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
-        loginButton = findViewById(R.id.loginButton)
+        val loginButton = findViewById<Button>(R.id.loginButton)
         val signUpText = findViewById<TextView>(R.id.signUpText)
 
         loginButton.setOnClickListener {
@@ -41,10 +39,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         val showPasswordCheckBox = findViewById<CheckBox>(R.id.showPasswordCheckBox)
+
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            passwordEditText.inputType =
-                if (isChecked) InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            if (isChecked) {
+                passwordEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
             passwordEditText.setSelection(passwordEditText.text.length) // Keep cursor at end
         }
 
@@ -59,54 +60,33 @@ class LoginActivity : AppCompatActivity() {
 
             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
-                    Toast.makeText(
-                        this,
-                        if (task.isSuccessful) "Reset link sent to your email" else "Failed to send reset email",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-        }
-    }
-
-    private fun authenticateUser(identifier: String, password: String) {
-        val firebaseAuth = FirebaseAuth.getInstance()
-
-        loginButton.isEnabled = false
-        loginButton.text = "Logging in..."
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            firebaseAuth.signInWithEmailAndPassword(identifier, password)
-                .addOnCompleteListener { task ->
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (task.isSuccessful) {
-                            val user = firebaseAuth.currentUser
-                            if (user != null && user.isEmailVerified) {
-                                showToast("Login Successful")
-                                startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
-                                finish()
-                            } else {
-                                showToast("Please verify your email before logging in.")
-                                firebaseAuth.signOut()
-                                resetLoginButton()
-                            }
-                        } else {
-                            showToast("Invalid credentials or user does not exist")
-                            resetLoginButton()
-                        }
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Reset link sent to your email", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "Failed to send reset email", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
     }
 
-    private fun resetLoginButton() {
-        loginButton.isEnabled = true
-        loginButton.text = "Login"
-    }
+    private fun authenticateUser(identifier: String, password: String) {
+        val firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
 
-    private fun showToast(message: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-        }
+        firebaseAuth.signInWithEmailAndPassword(identifier, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    if (user != null && user.isEmailVerified) {
+                        Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
+                        finish()
+                    } else {
+                        Toast.makeText(this@LoginActivity, "Please verify your email before logging in.", Toast.LENGTH_LONG).show()
+                        firebaseAuth.signOut() // Ensure unverified users can't proceed
+                    }
+                } else {
+                    Toast.makeText(this@LoginActivity, "Invalid credentials or user does not exist", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }
-
