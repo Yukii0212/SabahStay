@@ -121,6 +121,8 @@
                 android:text="Male"
                 android:textColor="@android:color/white"
                 android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"
                 android:layout_marginEnd="20dp"/>
 
             <RadioButton
@@ -130,6 +132,8 @@
                 android:text="Female"
                 android:textColor="@android:color/white"
                 android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"
                 android:layout_marginEnd="20dp"/>
 
             <RadioButton
@@ -138,8 +142,11 @@
                 android:layout_height="wrap_content"
                 android:text="Other"
                 android:textColor="@android:color/white"
-                android:button="@drawable/custom_radio_button"/>
+                android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"/>
         </RadioGroup>
+
 
         <!-- Email -->
         <TextView
