@@ -83,9 +83,13 @@ class OpenAnimation : AppCompatActivity() {
             override fun onAnimationStart(animation: Animation?) {}
             override fun onAnimationEnd(animation: Animation?) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    startActivity(Intent(this@OpenAnimation, FakeMainActivity::class.java))
-                    finish()
-                }, 1000) // Small delay before switching screen
+
+                    val intent = Intent(this@OpenAnimation, BranchOverview::class.java)
+                    startActivity(intent)
+                    finish() // Close animation screen
+                }, 1000) // Short delay before switching screen
+
+
             }
             override fun onAnimationRepeat(animation: Animation?) {}
         })

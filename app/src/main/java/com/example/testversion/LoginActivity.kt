@@ -74,6 +74,8 @@ class LoginActivity : AppCompatActivity() {
         loginButton.isEnabled = false
         loginButton.text = "Logging in..."
 
+
+
         lifecycleScope.launch(Dispatchers.IO) {
             firebaseAuth.signInWithEmailAndPassword(identifier, password)
                 .addOnCompleteListener { task ->
