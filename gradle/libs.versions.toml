@@ -4,6 +4,7 @@ androidxCoreKtx = "1.12.0"
 androidxJunit = "1.1.5"
 appcompat = "1.7.0"
 appcompatVersion = "1.6.1"
+ccp = "2.5.0"
 espressoCoreVersion = "3.5.1"
 foundation = "1.5.0"
 animation = "1.5.0"
@@ -42,6 +43,7 @@ androidx-room-compiler-v261 = { module = "androidx.room:room-compiler", version.
 androidx-room-ktx-v252 = { module = "androidx.room:room-ktx", version.ref = "roomKtxVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomKtxVersion" }
 androidx-room-runtime-v261 = { module = "androidx.room:room-runtime", version.ref = "roomRuntimeVersion" }
+ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 core-ktx-v1120 = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtx" }
 google-material = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
