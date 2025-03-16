@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 if (user != null && user.password == password) {
                     Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
+                    startActivity(Intent(this@LoginActivity, BranchOverview::class.java))
                     finish()
                 } else {
                     Toast.makeText(this@LoginActivity, "Invalid credentials", Toast.LENGTH_SHORT).show()

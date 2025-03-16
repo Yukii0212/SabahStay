@@ -72,7 +72,7 @@ class OpenAnimation : AppCompatActivity() {
 
                 // Move to FakeMainActivity
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this@OpenAnimation, FakeMainActivity::class.java)
+                    val intent = Intent(this@OpenAnimation, BranchOverview::class.java)
                     startActivity(intent)
                     finish() // Close animation screen
                 }, 1000) // Short delay before switching screen

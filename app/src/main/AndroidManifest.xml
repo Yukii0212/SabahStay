@@ -27,7 +27,7 @@
         <activity android:name=".RegistrationActivity" android:exported="true"/>
 
         <!-- Fake Main Page -->
-        <activity android:name=".FakeMainActivity" android:exported="false"/>
+        <activity android:name=".BranchOverview" android:exported="false"/>
 
     </application>
 </manifest>
