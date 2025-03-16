@@ -4,12 +4,12 @@
 
     <translate
         android:fromXDelta="0%"
-        android:toXDelta="-200%"
-        android:duration="1400" />
+        android:toXDelta="200%"
+        android:duration="3000" />
 
     <alpha
         android:fromAlpha="1.0"
         android:toAlpha="0.0"
-        android:startOffset="1320"
+        android:startOffset="2020"
         android:duration="80" />
 </set>
