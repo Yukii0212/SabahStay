@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                             val user = firebaseAuth.currentUser
                             if (user != null && user.isEmailVerified) {
                                 showToast("Login Successful")
-                                startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
+                                startActivity(Intent(this@LoginActivity, BranchOverview::class.java))
                                 finish()
                             } else {
                                 showToast("Please verify your email before logging in.")
