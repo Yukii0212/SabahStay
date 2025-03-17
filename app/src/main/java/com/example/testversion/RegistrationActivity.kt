@@ -29,6 +29,7 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var registerButton: Button
     private lateinit var passwordRequirementsText: TextView
     private lateinit var auth: FirebaseAuth
+    private lateinit var countryCodePicker: com.hbb20.CountryCodePicker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class RegistrationActivity : AppCompatActivity() {
         nameInput = findViewById(R.id.nameInput)
         passportInput = findViewById(R.id.passportInput)
         phoneInput = findViewById(R.id.phoneInput)
+        countryCodePicker = findViewById(R.id.countryCodePicker)
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput)
@@ -64,13 +66,23 @@ class RegistrationActivity : AppCompatActivity() {
         // Show Password Toggle
         val showPasswordCheckBox = findViewById<CheckBox>(R.id.showPasswordCheckBox)
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            val inputType = if (isChecked) InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            val inputType = if (isChecked) {
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+
+            // Store the current font style before changing inputType
+            val typeface = passwordInput.typeface
 
             passwordInput.inputType = inputType
             confirmPasswordInput.inputType = inputType
 
-            // Keep cursor at the end after toggling visibility
+            // Restore the typeface to prevent size change on first click
+            passwordInput.typeface = typeface
+            confirmPasswordInput.typeface = typeface
+
+            // Keep cursor at the end
             passwordInput.setSelection(passwordInput.text.length)
             confirmPasswordInput.setSelection(confirmPasswordInput.text.length)
         }
@@ -111,6 +123,11 @@ class RegistrationActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        countryCodePicker.setOnCountryChangeListener {
+            phoneInput.setText("")
+            phoneInput.hint = countryCodePicker.selectedCountryCodeWithPlus
         }
 
         setupKeyboardScrolling()
@@ -352,7 +369,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         val name = nameInput.text.toString().trim()
         val passport = passportInput.text.toString().trim()
-        val phone = phoneInput.text.toString().trim()
+        val phone = countryCodePicker.selectedCountryCodeWithPlus + phoneInput.text.toString().trim()
         val email = emailInput.text.toString().trim().lowercase()
         val password = passwordInput.text.toString().trim()
         val selectedGenderId = genderRadioGroup.checkedRadioButtonId

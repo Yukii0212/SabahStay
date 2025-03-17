@@ -121,6 +121,8 @@
                 android:text="Male"
                 android:textColor="@android:color/white"
                 android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"
                 android:layout_marginEnd="20dp"/>
 
             <RadioButton
@@ -130,6 +132,8 @@
                 android:text="Female"
                 android:textColor="@android:color/white"
                 android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"
                 android:layout_marginEnd="20dp"/>
 
             <RadioButton
@@ -138,8 +142,11 @@
                 android:layout_height="wrap_content"
                 android:text="Other"
                 android:textColor="@android:color/white"
-                android:button="@drawable/custom_radio_button"/>
+                android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"/>
         </RadioGroup>
+
 
         <!-- Email -->
         <TextView
@@ -175,20 +182,58 @@
             android:layout_marginTop="15dp"
             android:gravity="start"/>
 
-        <EditText
-            android:id="@+id/phoneInput"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/input_default_border"
-            android:hint="Enter your phone number"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:paddingStart="10dp"
-            android:drawableStart="@drawable/phone_logo"
-            android:drawablePadding="12dp"
-            android:maxLength="15"
-            android:inputType="number"
-            android:textColorHint="#A0A0A0"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <!-- Country Code Picker Box -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@drawable/input_default_border"
+                android:padding="8dp"
+                android:gravity="center">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/countryCodePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ccp_defaultNameCode="MY"
+                    app:ccp_textSize="16sp"
+                    app:ccp_showFullName="false"
+                    app:ccp_showFlag="true"
+                    app:ccp_showArrow="true"
+                    app:ccp_showNameCode="false"
+                    app:ccp_contentColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Space between CCP and EditText -->
+            <Space
+                android:layout_width="8dp"
+                android:layout_height="1dp"/>
+
+            <!-- Phone Number Input Box -->
+            <EditText
+                android:id="@+id/phoneInput"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:background="@drawable/input_default_border"
+                android:hint="Enter your phone"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:paddingStart="10dp"
+                android:drawableStart="@drawable/phone_logo"
+                android:drawablePadding="12dp"
+                android:maxLength="15"
+                android:inputType="phone"
+                android:textColorHint="#A0A0A0"
+                android:singleLine="true"
+                android:scrollHorizontally="true"/>
+        </LinearLayout>
 
         <!-- Password -->
         <TextView

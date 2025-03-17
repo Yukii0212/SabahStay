@@ -42,11 +42,24 @@ class LoginActivity : AppCompatActivity() {
 
         val showPasswordCheckBox = findViewById<CheckBox>(R.id.showPasswordCheckBox)
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            passwordEditText.inputType =
-                if (isChecked) InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            passwordEditText.setSelection(passwordEditText.text.length) // Keep cursor at end
+            val inputType = if (isChecked) {
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+
+            // Store the current font style before changing inputType
+            val typeface = passwordEditText.typeface
+
+            passwordEditText.inputType = inputType
+
+            // Restore the typeface to prevent size change on first click
+            passwordEditText.typeface = typeface
+
+            // Keep cursor at the end
+            passwordEditText.setSelection(passwordEditText.text.length)
         }
+
 
         val forgotPasswordText = findViewById<TextView>(R.id.forgotPasswordText)
         forgotPasswordText.setOnClickListener {

@@ -63,6 +63,7 @@ dependencies {
 
     implementation(platform(libs.firebase.bom)) // 🔥 Firebase BOM (Manages versions automatically)
     implementation(libs.firebase.auth) // 🔥 Firebase Authentication
+    implementation(libs.ccp)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
