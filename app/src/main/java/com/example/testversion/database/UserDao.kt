@@ -1,25 +1,33 @@
 package com.example.testversion.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface UserDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)
 
     @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
     suspend fun getUserByEmail(email: String): User?
 
-    @Query("SELECT * FROM users WHERE phone = :phone LIMIT 1")
-    suspend fun getUserByPhone(phone: String): User?
+    @Query("UPDATE users SET nickname = :nickname WHERE email = :email")
+    suspend fun updateNickname(email: String, nickname: String)
 
-    @Query("SELECT * FROM users WHERE email = :email OR phone = :phone LIMIT 1")
-    suspend fun getUserByEmailOrPhone(email: String, phone: String): User?
+    @Query("UPDATE users SET profilePicturePath = :path WHERE email = :email")
+    suspend fun updateProfilePicture(email: String, path: String)
 
-    @Query("SELECT * FROM users WHERE LOWER(email) = LOWER(:email) OR phone = :phone OR passport = :passport LIMIT 1")
-    suspend fun getUserByEmailOrPhoneOrPassport(email: String, phone: String, passport: String): User?
+    @Query("UPDATE users SET prefix = :prefix WHERE email = :email")
+    suspend fun updatePrefix(email: String, prefix: String)
+
+    @Query("UPDATE users SET gender = :gender WHERE email = :email")
+    suspend fun updateGender(email: String, gender: String)
+
+    @Delete
+    suspend fun delete(user: User)
 }
+
 

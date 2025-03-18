@@ -32,8 +32,17 @@
         <!-- Email Verification Page -->
         <activity android:name=".EmailVerificationActivity" android:exported="true"/>
 
-        <!-- Fake Main Page -->
-        <activity android:name=".BranchOverview" android:exported="false"/>
+
+
+        <!-- User Profile Page -->
+        <activity android:name=".UserProfileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <!-- Change Settings Page -->
+        <activity android:name=".ChangeSettingsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>
 </manifest>

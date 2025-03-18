@@ -46,4 +46,26 @@ class EmailVerificationActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun saveUserDataToLocal() {
+        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        val user = FirebaseAuth.getInstance().currentUser
+        val email = user?.email ?: "Not provided"
+
+        // Retrieve stored values from RegistrationActivity (passed via intent)
+        val fullName = intent.getStringExtra("full_name") ?: "Not set"
+        val phone = intent.getStringExtra("phone") ?: "Not set"
+        val gender = intent.getStringExtra("gender") ?: "Not specified"
+
+        // Save data
+        editor.putString("full_name", fullName)
+        editor.putString("phone", phone)
+        editor.putString("email", email)
+        editor.putString("gender", gender)
+
+        editor.apply()
+    }
+
 }

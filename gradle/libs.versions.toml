@@ -28,6 +28,8 @@ ui = "1.7.8"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
 firebase-bom = "33.10.0"
+firebaseFirestoreKtx = "25.1.2"
+firebaseStorageKtx = "21.0.1"
 
 [libraries]
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -67,6 +69,8 @@ room-runtime = { module = "android.room:room-runtime", version.ref = "roomRuntim
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

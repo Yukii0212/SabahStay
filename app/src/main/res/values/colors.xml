@@ -15,4 +15,5 @@
     <color name="error_red">#FF0000</color>
     <color name="border_white">#FFFFFF</color>
     <color name="background_box">#002873</color>
+    <color name="primary_button">#007AFF</color>
 </resources>

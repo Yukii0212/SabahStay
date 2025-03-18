@@ -360,7 +360,6 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-    // Registration Logic
     private fun registerUser() {
         if (!validateInputs()) {
             Toast.makeText(this, "Please provide valid details", Toast.LENGTH_SHORT).show()
@@ -373,9 +372,20 @@ class RegistrationActivity : AppCompatActivity() {
         val email = emailInput.text.toString().trim().lowercase()
         val password = passwordInput.text.toString().trim()
         val selectedGenderId = genderRadioGroup.checkedRadioButtonId
-        val gender = findViewById<RadioButton>(selectedGenderId).text.toString().lowercase()
+        val gender = findViewById<RadioButton>(selectedGenderId)?.text?.toString() ?: "Other"
 
-        // Show loading UI
+        val defaultPrefix = when (gender) {
+            "Male" -> "Mr."
+            "Female" -> "Ms."
+            else -> "None"
+        }
+
+        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        sharedPreferences.edit()
+            .putString("prefix", defaultPrefix)
+            .putString("gender", gender)
+            .apply()
+
         registerButton.isEnabled = false
         registerButton.text = "Registering..."
 
@@ -386,8 +396,18 @@ class RegistrationActivity : AppCompatActivity() {
                         auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
                             lifecycleScope.launch(Dispatchers.Main) {
                                 if (verifyTask.isSuccessful) {
+                                    val userDao = UserDatabase.getDatabase(this@RegistrationActivity).userDao()
+
+                                    // ✅ Delete old local user data (if any) before inserting new data
+                                    val existingUser = userDao.getUserByEmail(email)
+                                    if (existingUser != null) {
+                                        userDao.delete(existingUser)
+                                    }
+
+                                    // ✅ Save user data in local Room Database
+                                    saveUserToDatabase(name, passport, phone, gender, email, password, defaultPrefix)
+
                                     val intent = Intent(this@RegistrationActivity, EmailVerificationActivity::class.java)
-                                    intent.putExtra("email", email)
                                     startActivity(intent)
                                     finish()
                                 } else {
@@ -398,13 +418,38 @@ class RegistrationActivity : AppCompatActivity() {
                         }
                     } else {
                         lifecycleScope.launch(Dispatchers.Main) {
-                            showToast("Registration Failed: ${task.exception?.message}")
+                            val errorMessage = task.exception?.message ?: "Registration failed"
+                            if (errorMessage.contains("email address is already in use")) {
+                                showToast("This email is already registered. Try logging in instead.")
+                            } else {
+                                showToast("Registration Failed: $errorMessage")
+                            }
                             resetRegisterButton()
                         }
                     }
                 }
         }
     }
+
+    private fun saveUserToDatabase(name: String, passport: String, phone: String, gender: String, email: String, password: String, prefix: String) {
+        val userDao = UserDatabase.getDatabase(this).userDao()
+        val newUser = User(
+            name = name,
+            passport = passport,
+            gender = gender,
+            phone = phone,
+            email = email,
+            password = password,
+            nickname = "",
+            profilePicturePath = "",
+            prefix = prefix
+        )
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            userDao.insert(newUser)
+        }
+    }
+
 
     // Utility function to reset button state
     private fun resetRegisterButton() {
@@ -417,5 +462,27 @@ class RegistrationActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             Toast.makeText(this@RegistrationActivity, message, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun saveUserData() {
+        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Save user details from registration
+        editor.putString("full_name", nameInput.text.toString().trim())
+        editor.putString("phone", phoneInput.text.toString().trim())
+        editor.putString("country_code", countryCodePicker.selectedCountryCodeWithPlus)
+        editor.putString("email", emailInput.text.toString().trim())
+
+        // Save gender
+        val selectedGenderId = genderRadioGroup.checkedRadioButtonId
+        val gender = if (selectedGenderId != -1) {
+            findViewById<RadioButton>(selectedGenderId).text.toString()
+        } else {
+            "Other" // Default if none selected
+        }
+        editor.putString("gender", gender)
+
+        editor.apply()
     }
 }
