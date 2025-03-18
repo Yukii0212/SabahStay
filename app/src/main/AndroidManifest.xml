@@ -20,6 +20,9 @@
         <!-- Main Page -->
         <activity android:name=".MainActivity" android:exported="true" />
 
+        <!--  Fake Main Page  -->
+        <activity android:name=".BranchOverview" android:exported="true"/>
+
         <!-- Login Page -->
         <activity android:name=".LoginActivity" android:exported="true"/>
 
@@ -31,8 +34,6 @@
 
         <!-- Email Verification Page -->
         <activity android:name=".EmailVerificationActivity" android:exported="true"/>
-
-
 
         <!-- User Profile Page -->
         <activity android:name=".UserProfileActivity"

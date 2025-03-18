@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     showToast("Login Successful")
-                    startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
+                    startActivity(Intent(this@LoginActivity, BranchOverview::class.java))
                     finish()
                 }
             } else {
