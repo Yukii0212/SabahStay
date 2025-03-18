@@ -33,7 +33,17 @@
         <activity android:name=".EmailVerificationActivity" android:exported="true"/>
 
         <!-- Fake Main Page -->
-        <activity android:name=".FakeMainActivity" android:exported="false"/>
+        <activity android:name=".FakeMainActivity" android:exported="true"/>
+
+        <!-- User Profile Page -->
+        <activity android:name=".UserProfileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <!-- Change Settings Page -->
+        <activity android:name=".ChangeSettingsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>
 </manifest>

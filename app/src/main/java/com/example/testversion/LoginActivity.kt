@@ -79,6 +79,9 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
                 }
         }
+
+        setupKeyboardScrolling()
+
     }
 
     private fun authenticateUser(identifier: String, password: String) {
@@ -87,27 +90,53 @@ class LoginActivity : AppCompatActivity() {
         loginButton.isEnabled = false
         loginButton.text = "Logging in..."
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            firebaseAuth.signInWithEmailAndPassword(identifier, password)
-                .addOnCompleteListener { task ->
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (task.isSuccessful) {
-                            val user = firebaseAuth.currentUser
-                            if (user != null && user.isEmailVerified) {
-                                showToast("Login Successful")
-                                startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
-                                finish()
-                            } else {
-                                showToast("Please verify your email before logging in.")
-                                firebaseAuth.signOut()
-                                resetLoginButton()
-                            }
-                        } else {
-                            showToast("Invalid credentials or user does not exist")
-                            resetLoginButton()
-                        }
+        firebaseAuth.signInWithEmailAndPassword(identifier, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    if (user != null && user.isEmailVerified) {
+                        // ✅ Load user profile from local database
+                        loadUserDataFromDatabase(user.email!!)
+                    } else {
+                        showToast("Please verify your email before logging in.")
+                        firebaseAuth.signOut()
+                        resetLoginButton()
                     }
+                } else {
+                    showToast("Invalid credentials or user does not exist")
+                    resetLoginButton()
                 }
+            }
+    }
+
+    private fun loadUserDataFromDatabase(email: String) {
+        val userDao = UserDatabase.getDatabase(this).userDao()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user = userDao.getUserByEmail(email)
+
+            if (user != null) {
+                val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+
+                editor.putString("full_name", user.name)
+                editor.putString("phone", user.phone)
+                editor.putString("gender", user.gender)
+                editor.putString("email", user.email)
+                editor.putBoolean("is_logged_in", true)  // Mark as logged in
+                editor.apply()
+
+                withContext(Dispatchers.Main) {
+                    showToast("Login Successful")
+                    startActivity(Intent(this@LoginActivity, FakeMainActivity::class.java))
+                    finish()
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    showToast("User data not found locally. Please re-register.")
+                    resetLoginButton()
+                }
+            }
         }
     }
 
@@ -121,5 +150,19 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun setupKeyboardScrolling() {
+        val scrollView = findViewById<ScrollView>(R.id.scrollView)
+        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
+
+        passwordEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                scrollView.postDelayed({
+                    scrollView.smoothScrollTo(0, passwordEditText.bottom)
+                }, 200)
+            }
+        }
+    }
+
 }
 

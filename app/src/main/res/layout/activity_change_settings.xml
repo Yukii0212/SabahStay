@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_blue"
+    android:fillViewport="true"
+    tools:context=".ChangeSettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Profile Picture & Change Picture Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/default_male"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_shape"/>
+
+            <Button
+                android:id="@+id/changeProfilePictureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHANGE PROFILE PICTURE"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:textColor="@android:color/white"
+                android:background="@color/button_blue"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+
+        <!-- Full Name -->
+        <!-- Full Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full Name"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+        <EditText
+            android:id="@+id/fullName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your full name"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:background="@drawable/input_default_border"
+            android:textSize="16sp"
+            android:paddingStart="10dp"/>
+
+
+        <!-- Nickname -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nickname"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+        <EditText
+            android:id="@+id/nickname"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your nickname (optional)"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:background="@drawable/input_default_border"
+            android:textSize="16sp"
+            android:paddingStart="10dp"/>
+
+
+        <!-- Gender -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+        <RadioGroup
+            android:id="@+id/genderRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/genderMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:textColor="@android:color/white"
+                android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"
+                android:layout_marginEnd="20dp"/>
+
+            <RadioButton
+                android:id="@+id/genderFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textColor="@android:color/white"
+                android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"
+                android:layout_marginEnd="20dp"/>
+
+            <RadioButton
+                android:id="@+id/genderOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:textColor="@android:color/white"
+                android:button="@drawable/custom_radio_button"
+                android:buttonTint="@android:color/white"
+                android:paddingStart="8dp"/>
+        </RadioGroup>
+
+        <!-- Prefix -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prefix"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <Spinner
+            android:id="@+id/prefixSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/spinner_background"
+            android:popupBackground="@color/background_blue"
+            android:theme="@style/WhiteSpinnerStyle"/>
+
+        <!-- Email -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your email"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:background="@drawable/input_default_border"
+            android:textSize="16sp"
+            android:paddingStart="10dp"/>
+
+        <!-- Phone Number (Require Password) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Number"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/countryCodePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ccp_defaultNameCode="MY"
+                app:ccp_textSize="16sp"
+                app:ccp_showFullName="false"
+                app:ccp_showFlag="true"
+                app:ccp_showArrow="true"
+                app:ccp_showNameCode="false"
+                app:ccp_contentColor="@android:color/white"/>
+
+            <Space
+                android:layout_width="8dp"
+                android:layout_height="1dp"/>
+
+            <EditText
+                android:id="@+id/phone"
+                style="@style/ProfileInput"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:hint="Enter your phone"
+                android:textColorHint="@android:color/white"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <!-- Confirm & Discard Buttons -->
+        <Button
+            android:id="@+id/discardChangeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DISCARD CHANGES"
+            android:layout_marginTop="20dp"
+            android:background="@color/error_red"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/confirmChangeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONFIRM CHANGES"
+            android:layout_marginTop="10dp"
+            android:background="@color/button_blue"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+</ScrollView>
