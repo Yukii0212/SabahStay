@@ -9,10 +9,11 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
-class FakeMainActivity : AppCompatActivity() {
+
+class BranchOverview : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fake_main)
+        setContentView(R.layout.activity_branch_overview)
 
         val loginButton = findViewById<Button>(R.id.loginButton)
         val profileButton = findViewById<Button>(R.id.profileButton)

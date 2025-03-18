@@ -90,6 +90,7 @@ class LoginActivity : AppCompatActivity() {
         loginButton.isEnabled = false
         loginButton.text = "Logging in..."
 
+
         firebaseAuth.signInWithEmailAndPassword(identifier, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -101,6 +102,7 @@ class LoginActivity : AppCompatActivity() {
                         showToast("Please verify your email before logging in.")
                         firebaseAuth.signOut()
                         resetLoginButton()
+
                     }
                 } else {
                     showToast("Invalid credentials or user does not exist")

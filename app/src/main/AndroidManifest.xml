@@ -32,8 +32,7 @@
         <!-- Email Verification Page -->
         <activity android:name=".EmailVerificationActivity" android:exported="true"/>
 
-        <!-- Fake Main Page -->
-        <activity android:name=".FakeMainActivity" android:exported="true"/>
+
 
         <!-- User Profile Page -->
         <activity android:name=".UserProfileActivity"
