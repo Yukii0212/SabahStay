@@ -71,8 +71,8 @@ class UserProfileActivity : AppCompatActivity() {
                 savedProfilePicture.delete()
             }
 
-            // Redirect to FakeMainActivity
-            val intent = Intent(this, FakeMainActivity::class.java)
+            // Redirect to BranchOverview
+            val intent = Intent(this, BranchOverview::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
@@ -200,7 +200,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         FirebaseAuth.getInstance().signOut()
 
-        val intent = Intent(this, FakeMainActivity::class.java)
+        val intent = Intent(this, BranchOverview::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
