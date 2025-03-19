@@ -153,6 +153,7 @@
             android:popupBackground="@color/background_blue"
             android:theme="@style/WhiteSpinnerStyle"/>
 
+
         <!-- Email -->
         <TextView
             android:layout_width="wrap_content"
@@ -211,8 +212,13 @@
                 android:layout_weight="1"
                 android:layout_height="50dp"
                 android:hint="Enter your phone"
+                android:textColor="@android:color/white"
                 android:textColorHint="@android:color/white"
-                android:enabled="false"/>
+                android:background="@drawable/input_default_border"
+                android:textSize="16sp"
+                android:paddingStart="10dp"
+                android:inputType="phone"
+                android:enabled="true"/>
         </LinearLayout>
 
         <!-- Confirm & Discard Buttons -->

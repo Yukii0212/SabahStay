@@ -1,5 +1,6 @@
 package com.example.testversion
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -29,6 +30,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var email: TextView
     private lateinit var phone: TextView
     private lateinit var logoutButton: Button
+    private val REQUEST_SETTINGS_UPDATE = 1002
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,8 +92,21 @@ class UserProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadUserData()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_SETTINGS_UPDATE && resultCode == Activity.RESULT_OK) {
+            loadUserData()
+        }
+    }
+
+
     private fun loadUserData() {
-        val user = auth.currentUser
+        val user = auth.currentUser ?: return
         val loginButton = findViewById<Button>(R.id.login_button)
         val logoutButton = findViewById<Button>(R.id.logout_button)
 
@@ -102,17 +117,17 @@ class UserProfileActivity : AppCompatActivity() {
         var savedGender = sharedPreferences.getString("gender", "Other") ?: "Other"
         var savedPrefix = sharedPreferences.getString("prefix", "None") ?: "None"
         var savedPhone = sharedPreferences.getString("phone", "") ?: ""
-        val savedCountryCode = sharedPreferences.getString("country_code", "+XXX") ?: "+XXX"
-        val savedEmail = user?.email ?: sharedPreferences.getString("email", "") ?: ""
+        val savedCountryCode = sharedPreferences.getString("country_code", "+60") ?: "+60"
+        val savedEmail = sharedPreferences.getString("email", "") ?: ""
         var savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
 
         // ✅ Load user details from Room Database & update UI in real-time
         val userDao = UserDatabase.getDatabase(this).userDao()
         lifecycleScope.launch(Dispatchers.IO) {
-            val localUser = userDao.getUserByEmail(savedEmail)
+            val localUser = userDao.getUserByEmail(user.email ?: "")
 
-            if (localUser != null) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (localUser != null) {
                     // ✅ Load values from Room Database
                     savedNickname = localUser.nickname.ifEmpty { savedNickname }
                     savedProfilePicturePath = localUser.profilePicturePath.ifEmpty { savedProfilePicturePath }
@@ -126,22 +141,24 @@ class UserProfileActivity : AppCompatActivity() {
                         .putString("prefix", savedPrefix)
                         .putString("gender", savedGender)
                         .apply()
-
-                    // ✅ Update UI elements immediately
-                    nickname.text = savedNickname.ifEmpty { "Not set" }
-                    fullName.text = if (savedFullName.isNotEmpty()) savedFullName else "Not set"
-                    gender.text = savedGender
-                    prefix?.text = if (savedPrefix == "None") "" else savedPrefix
-
-                    // ✅ Display Name Priority: Nickname > Full Name > "Guest User"
-                    val displayName = savedNickname.ifEmpty { savedFullName.ifEmpty { "Guest User" } }
-
-                    usernameDisplay.text = if (user != null) {
-                        if (savedPrefix == "None") "Hello, $displayName" else "Hello, $savedPrefix $displayName"
-                    } else {
-                        "Hello, Guest User"
-                    }
                 }
+
+                // ✅ Update UI elements immediately
+                nickname.text = savedNickname.ifEmpty { "Not set" }
+                fullName.text = if (savedFullName.isNotEmpty()) savedFullName else "Not set"
+                gender.text = savedGender
+                prefix?.text = if (savedPrefix == "None") "" else savedPrefix
+
+                // ✅ Display Name Priority: Nickname > Full Name > "Guest User"
+                val displayName = savedNickname.ifEmpty { savedFullName.ifEmpty { "Guest User" } }
+                usernameDisplay.text = if (user != null) {
+                    if (savedPrefix == "None") "Hello, $displayName" else "Hello, $savedPrefix $displayName"
+                } else {
+                    "Hello, Guest User"
+                }
+
+                // ✅ Ensure Profile Picture Updates Instantly
+                updateProfilePicture(savedProfilePicturePath, savedGender)
             }
         }
 
@@ -155,25 +172,19 @@ class UserProfileActivity : AppCompatActivity() {
             sharedPreferences.edit().putString("prefix", savedPrefix).apply()
         }
 
-        // ✅ Ensure correct phone number format (remove extra `+XXX`)
-        if (!savedPhone.startsWith(savedCountryCode)) {
-            savedPhone = "$savedCountryCode $savedPhone"
-        }
-        phone.text = if (savedPhone.isNotEmpty()) savedPhone else "Not provided"
+        savedPhone = savedPhone.replace("+XXX", "").trim()
 
-        email.text = savedEmail.ifEmpty { "Not provided" }
-
-        // ✅ Ensure Profile Picture Loads Correctly
-        if (savedProfilePicturePath.isNotEmpty() && File(savedProfilePicturePath).exists()) {
-            profilePicture.setImageURI(Uri.fromFile(File(savedProfilePicturePath)))
-        } else {
-            val defaultProfilePicture = when (savedGender) {
-                "Male" -> R.drawable.default_male
-                "Female" -> R.drawable.default_female
-                else -> R.drawable.default_other
+        if (savedPhone.startsWith("+")) {
+            val phoneWithoutCode = savedPhone.substringAfter(" ")
+            savedPhone = if (!phoneWithoutCode.startsWith(savedCountryCode)) {
+                "$savedCountryCode $phoneWithoutCode"
+            } else {
+                savedPhone
             }
-            profilePicture.setImageResource(defaultProfilePicture)
         }
+
+        phone.text = savedPhone.ifEmpty { "Not provided" }
+        email.text = savedEmail.ifEmpty { "Not provided" }
 
         // ✅ Show/Hide login/logout buttons based on authentication status
         if (user != null) {
@@ -188,6 +199,19 @@ class UserProfileActivity : AppCompatActivity() {
             loginButton.setOnClickListener {
                 startActivity(Intent(this, LoginActivity::class.java))
             }
+        }
+    }
+
+    private fun updateProfilePicture(savedProfilePicturePath: String, savedGender: String) {
+        if (savedProfilePicturePath.isNotEmpty() && File(savedProfilePicturePath).exists()) {
+            profilePicture.setImageURI(Uri.fromFile(File(savedProfilePicturePath)))
+        } else {
+            val defaultProfilePicture = when (savedGender) {
+                "Male" -> R.drawable.default_male
+                "Female" -> R.drawable.default_female
+                else -> R.drawable.default_other
+            }
+            profilePicture.setImageResource(defaultProfilePicture)
         }
     }
 

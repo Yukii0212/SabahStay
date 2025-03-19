@@ -26,6 +26,12 @@ interface UserDao {
     @Query("UPDATE users SET gender = :gender WHERE email = :email")
     suspend fun updateGender(email: String, gender: String)
 
+    @Query("UPDATE users SET phone = :phone WHERE email = :email")
+    suspend fun updatePhone(email: String, phone: String)
+
+    @Query("UPDATE users SET email = :newEmail WHERE email = :oldEmail")
+    suspend fun updateEmail(oldEmail: String, newEmail: String)
+
     @Delete
     suspend fun delete(user: User)
 }
