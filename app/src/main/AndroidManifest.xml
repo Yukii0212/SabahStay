@@ -45,5 +45,9 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <!-- Change Sensitive Information page -->
+        <activity android:name=".ChangeSensitiveInformationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 </manifest>

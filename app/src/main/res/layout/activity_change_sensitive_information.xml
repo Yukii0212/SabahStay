@@ -1,0 +1,194 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_blue"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <!-- Mountain Logo -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mountain"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-50dp"/>
+
+        <LinearLayout
+            android:id="@+id/inputContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:layout_below="@id/logo"
+            android:layout_marginTop="-40dp">
+
+            <!-- Phone Number -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="15dp"
+                android:gravity="start"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp">
+
+                <!-- Country Code Picker -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:background="@drawable/input_default_border"
+                    android:padding="8dp"
+                    android:gravity="center">
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/countryCodePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:ccp_defaultNameCode="MY"
+                        app:ccp_textSize="16sp"
+                        app:ccp_showFlag="true"
+                        app:ccp_showArrow="true"
+                        app:ccp_contentColor="@android:color/white"/>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="1dp"/>
+
+                <EditText
+                    android:id="@+id/phoneInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:background="@drawable/input_default_border"
+                    android:hint="Enter your phone"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:paddingLeft="8dp"
+                    android:paddingStart="4dp"
+                    android:maxLength="15"
+                    android:inputType="phone"
+                    android:textColorHint="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Current Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Password"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="15dp"/>
+            <EditText
+                android:id="@+id/currentPassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Enter current password"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:paddingLeft="8dp"
+                android:paddingStart="4dp"
+                android:inputType="textPassword"
+                android:background="@drawable/input_default_border"
+                android:textSize="16sp"/>
+
+            <!-- New Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Password"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="15dp"/>
+            <EditText
+                android:id="@+id/newPassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Enter new password"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:paddingLeft="8dp"
+                android:paddingStart="4dp"
+                android:inputType="textPassword"
+                android:background="@drawable/input_default_border"
+                android:textSize="16sp"/>
+
+            <!-- Confirm New Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm New Password"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="15dp"/>
+            <EditText
+                android:id="@+id/confirmNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Confirm new password"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:inputType="textPassword"
+                android:background="@drawable/input_default_border"
+                android:paddingLeft="8dp"
+                android:paddingStart="4dp"
+                android:textSize="16sp"/>
+            <CheckBox
+                android:id="@+id/showPasswordCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Password"
+                android:textColor="@android:color/white"
+                android:buttonTint="@color/white"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:id="@+id/passwordRequirementsBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/input_default_border"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/passwordRequirementsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Password must meet the following criteria:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Save Button -->
+            <Button
+                android:id="@+id/saveChangesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Changes"
+                android:textSize="16sp"
+                android:background="@color/button_blue"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="20dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

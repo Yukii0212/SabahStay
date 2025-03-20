@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.foundation.android)
     kapt("androidx.room:room-compiler:2.6.1")
 
     implementation(platform(libs.firebase.bom)) // 🔥 Firebase BOM (Manages versions automatically)
