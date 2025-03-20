@@ -34,7 +34,6 @@ class UserProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("UserProfileActivity", "UserProfileActivity started!")
         setContentView(R.layout.activity_user_profile)
 
         auth = FirebaseAuth.getInstance()
@@ -52,9 +51,12 @@ class UserProfileActivity : AppCompatActivity() {
 
         // Clicking the pencil icon redirects to Change Settings
         editProfilePicture.setOnClickListener {
-            startActivity(Intent(this, ChangeSettingsActivity::class.java))
+            if (auth.currentUser == null) {
+                redirectToLogin()
+            } else {
+                startActivity(Intent(this, ChangeSettingsActivity::class.java))
+            }
         }
-
         // Load user data
         loadUserData()
 
@@ -90,6 +92,16 @@ class UserProfileActivity : AppCompatActivity() {
         } else {
             logoutButton.text = "LOG OUT"
         }
+
+        val changeSensitiveInfoButton = findViewById<Button>(R.id.change_sensitive_info_button)
+
+        changeSensitiveInfoButton.setOnClickListener {
+            if (auth.currentUser == null) {
+                redirectToLogin()
+            } else {
+                startActivity(Intent(this, ChangeSensitiveInformationActivity::class.java))
+            }
+        }
     }
 
     override fun onResume() {
@@ -104,6 +116,13 @@ class UserProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun redirectToLogin() {
+        Toast.makeText(this, "Please log in to edit your profile.", Toast.LENGTH_SHORT).show()
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        loginIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(loginIntent)
+        finish()
+    }
 
     private fun loadUserData() {
         val user = auth.currentUser ?: return
@@ -159,6 +178,14 @@ class UserProfileActivity : AppCompatActivity() {
 
                 // ✅ Ensure Profile Picture Updates Instantly
                 updateProfilePicture(savedProfilePicturePath, savedGender)
+            }
+
+            withContext(Dispatchers.Main) {
+                if (localUser != null) {
+                    phone.text = localUser.phone.ifEmpty { "Not provided" }
+                } else {
+                    phone.text = "Not provided"
+                }
             }
         }
 
