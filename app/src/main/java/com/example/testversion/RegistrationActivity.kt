@@ -109,11 +109,16 @@ class RegistrationActivity : AppCompatActivity() {
         // Convert IC/Passport to Uppercase on Input
         passportInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                passportInput.removeTextChangedListener(this)
-                passportInput.setText(s.toString().uppercase())  // Force uppercase
-                passportInput.setSelection(passportInput.text.length)
-                passportInput.addTextChangedListener(this)
+                if (s == null) return
+                val filteredText = s.toString().uppercase().filter { it.isLetterOrDigit() }
+                if (filteredText != s.toString()) {
+                    passportInput.removeTextChangedListener(this)
+                    passportInput.setText(filteredText)
+                    passportInput.setSelection(filteredText.length)
+                    passportInput.addTextChangedListener(this)
+                }
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })

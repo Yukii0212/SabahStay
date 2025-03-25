@@ -188,6 +188,16 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Change Sensitive Information Button -->
+        <Button
+            android:id="@+id/change_sensitive_info_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Phone/Password"
+            android:background="@color/button_blue"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"/>
+
         <FrameLayout
             android:id="@+id/auth_button_container"
             android:layout_width="match_parent"
@@ -212,9 +222,6 @@
                 android:background="@color/error_red"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="20dp"/>
-
-
         </FrameLayout>
-
     </LinearLayout>
 </ScrollView>
