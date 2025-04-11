@@ -17,6 +17,7 @@ class BranchOverview : AppCompatActivity() {
 
         val loginButton = findViewById<Button>(R.id.loginButton)
         val profileButton = findViewById<Button>(R.id.profileButton)
+        val paymentButton = findViewById<Button>(R.id.paymentButton)
 
         val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
 
@@ -31,6 +32,10 @@ class BranchOverview : AppCompatActivity() {
 
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
+        }
+
+        paymentButton.setOnClickListener {
+            startActivity(Intent(this, PaymentDetailsActivity::class.java))
         }
     }
 

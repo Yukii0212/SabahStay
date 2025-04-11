@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A2345"
+    tools:context=".PendingPaymentActivity">
+
+    <!-- Step Progress Bar -->
+    <LinearLayout
+        android:id="@+id/stepProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="70dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/holo_green_dark" />
+
+        <ImageView
+            android:id="@+id/centerHourglass"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_hourglass" />
+
+        <View
+            android:layout_width="70dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Pending Icon -->
+    <ImageView
+        android:id="@+id/pendingIcon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="140dp"
+        android:src="@drawable/ic_payment_pending"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stepProgressBar" />
+
+    <TextView
+        android:id="@+id/pendingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Processing Payment..."
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/pendingIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/loadingSpinner"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/pendingText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Step Texts -->
+    <TextView
+        android:id="@+id/stepSelectPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Payment"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/stepProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/stepPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/stepProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="181dp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/stepConfirmation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmation"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/stepProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="279dp"
+        android:layout_marginTop="8dp" />
+
+    <!-- Extra Icons -->
+    <ImageView
+        android:id="@+id/leftIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_checking"
+        app:layout_constraintTop_toTopOf="@id/stepProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="-24dp" />
+
+    <ImageView
+        android:id="@+id/rightIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_unchecked"
+        app:layout_constraintTop_toTopOf="@id/stepProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="296dp"
+        android:layout_marginTop="-24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
