@@ -2,18 +2,19 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="#002B7F"
-    android:gravity="center"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:background="#002B7F"
+    android:gravity="center_horizontal"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/header_logo"
-        android:layout_width="100dp"
-        android:layout_height="44dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
         android:adjustViewBounds="true"
         android:contentDescription="Logo"
         android:scaleType="fitCenter"
@@ -27,5 +28,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_marginTop="6dp"/>
 </LinearLayout>

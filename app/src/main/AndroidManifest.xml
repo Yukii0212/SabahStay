@@ -51,8 +51,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Payment Flow Activities -->
-        <activity android:name=".PaymentDetailsActivity" android:exported="true"/>
-        <activity android:name=".PendingPaymentActivity" android:exported="true"/>
+        <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
+        <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>
         <activity android:name=".BookingSuccessActivity" android:exported="true"/>
         <activity android:name=".PaymentFailedActivity" android:exported="true"/>
     </application>
