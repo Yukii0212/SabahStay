@@ -49,5 +49,11 @@
         <activity android:name=".ChangeSensitiveInformationActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <!-- Payment Flow Activities -->
+        <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
+        <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>
+        <activity android:name=".BookingSuccessActivity" android:exported="true"/>
+        <activity android:name=".PaymentFailedActivity" android:exported="true"/>
     </application>
 </manifest>

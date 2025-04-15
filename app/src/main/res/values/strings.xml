@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">TestVersion</string>
+    <string name="app_name">S A B A H  S T A Y</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="credit_card_icon">Credit Card Icon</string>
+    <string name="online_banking">Online Banking</string>
+    <string name="online_banking_icon">Online Banking Icon</string>
+    <string name="e_wallet">E-Wallet</string>
+    <string name="e_wallet_icon">E-Wallet Icon</string>
+    <string name="confirm">Confirm</string>
 </resources>
