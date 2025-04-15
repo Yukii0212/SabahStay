@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.AttributeSet
+import android.util.Log // Import added for Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -36,24 +37,18 @@ class FooterBar @JvmOverloads constructor(
         notificationSection = findViewById(R.id.notification_section)
         accountSection = findViewById(R.id.account_section)
         accountIcon = findViewById(R.id.account_icon)
-        accountText = findViewById(R.id.account_text)
+        accountText = findViewById(R.id.profileButton) // Corrected id reference
 
         updateFooterUI()
 
-        homeSection.setOnClickListener {
-            context.startActivity(Intent(context, HomeActivity::class.java))
-        }
-
-        reservationSection.setOnClickListener {
-            context.startActivity(Intent(context, ReservationActivity::class.java))
-        }
-
-        notificationSection.setOnClickListener {
-            context.startActivity(Intent(context, NotificationActivity::class.java))
-        }
-
         accountSection.setOnClickListener {
-            context.startActivity(Intent(context, UserProfileActivity::class.java))
+            Log.d("FooterBar", "Account section clicked")
+            val user = auth.currentUser
+            if (user == null) {
+                context.startActivity(Intent(context, LoginActivity::class.java))
+            } else {
+                context.startActivity(Intent(context, UserProfileActivity::class.java))
+            }
         }
     }
 
@@ -63,14 +58,17 @@ class FooterBar @JvmOverloads constructor(
             val savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
             val savedUsername = sharedPreferences.getString("nickname", user.displayName ?: "User") ?: "User"
 
+            // Set profile picture if available, otherwise use default icon
             if (savedProfilePicturePath.isNotEmpty() && File(savedProfilePicturePath).exists()) {
                 accountIcon.setImageURI(Uri.fromFile(File(savedProfilePicturePath)))
             } else {
                 accountIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.account_button))
             }
 
-            accountText.text = savedUsername
+            // Set text to "<user name>'s account"
+            accountText.text = "$savedUsername's account"
         } else {
+            // Default icon and text for no user
             accountIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.account_button))
             accountText.text = "Account"
         }
