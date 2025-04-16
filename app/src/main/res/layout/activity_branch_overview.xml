@@ -33,7 +33,7 @@
         android:text="Go to Login"
         android:textSize="18sp"
         android:padding="10dp"
-        android:background="@android:color/holo_blue_dark"
+        android:backgroundTint="@color/grey"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/fakeMainPage"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,30 +43,46 @@
         android:id="@+id/profileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_dark"
         android:padding="10dp"
         android:text="Go to Profile"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="219dp"
+        android:backgroundTint="@color/pink_700"
         app:layout_constraintTop_toBottomOf="@id/loginButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <Button
         android:id="@+id/paymentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
-        android:background="@android:color/holo_blue_dark"
         android:padding="10dp"
         android:text="Go to payment"
         android:textColor="@android:color/white"
         android:textSize="18sp"
+        android:backgroundTint="@color/blue_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fakeMainPage" />
+
+
+    <Button
+        android:id="@+id/bookingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="216dp"
+        android:backgroundTint="@color/purple_400"
+        android:padding="10dp"
+        android:text="Go to booking lah"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fakeMainPage" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
