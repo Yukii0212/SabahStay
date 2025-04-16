@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -63,6 +64,14 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
     implementation(libs.androidx.foundation.android)
     kapt("androidx.room:room-compiler:2.6.1")
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
+
+
 
     implementation(platform(libs.firebase.bom)) // 🔥 Firebase BOM (Manages versions automatically)
     implementation(libs.firebase.auth) // 🔥 Firebase Authentication
