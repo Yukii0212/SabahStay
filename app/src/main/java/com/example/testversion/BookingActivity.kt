@@ -265,54 +265,115 @@ class BookingActivity : AppCompatActivity() {
             val bookingDao = db.bookingDao()
             val userDao = db.userDao()
 
-            val testBranchId = "test-branch-001"
-            val testRoomId = "test-room-001"
-            val testUserEmail = "dummy@test.com"
+            val branchId = "branch-excel"
+            val userEmail = "tester@excel.com"
 
+            // 1. Insert test branch
             branchDao.insert(
                 Branch(
-                    branchId = testBranchId,
-                    name = "Test Branch",
-                    location = "Test City",
-                    contactNumber = "123456789",
-                    email = "test@branch.com"
+                    branchId = branchId,
+                    name = "Excel Island Branch",
+                    location = "Island Paradise",
+                    contactNumber = "0000000000",
+                    email = "excel@branch.com"
                 )
             )
 
-            roomDao.insert(
-                HotelRoom(
-                    roomId = testRoomId,
-                    roomNumber = "101",
-                    roomType = "Standard",
-                    pricePerNight = 99.99,
-                    isAvailable = true,
-                    bedCount = 1,
-                    description = "Test Room for April 18–19 only",
-                    maxGuests = 2,
-                    branchId = testBranchId
-                )
-            )
-
+            // 2. Insert test user
             userDao.insert(
                 User(
-                    email = testUserEmail,
-                    name = "Test User",
-                    passport = "12345678",
+                    email = userEmail,
+                    name = "Excel Tester",
+                    passport = "T1234567",
                     gender = "Other",
-                    phone = "1234567890",
-                    password = "test"
+                    phone = "0000000000",
+                    password = "test123"
                 )
             )
 
-            // Add a conflicting booking on April 20 to block all other dates
-            bookingDao.insert(
+            // 3. Insert 5 test rooms (slot 1 to slot 5)
+            for (i in 1..5) {
+                roomDao.insert(
+                    HotelRoom(
+                        roomId = "room-$i",
+                        roomNumber = "10$i",
+                        roomType = "Standard",
+                        pricePerNight = 100.0 + i,
+                        isAvailable = true,
+                        bedCount = 2,
+                        description = "Slot $i test room",
+                        maxGuests = 2,
+                        branchId = branchId
+                    )
+                )
+            }
+
+            // 4. Insert bookings based on your Excel test table
+            val bookings = listOf(
+                // Slot 1: Yuki booking from 18 to 20 April
                 Booking(
-                    bookingId = "test-booking-001",
-                    userEmail = testUserEmail,
-                    roomId = testRoomId,
-                    checkInDate = LocalDate.parse("2025-04-20"),
-                    checkOutDate = LocalDate.parse("2025-04-22"),
-                    totalPrice = 199.99,
+                    bookingId = "b1",
+                    userEmail = userEmail,
+                    roomId = "room-1",
+                    checkInDate = LocalDate.parse("2025-04-18"),
+                    checkOutDate = LocalDate.parse("2025-04-20"),
+                    totalPrice = 200.0,
+                    status = "confirmed",
+                    numGuests = 2,
+                    createdAt = LocalDate.now(),
+                    paymentStatus = "paid"
+                ),
+
+                // Slot 2: Pei Pei booking from 17 to 19 April
+                Booking(
+                    bookingId = "b2",
+                    userEmail = userEmail,
+                    roomId = "room-2",
+                    checkInDate = LocalDate.parse("2025-04-17"),
+                    checkOutDate = LocalDate.parse("2025-04-19"),
+                    totalPrice = 200.0,
+                    status = "confirmed",
+                    numGuests = 2,
+                    createdAt = LocalDate.now(),
+                    paymentStatus = "paid"
+                ),
+
+                // Slot 3: Wei Wei booking from 15 to 18 April
+                Booking(
+                    bookingId = "b3",
+                    userEmail = userEmail,
+                    roomId = "room-3",
+                    checkInDate = LocalDate.parse("2025-04-15"),
+                    checkOutDate = LocalDate.parse("2025-04-18"),
+                    totalPrice = 300.0,
+                    status = "confirmed",
+                    numGuests = 2,
+                    createdAt = LocalDate.now(),
+                    paymentStatus = "paid"
+                ),
+
+                // Slot 4: Gabriel booking from 16 to 21 April
+                Booking(
+                    bookingId = "b4",
+                    userEmail = userEmail,
+                    roomId = "room-4",
+                    checkInDate = LocalDate.parse("2025-04-16"),
+                    checkOutDate = LocalDate.parse("2025-04-21"),
+                    totalPrice = 500.0,
+                    status = "confirmed",
+                    numGuests = 2,
+                    createdAt = LocalDate.now(),
+                    paymentStatus = "paid"
+                ),
+
+                // Slot 5: Rachel booking from 16 to 19 April
+                Booking(
+                    bookingId = "b5",
+                    userEmail = userEmail,
+                    roomId = "room-5",
+                    checkInDate = LocalDate.parse("2025-04-16"),
+                    checkOutDate = LocalDate.parse("2025-04-19"),
+                    totalPrice = 300.0,
                     status = "confirmed",
                     numGuests = 2,
                     createdAt = LocalDate.now(),
@@ -320,7 +381,10 @@ class BookingActivity : AppCompatActivity() {
                 )
             )
 
-            Toast.makeText(this@BookingActivity, "Test room + dummy booking inserted", Toast.LENGTH_SHORT).show()
+            bookings.forEach { bookingDao.insert(it) }
+
+            Toast.makeText(this@BookingActivity, "🌴 Excel test data inserted successfully!", Toast.LENGTH_LONG).show()
         }
     }
+
 }
