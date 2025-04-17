@@ -1,6 +1,7 @@
 package com.example.testversion.database
 
 import androidx.room.*
+import java.time.LocalDate
 
 @Dao
 interface BranchDao {
@@ -34,6 +35,21 @@ interface BookingDao {
 
     @Query("SELECT * FROM bookings WHERE userEmail = :userEmail")
     suspend fun getByUser(userEmail: String): List<Booking>
+
+    @Query("""
+    SELECT * FROM bookings 
+    WHERE roomId = :roomId AND 
+    NOT (checkOutDate <= :checkInDate OR checkInDate >= :checkOutDate)
+""")
+    suspend fun getConflictingBookings(
+        roomId: String,
+        checkInDate: org.threeten.bp.LocalDate,
+        checkOutDate: org.threeten.bp.LocalDate
+    ): List<Booking>
+
+    @Query("SELECT * FROM bookings WHERE roomId = :roomId")
+    suspend fun getByRoom(roomId: String): List<Booking>
+
 }
 
 @Dao
