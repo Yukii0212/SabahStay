@@ -7,10 +7,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [User::class, Branch::class, HotelRoom::class, Booking::class, Review::class],
+    entities = [User::class, Branch::class, HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class],
     version = 1,
     exportSchema = false
 )
+
 @TypeConverters(LocalDateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
@@ -18,6 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
     abstract fun bookingDao(): BookingDao
     abstract fun reviewDao(): ReviewDao
+    abstract fun finalizedBookingDao(): FinalizedBookingDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
