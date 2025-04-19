@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:background="#002B7F"
@@ -20,10 +21,10 @@
 
         <ImageView
             android:id="@+id/home_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@drawable/home_button"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
 
         <TextView
             android:id="@+id/home_text"
@@ -32,7 +33,7 @@
             android:text="Home"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,19 +48,20 @@
 
         <ImageView
             android:id="@+id/reservation_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="36dp"
             android:src="@drawable/calendar_button"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
 
         <TextView
             android:id="@+id/reservation_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reservation"
+            android:paddingRight="2dp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -74,10 +76,10 @@
 
         <ImageView
             android:id="@+id/notification_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="36dp"
             android:src="@drawable/notification_button"
-            android:tint="@android:color/white" />
+            app:tint="@android:color/white" />
 
         <TextView
             android:id="@+id/notification_text"
@@ -86,7 +88,7 @@
             android:text="Notification"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -101,10 +103,10 @@
 
         <ImageView
             android:id="@+id/account_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="36dp"
             android:src="@drawable/account_button"
-            android:tint="@android:color/white"
+            app:tint="@android:color/white"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true" />
 
@@ -115,7 +117,7 @@
             android:text="Account"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
 </LinearLayout>

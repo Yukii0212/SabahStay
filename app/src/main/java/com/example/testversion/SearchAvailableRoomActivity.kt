@@ -23,7 +23,7 @@ import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 
-class BookingActivity : AppCompatActivity() {
+class SearchAvailableRoomActivity : AppCompatActivity() {
 
     private lateinit var checkInEditText: EditText
     private lateinit var checkOutEditText: EditText
@@ -36,7 +36,7 @@ class BookingActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_booking_page)
+        setContentView(R.layout.activity_search_available_room)
 
         checkInEditText = findViewById(R.id.edit_check_in)
         checkOutEditText = findViewById(R.id.edit_check_out)
@@ -59,7 +59,7 @@ class BookingActivity : AppCompatActivity() {
             }
 
             lifecycleScope.launch {
-                val db = AppDatabase.getInstance(this@BookingActivity)
+                val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
                 val roomDao = db.roomDao()
                 val bookingDao = db.bookingDao()
 
@@ -93,7 +93,7 @@ class BookingActivity : AppCompatActivity() {
                 if (availableRooms.isEmpty()) {
                     showUnavailableDatesDialog(unavailableDates)
                 } else {
-                    Toast.makeText(this@BookingActivity, "${availableRooms.size} rooms available", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SearchAvailableRoomActivity, "${availableRooms.size} rooms available", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -259,7 +259,7 @@ class BookingActivity : AppCompatActivity() {
 
     private fun insertTestRoomData() {
         lifecycleScope.launch {
-            val db = AppDatabase.getInstance(this@BookingActivity)
+            val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
             val roomDao = db.roomDao()
             val branchDao = db.branchDao()
             val bookingDao = db.bookingDao()
@@ -383,7 +383,7 @@ class BookingActivity : AppCompatActivity() {
 
             bookings.forEach { bookingDao.insert(it) }
 
-            Toast.makeText(this@BookingActivity, "🌴 Excel test data inserted successfully!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@SearchAvailableRoomActivity, "🌴 Excel test data inserted successfully!", Toast.LENGTH_LONG).show()
         }
     }
 

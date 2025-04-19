@@ -1,12 +1,10 @@
-// PaymentDetailsActivity.kt
+// File: PaymentDetailsActivity.kt
 package com.example.testversion
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,8 +12,14 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import java.util.Calendar
-
+import androidx.lifecycle.lifecycleScope
+import com.example.testversion.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDate
+import org.threeten.bp.temporal.ChronoUnit
+import java.util.*
 
 class PaymentDetailsActivity : AppCompatActivity() {
     private lateinit var paymentOptionsLayout: ConstraintLayout
@@ -26,6 +30,14 @@ class PaymentDetailsActivity : AppCompatActivity() {
     private lateinit var centerHourglass: ImageView
     private lateinit var rightIcon: ImageView
     private var selectedPaymentMethod: String = ""
+
+    private lateinit var userEmail: String
+    private lateinit var roomId: String
+    private lateinit var checkInDate: LocalDate
+    private lateinit var checkOutDate: LocalDate
+    private var extraBed: Boolean = false
+    private var buffetAdult: Int = 0
+    private var buffetChild: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +58,33 @@ class PaymentDetailsActivity : AppCompatActivity() {
         val onlineBankingLayout = findViewById<LinearLayout>(R.id.onlineBankingLayout)
         val eWalletLayout = findViewById<LinearLayout>(R.id.eWalletLayout)
 
-        confirmButton.visibility = View.GONE // Hide confirm initially
+        confirmButton.visibility = View.GONE
+
+        // Safely extract and parse intent data
+        userEmail = intent.getStringExtra("userEmail") ?: ""
+        roomId = intent.getStringExtra("roomId") ?: ""
+        extraBed = intent.getBooleanExtra("extraBed", false)
+        buffetAdult = intent.getIntExtra("buffetAdult", 0)
+        buffetChild = intent.getIntExtra("buffetChild", 0)
+
+        val checkInStr = intent.getStringExtra("checkIn")
+        val checkOutStr = intent.getStringExtra("checkOut")
+
+        if (checkInStr == null || checkOutStr == null) {
+            Toast.makeText(this, "Missing booking dates. Returning.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+
+        try {
+            checkInDate = LocalDate.parse(checkInStr)
+            checkOutDate = LocalDate.parse(checkOutStr)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         creditCardLayout.setOnClickListener {
             selectedPaymentMethod = "credit_card"
@@ -56,59 +94,87 @@ class PaymentDetailsActivity : AppCompatActivity() {
         onlineBankingLayout.setOnClickListener {
             selectedPaymentMethod = "online_banking"
             confirmButton.visibility = View.VISIBLE
-            confirmButton.setOnClickListener {
-                processPayment()  // Only when user CONFIRMS
-            }
+            confirmButton.setOnClickListener { finalizeBooking() }
         }
 
         eWalletLayout.setOnClickListener {
             selectedPaymentMethod = "e_wallet"
             confirmButton.visibility = View.VISIBLE
-            confirmButton.setOnClickListener {
-                processPayment()  // Only when user CONFIRMS
-            }
+            confirmButton.setOnClickListener { finalizeBooking() }
         }
 
         confirmButton.setOnClickListener {
             if (selectedPaymentMethod == "credit_card") {
-                validateAndProceed()   // validate expiry + card details
+                validateAndProceed()
             } else {
-                processPayment()       // online banking, e-wallet
+                finalizeBooking()
             }
         }
-
 
         setupCardNumberFormatter()
         setupExpiryDateFormatter()
         setupKeyboardScrolling()
     }
 
-    private fun showCreditCardForm() {
-        findViewById<LinearLayout>(R.id.creditCardLayout).visibility = View.GONE
-        findViewById<LinearLayout>(R.id.onlineBankingLayout).visibility = View.GONE
-        findViewById<LinearLayout>(R.id.eWalletLayout).visibility = View.GONE
+    private fun finalizeBooking() {
+        confirmButton.text = "Processing..."
+        confirmButton.isEnabled = false
 
-        val selectedPaymentMethodLayout = findViewById<LinearLayout>(R.id.selectedPaymentMethodLayout)
-        selectedPaymentMethodLayout.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            val db = AppDatabase.getInstance(applicationContext)
+            val roomDao = db.roomDao()
+            val bookingDao = db.finalizedBookingDao()
+            val room = roomDao.getAll().find { it.roomId == roomId } ?: return@launch
+            val branch = db.branchDao().getAll().find { it.branchId == room.branchId } ?: return@launch
 
-        val selectedPaymentText = findViewById<TextView>(R.id.selectedPaymentText)
+            val nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate).toInt()
+            val basePrice = room.pricePerNight * nights
+            val extraBedCost = if (extraBed) 100.0 else 0.0
+            val buffetCost = buffetAdult * 120.0 + buffetChild * 80.0
+            val subtotal = basePrice + extraBedCost + buffetCost
+            val tax = subtotal * 0.10
+            val total = subtotal + tax
 
+            val range = when (branch.name) {
+                "KK City" -> 10_000_000L to 30_000_000L
+                "Kundasang" -> 40_000_000L to 60_000_000L
+                else -> 70_000_000L to 90_000_000L
+            }
 
-        selectedPaymentText.text = "Credit Card"
+            val lastNum = withContext(Dispatchers.IO) {
+                bookingDao.getMaxBookingNumberInRange(range.first, range.second) ?: (range.first - 1)
+            }
 
+            val bookingNumber = lastNum + 1
 
-        // Fade in the credit card form
-        creditCardForm.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-            animate()
-                .alpha(1f)
-                .setDuration(500)
-                .setInterpolator(DecelerateInterpolator())
-                .start()
+            val finalized = FinalizedBooking(
+                bookingNumber = bookingNumber,
+                userEmail = userEmail,
+                roomId = roomId,
+                roomType = room.roomType,
+                branchName = branch.name,
+                checkInDate = checkInDate,
+                checkOutDate = checkOutDate,
+                nights = nights,
+                basePrice = basePrice,
+                extraBed = extraBed,
+                lunchBuffetAdult = buffetAdult,
+                lunchBuffetChild = buffetChild,
+                tax = tax,
+                totalPrice = total,
+                paymentMethod = selectedPaymentMethod,
+                createdAt = LocalDate.now()
+            )
+
+            bookingDao.insert(finalized)
+            roomDao.insert(room.copy(isAvailable = false))
+
+            val intent = Intent(this@PaymentDetailsActivity, BookingSuccessActivity::class.java)
+            intent.putExtra("bookingNumber", bookingNumber)
+            intent.putExtra("totalPrice", total)
+            startActivity(intent)
+            finish()
         }
-
-        confirmButton.visibility = View.VISIBLE // Show confirm button when needed
     }
 
     private fun validateAndProceed() {
@@ -135,10 +201,17 @@ class PaymentDetailsActivity : AppCompatActivity() {
         }
 
         animateProgressBar()
-        processPayment()
+        finalizeBooking()
     }
 
-
+    private fun animateProgressBar() {
+        centerHourglass.visibility = View.VISIBLE
+        val rotation = ObjectAnimator.ofFloat(centerHourglass, View.ROTATION, 0f, 360f)
+        rotation.duration = 1000
+        rotation.repeatCount = ObjectAnimator.INFINITE
+        rotation.interpolator = DecelerateInterpolator()
+        rotation.start()
+    }
 
     private fun isExpired(expiryDate: String): Boolean {
         val parts = expiryDate.split("/")
@@ -156,112 +229,65 @@ class PaymentDetailsActivity : AppCompatActivity() {
         return expYear + 2000 < currentYear || (expYear + 2000 == currentYear && expMonth < currentMonth)
     }
 
+    private fun showCreditCardForm() {
+        findViewById<LinearLayout>(R.id.creditCardLayout).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.onlineBankingLayout).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.eWalletLayout).visibility = View.GONE
 
+        val selectedPaymentMethodLayout = findViewById<LinearLayout>(R.id.selectedPaymentMethodLayout)
+        selectedPaymentMethodLayout.visibility = View.VISIBLE
 
-    private fun animateProgressBar() {
-        centerHourglass.setImageResource(R.drawable.ic_checking)
-        rightIcon.setImageResource(R.drawable.ic_checking)
+        val selectedPaymentText = findViewById<TextView>(R.id.selectedPaymentText)
+        selectedPaymentText.text = "Credit Card"
 
-        val scaleUp = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.2f, 1f)
-        val scaleYUp = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.2f, 1f)
-
-        ObjectAnimator.ofPropertyValuesHolder(centerHourglass, scaleUp, scaleYUp).apply {
-            duration = 500
-            interpolator = DecelerateInterpolator()
-            start()
+        creditCardForm.apply {
+            alpha = 0f
+            visibility = View.VISIBLE
+            animate().alpha(1f).setDuration(500).setInterpolator(DecelerateInterpolator()).start()
         }
 
-        ObjectAnimator.ofPropertyValuesHolder(rightIcon, scaleUp, scaleYUp).apply {
-            duration = 500
-            interpolator = DecelerateInterpolator()
-            start()
-        }
-
-        // Animate the lines color
-        val stepProgressBar = findViewById<LinearLayout>(R.id.stepProgressBar)
-        val leftLine = stepProgressBar.getChildAt(0)
-        val rightLine = stepProgressBar.getChildAt(2)
-
-        ObjectAnimator.ofArgb(leftLine, "backgroundColor", 0xFFFFFFFF.toInt(), 0xFF4CAF50.toInt()).apply {
-            duration = 500
-            start()
-        }
-
-        ObjectAnimator.ofArgb(rightLine, "backgroundColor", 0xFFFFFFFF.toInt(), 0xFF4CAF50.toInt()).apply {
-            duration = 500
-            start()
-        }
-    }
-
-    private fun processPayment() {
-        confirmButton.text = "Processing..."
-        confirmButton.isEnabled = false
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, PendingPaymentActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 2000)
+        confirmButton.visibility = View.VISIBLE
     }
 
     private fun setupCardNumberFormatter() {
         cardNumberEditText.addTextChangedListener(object : TextWatcher {
-            private var isFormatting = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            private var isFormatting: Boolean = false
             override fun afterTextChanged(s: Editable?) {
                 if (isFormatting) return
                 isFormatting = true
-                val digitsOnly = s.toString().replace("\\D".toRegex(), "")
-                val formatted = StringBuilder()
-                for (i in digitsOnly.indices) {
-                    if (i > 0 && i % 4 == 0) formatted.append(" ")
-                    formatted.append(digitsOnly[i])
-                }
-                cardNumberEditText.setText(formatted.toString())
+                val formatted = s.toString().replace(" ", "").chunked(4).joinToString(" ")
+                cardNumberEditText.setText(formatted)
                 cardNumberEditText.setSelection(formatted.length)
                 isFormatting = false
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
     private fun setupExpiryDateFormatter() {
         expiryDateEditText.addTextChangedListener(object : TextWatcher {
             private var isFormatting = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 if (isFormatting) return
                 isFormatting = true
-                val digitsOnly = s.toString().replace("\\D".toRegex(), "")
+                val clean = s.toString().replace("/", "")
                 val formatted = when {
-                    digitsOnly.length >= 3 -> digitsOnly.substring(0, 2) + "/" + digitsOnly.substring(2)
-                    else -> digitsOnly
+                    clean.length >= 3 -> clean.substring(0, 2) + "/" + clean.substring(2)
+                    else -> clean
                 }
                 expiryDateEditText.setText(formatted)
                 expiryDateEditText.setSelection(formatted.length)
                 isFormatting = false
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
     private fun setupKeyboardScrolling() {
-        val scrollView = findViewById<ScrollView>(R.id.scrollView)
-
-        val cardHolderNameEditText = findViewById<EditText>(R.id.cardHolderName)
-        val cvvEditText = findViewById<EditText>(R.id.cvv)
-
-        val editTextList = listOf(cardNumberEditText, cardHolderNameEditText, expiryDateEditText, cvvEditText)
-
-        editTextList.forEach { editText ->
-            editText.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    scrollView.postDelayed({
-                        scrollView.smoothScrollTo(0, editText.top - 100)
-                    }, 200)
-                }
-            }
-        }
+        // Optional: handle scrolling to avoid keyboard overlap
     }
-
 }
