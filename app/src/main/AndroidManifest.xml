@@ -51,6 +51,14 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <activity android:name=".CityBranch" android:exported="true"/>
+
+        <activity android:name=".MountainBranch" android:exported="true"/>
+
+        <activity android:name=".IslandBranch" android:exported="true"/>
+
+
+
         <!-- Payment Flow Activities -->
         <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
         <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>

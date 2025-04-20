@@ -2,10 +2,15 @@ package com.example.testversion
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.util.Log
+
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.google.firebase.auth.FirebaseAuth
 
 class BranchOverview : AppCompatActivity() {
@@ -42,5 +47,23 @@ class BranchOverview : AppCompatActivity() {
             Toast.makeText(this, "Booking clicked", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, SearchAvailableRoomActivity::class.java))
         }
+
+        // Click listeners for the 3 cards
+        val mountainCard = findViewById<CardView>(R.id.mountainCard)
+        val islandCard = findViewById<CardView>(R.id.islandCard)
+        val cityCard = findViewById<CardView>(R.id.cityCard)
+
+        mountainCard.setOnClickListener {
+            startActivity(Intent(this, MountainBranch::class.java))
+        }
+
+        islandCard.setOnClickListener {
+            startActivity(Intent(this, IslandBranch::class.java))
+        }
+
+        cityCard.setOnClickListener {
+            startActivity(Intent(this, CityBranch::class.java))
+        }
+
     }
 }
