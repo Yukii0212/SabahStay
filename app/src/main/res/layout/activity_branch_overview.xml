@@ -5,102 +5,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".BranchOverview">
 
-    <include
-        android:id="@+id/header"
-        layout="@layout/header"
+    <!-- Scrollable content area -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/footer_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:id="@+id/fakeMainPage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fake Main Page"
-        android:textSize="22sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Login"
-        android:textSize="18sp"
-        android:padding="10dp"
-        android:backgroundTint="@color/grey"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/fakeMainPage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <include
+                layout="@layout/header" />
 
-    <Button
-        android:id="@+id/profileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Go to Profile"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:backgroundTint="@color/pink_700"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/mountainCard"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/mountainview"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MOUNTAIN"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="30sp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="16dp"/>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-        app:layout_constraintTop_toBottomOf="@id/loginButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <!-- Island -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/islandCard"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/islandview"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ISLAND"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="30sp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="16dp"/>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/paymentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:backgroundTint="@color/blue_500"
-        android:padding="10dp"
-        android:text="Go to payment bah"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fakeMainPage" />
+            <!-- City -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cityCard"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/cityview"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CITY"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="30sp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="16dp"/>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
+            <!-- Buttons -->
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to Login"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/grey"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="16dp" />
 
+            <Button
+                android:id="@+id/profileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to Profile"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/pink_700"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/bookingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="216dp"
-        android:backgroundTint="@color/purple_400"
-        android:padding="10dp"
-        android:text="Go to booking lah"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fakeMainPage" />
+            <Button
+                android:id="@+id/bookingButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to booking lah"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/purple_400"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
+    <!-- Fixed Footer -->
     <include
         android:id="@+id/footer_container"
         layout="@layout/footer_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="500dp"
-        android:padding="10dp"
-        android:text="Go to payment"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:backgroundTint="@color/blue_500"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fakeMainPage" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
