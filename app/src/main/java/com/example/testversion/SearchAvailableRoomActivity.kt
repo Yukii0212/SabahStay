@@ -1,4 +1,3 @@
-// File: BookingActivity.kt
 package com.example.testversion
 
 import android.app.DatePickerDialog
@@ -28,10 +27,14 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
     private lateinit var checkInEditText: EditText
     private lateinit var checkOutEditText: EditText
     private lateinit var roomGuestEditText: EditText
+    private lateinit var roomTypeEditText: EditText
+    private lateinit var branchEditText: EditText
     private lateinit var searchButton: Button
 
     private var checkInDateMillis: Long? = null
     private var checkOutDateMillis: Long? = null
+    private var selectedBranchId: String? = null
+    private var selectedRoomType: String? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +44,22 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         checkInEditText = findViewById(R.id.edit_check_in)
         checkOutEditText = findViewById(R.id.edit_check_out)
         roomGuestEditText = findViewById(R.id.edit_room_guest)
+        roomTypeEditText = findViewById(R.id.edit_room_type)
+        branchEditText = findViewById(R.id.edit_branch)
         searchButton = findViewById(R.id.button_search)
+
+        selectedBranchId = intent.getStringExtra("branchId")
+        if (selectedBranchId == null) {
+            Toast.makeText(this, "Missing branch selection", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }
         roomGuestEditText.setOnClickListener { showRoomGuestDialog() }
+        roomTypeEditText.setOnClickListener { showRoomTypeDialog() }
+        branchEditText.setOnClickListener { showBranchDialog() }
 
         searchButton.setOnClickListener {
             if (checkInDateMillis == null || checkOutDateMillis == null) {
@@ -68,7 +82,7 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 val checkOut = Instant.ofEpochMilli(checkOutDateMillis!!)
                     .atZone(ZoneId.systemDefault()).toLocalDate()
 
-                val allRooms = roomDao.getAll()
+                val allRooms = roomDao.getAll().filter { it.roomType == selectedRoomType }
                 val availableRooms = mutableListOf<HotelRoom>()
                 val unavailableDates = mutableSetOf<LocalDate>()
 
@@ -98,6 +112,55 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
             }
         }
         insertTestRoomData()
+    }
+
+    private fun showRoomTypeDialog() {
+        lifecycleScope.launch {
+            val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
+            val roomTypes = db.roomDao().getAll()
+                .map { it.roomType }
+                .distinct()
+
+            if (roomTypes.isEmpty()) {
+                Toast.makeText(this@SearchAvailableRoomActivity, "No room types available", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            AlertDialog.Builder(this@SearchAvailableRoomActivity)
+                .setTitle("Select Room Type")
+                .setSingleChoiceItems(roomTypes.toTypedArray(), roomTypes.indexOf(selectedRoomType)) { dialog, which ->
+                    selectedRoomType = roomTypes[which]
+                    roomTypeEditText.setText(selectedRoomType)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+    }
+
+    private fun showBranchDialog() {
+        lifecycleScope.launch {
+            val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
+            val branches = db.branchDao().getAllBranches()
+
+            if (branches.isEmpty()) {
+                Toast.makeText(this@SearchAvailableRoomActivity, "No branches available", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            val branchNames = branches.map { it.name }
+
+            AlertDialog.Builder(this@SearchAvailableRoomActivity)
+                .setTitle("Select Branch")
+                .setSingleChoiceItems(branchNames.toTypedArray(), -1) { dialog, which ->
+                    val selectedBranch = branches[which]
+                    selectedBranchId = selectedBranch.branchId
+                    branchEditText.setText(selectedBranch.name)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     private fun showUnavailableDatesDialog(conflictingDates: Set<LocalDate>) {
