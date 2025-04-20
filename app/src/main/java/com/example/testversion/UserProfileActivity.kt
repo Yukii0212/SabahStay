@@ -140,20 +140,20 @@ class UserProfileActivity : AppCompatActivity() {
         val savedEmail = sharedPreferences.getString("email", "") ?: ""
         var savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
 
-        // ✅ Load user details from Room Database & update UI in real-time
+        //Load user details from Room Database & update UI in real-time
         val userDao = UserDatabase.getDatabase(this).userDao()
         lifecycleScope.launch(Dispatchers.IO) {
             val localUser = userDao.getUserByEmail(user.email ?: "")
 
             withContext(Dispatchers.Main) {
                 if (localUser != null) {
-                    // ✅ Load values from Room Database
+                    //Load values from Room Database
                     savedNickname = localUser.nickname.ifEmpty { savedNickname }
                     savedProfilePicturePath = localUser.profilePicturePath.ifEmpty { savedProfilePicturePath }
                     savedPrefix = localUser.prefix.ifEmpty { savedPrefix }
                     savedGender = localUser.gender.ifEmpty { savedGender }
 
-                    // ✅ Save updated values to SharedPreferences for consistency
+                    //Save updated values to SharedPreferences for consistency
                     sharedPreferences.edit()
                         .putString("nickname", savedNickname)
                         .putString("profilePicturePath", savedProfilePicturePath)
@@ -162,13 +162,13 @@ class UserProfileActivity : AppCompatActivity() {
                         .apply()
                 }
 
-                // ✅ Update UI elements immediately
+                //Update UI elements immediately
                 nickname.text = savedNickname.ifEmpty { "Not set" }
                 fullName.text = if (savedFullName.isNotEmpty()) savedFullName else "Not set"
                 gender.text = savedGender
                 prefix?.text = if (savedPrefix == "None") "" else savedPrefix
 
-                // ✅ Display Name Priority: Nickname > Full Name > "Guest User"
+                //Display Name Priority: Nickname > Full Name > "Guest User"
                 val displayName = savedNickname.ifEmpty { savedFullName.ifEmpty { "Guest User" } }
                 usernameDisplay.text = if (user != null) {
                     if (savedPrefix == "None") "Hello, $displayName" else "Hello, $savedPrefix $displayName"
@@ -176,7 +176,7 @@ class UserProfileActivity : AppCompatActivity() {
                     "Hello, Guest User"
                 }
 
-                // ✅ Ensure Profile Picture Updates Instantly
+                //Ensure Profile Picture Updates Instantly
                 updateProfilePicture(savedProfilePicturePath, savedGender)
             }
 
@@ -189,7 +189,7 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Assign Default Prefix if None Exists
+        //Assign Default Prefix if None Exists
         if (savedPrefix.isEmpty() || savedPrefix == "Other") {
             savedPrefix = when (savedGender) {
                 "Male" -> "Mr."
@@ -213,7 +213,7 @@ class UserProfileActivity : AppCompatActivity() {
         phone.text = savedPhone.ifEmpty { "Not provided" }
         email.text = savedEmail.ifEmpty { "Not provided" }
 
-        // ✅ Show/Hide login/logout buttons based on authentication status
+        //Show/Hide login/logout buttons based on authentication status
         if (user != null) {
             loginButton.visibility = View.GONE
             logoutButton.visibility = View.VISIBLE
