@@ -78,8 +78,6 @@
         android:textColorHint="#A0A0A0"/>
 
     <!-- Password Label -->
-
-    <!-- Password Input -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,6 +87,7 @@
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
+    <!-- Password Input -->
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
