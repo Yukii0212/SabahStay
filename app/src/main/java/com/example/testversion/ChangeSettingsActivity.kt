@@ -116,7 +116,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        loadUserData() // ✅ Load user data
+        loadUserData() //Load user data
 
         discardButton.setOnClickListener { finish() }
         confirmButton.setOnClickListener { saveChanges() }
@@ -381,7 +381,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
 
         val newPosition = prefixOptions.indexOf(newPrefix)
         if (prefixSpinner.selectedItemPosition != newPosition) {
-            prefixSpinner.setSelection(newPosition, false) // ✅ Prevent unwanted triggers
+            prefixSpinner.setSelection(newPosition, false) //Prevent unwanted triggers
         }
     }
 
