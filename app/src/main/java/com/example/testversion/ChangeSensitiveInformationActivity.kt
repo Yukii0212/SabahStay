@@ -100,7 +100,7 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
             if (hasFocus) setupKeyboardScrolling(findViewById(R.id.scrollView), confirmNewPassword)
         }
 
-        // ✅ Show Password Toggle
+        //Show Password Toggle
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             val inputType = if (isChecked) {
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
@@ -110,7 +110,7 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
 
             val typeface = newPassword.typeface
 
-            // ✅ Apply to all password fields
+            //Apply to all password fields
             currentPassword.inputType = inputType
             newPassword.inputType = inputType
             confirmNewPassword.inputType = inputType
@@ -137,14 +137,14 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
                     val fullPhone = localUser.phone
                     originalPhone = fullPhone
 
-                    // ✅ Extract the country code and phone number separately
+                    //Extract the country code and phone number separately
                     val countryCode = fullPhone.takeWhile { it.isDigit() || it == '+' }
                     val phoneNumberWithoutCode = fullPhone.removePrefix(countryCode).trim()
 
-                    // ✅ Set country code in CountryCodePicker
+                    //Set country code in CountryCodePicker
                     countryCodePicker.setCountryForPhoneCode(countryCode.replace("+", "").toIntOrNull() ?: 60)
 
-                    // ✅ Set only the phone number in EditText
+                    //Set only the phone number in EditText
                     phoneInput.setText(phoneNumberWithoutCode)
                 }
             }
@@ -176,19 +176,19 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
         val newPass = newPassword.text.toString().trim()
         val confirmPass = confirmNewPassword.text.toString().trim()
 
-        // ✅ No changes made
+        //No changes made
         if (newPhone == originalPhone && newPass.isEmpty()) {
             Toast.makeText(this, "No changes detected.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // ✅ Require current password ONLY IF changes are being made
+        //Require current password ONLY IF changes are being made
         if ((newPhone != originalPhone || newPass.isNotEmpty()) && oldPassword.isEmpty()) {
             Toast.makeText(this, "Current password is required to make changes.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // ✅ Validate new password if changed
+        //Validate new password if changed
         if (newPass.isNotEmpty() || confirmPass.isNotEmpty()) {
             if (!validatePassword(newPass)) {
                 Toast.makeText(this, "New password does not meet requirements.", Toast.LENGTH_SHORT).show()
@@ -230,10 +230,10 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val userDao = UserDatabase.getDatabase(this@ChangeSensitiveInformationActivity).userDao()
 
-            // ✅ Ensure phone number is saved with the country code
+            //Ensure phone number is saved with the country code
             val fullPhone = "+" + countryCodePicker.selectedCountryCode + " " + newPhone.trim()
 
-            // ✅ Update phone number in Room Database
+            //Update phone number in Room Database
             if (newPhone != originalPhone) {
                 userDao.updatePhone(user.email!!, fullPhone)
                 val updatedUser = userDao.getUserByEmail(user.email!!)
@@ -252,7 +252,7 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
                 }
             }
 
-            // ✅ Update password
+            //Update password
             if (newPassword.isNotEmpty()) {
                 user.updatePassword(newPassword).addOnCompleteListener {
                     if (it.isSuccessful) {
