@@ -9,6 +9,9 @@ interface BranchDao {
     suspend fun insert(branch: Branch)
 
     @Query("SELECT * FROM branches")
+    suspend fun getAllBranches(): List<Branch>
+
+    @Query("SELECT * FROM branches")
     suspend fun getAll(): List<Branch>
 }
 
