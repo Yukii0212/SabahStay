@@ -147,8 +147,24 @@
                 android:backgroundTint="@color/purple_400"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="16dp" />
+          
+              <Button
+        android:id="@+id/paymentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue_500"
+        android:padding="10dp"
+        android:text="Go to payment bah"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/profileButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 
     <!-- Fixed Footer -->
     <include

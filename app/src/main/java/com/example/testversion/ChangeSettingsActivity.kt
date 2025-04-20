@@ -116,7 +116,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        loadUserData() // ✅ Load user data
+        loadUserData() //Load user data
 
         discardButton.setOnClickListener { finish() }
         confirmButton.setOnClickListener { saveChanges() }
@@ -132,27 +132,27 @@ class ChangeSettingsActivity : AppCompatActivity() {
         var savedPrefix = sharedPreferences.getString("prefix", "None") ?: "None"
         var savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
 
-        // ✅ Restore manual prefix selection flag
+        //Restore manual prefix selection flag
         userManuallyChangedPrefix = sharedPreferences.getBoolean("manualPrefixSet", false)
 
-        // ✅ Store the original profile picture path before allowing changes
+        //Store the original profile picture path before allowing changes
         originalProfilePicturePath = savedProfilePicturePath
         profilePicturePath = savedProfilePicturePath
 
-        // ✅ Load user details from Room Database & update UI in real-time
+        //Load user details from Room Database & update UI in real-time
         val userDao = UserDatabase.getDatabase(this).userDao()
         lifecycleScope.launch(Dispatchers.IO) {
             val localUser = userDao.getUserByEmail(user.email ?: "")
 
             if (localUser != null) {
                 withContext(Dispatchers.Main) {
-                    // ✅ Load values from Room Database
+                    //Load values from Room Database
                     savedNickname = localUser.nickname.ifEmpty { savedNickname }
                     savedProfilePicturePath = localUser.profilePicturePath.ifEmpty { savedProfilePicturePath }
                     savedPrefix = localUser.prefix.ifEmpty { savedPrefix }
                     savedGender = localUser.gender.ifEmpty { savedGender }
 
-                    // ✅ Save updated values to SharedPreferences for consistency
+                    //Save updated values to SharedPreferences for consistency
                     sharedPreferences.edit()
                         .putString("nickname", savedNickname)
                         .putString("profilePicturePath", savedProfilePicturePath)
@@ -160,7 +160,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
                         .putString("gender", savedGender)
                         .apply()
 
-                    // ✅ Update UI elements immediately
+                    //Update UI elements immediately
                     nickname.setText(savedNickname)
                     fullName.setText(savedFullName)
                 }
@@ -230,7 +230,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
                 editor.putBoolean("manualPrefixSet", true)
                 editor.apply()
 
-                // ✅ Send result back to UserProfileActivity to trigger refresh
+                //Send result back to UserProfileActivity to trigger refresh
                 val resultIntent = Intent()
                 resultIntent.putExtra("profileUpdated", true)
                 setResult(Activity.RESULT_OK, resultIntent)
@@ -287,14 +287,14 @@ class ChangeSettingsActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             val imageUri = data?.data
             if (imageUri != null) {
-                showCropDialog(imageUri) // ✅ Ask if user wants to crop or not
+                showCropDialog(imageUri) //Ask if user wants to crop or not
             }
         } else if (requestCode == REQUEST_IMAGE_CROP && resultCode == Activity.RESULT_OK) {
             val extras = data?.extras
             val croppedBitmap = extras?.getParcelable<Bitmap>("data")
 
             if (croppedBitmap != null) {
-                applyProfilePicture(croppedBitmap) // ✅ Apply before navigation
+                applyProfilePicture(croppedBitmap) //Apply before navigation
             } else {
                 val croppedImageUri = data?.data
                 if (croppedImageUri != null) {
@@ -325,21 +325,21 @@ class ChangeSettingsActivity : AppCompatActivity() {
             profilePicture.setImageBitmap(bitmap)
         }
 
-        // ✅ Save cropped image to internal storage
+        //Save cropped image to internal storage
         val imagePath = saveCroppedImageToLocal(bitmap)
         profilePicturePath = imagePath
 
-        // ✅ Save path persistently
+        //Save path persistently
         sharedPreferences.edit().putString("profilePicturePath", imagePath).apply()
 
         Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show()
 
-        // ✅ Ensure the result is set before redirection
+        //Ensure the result is set before redirection
         val resultIntent = Intent()
         resultIntent.putExtra("profilePicturePath", imagePath)
         setResult(Activity.RESULT_OK, resultIntent)
 
-        finish() // ✅ Redirect AFTER saving
+        finish() //Redirect AFTER saving
     }
 
     private fun startCrop(imageUri: Uri) {
@@ -381,7 +381,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
 
         val newPosition = prefixOptions.indexOf(newPrefix)
         if (prefixSpinner.selectedItemPosition != newPosition) {
-            prefixSpinner.setSelection(newPosition, false) // ✅ Prevent unwanted triggers
+            prefixSpinner.setSelection(newPosition, false) //Prevent unwanted triggers
         }
     }
 
@@ -391,13 +391,13 @@ class ChangeSettingsActivity : AppCompatActivity() {
         val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, prefixOptions) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent) as TextView
-                view.setTextColor(Color.WHITE) // ✅ Ensure selected item is always white
+                view.setTextColor(Color.WHITE) //Ensure selected item is always white
                 return view
             }
 
             override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getDropDownView(position, convertView, parent) as TextView
-                view.setTextColor(Color.WHITE) // ✅ Ensure dropdown items are white
+                view.setTextColor(Color.WHITE) //Ensure dropdown items are white
                 return view
             }
         }

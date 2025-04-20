@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.util.Log
+
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -19,14 +21,14 @@ class BranchOverview : AppCompatActivity() {
 
         val loginButton = findViewById<Button>(R.id.loginButton)
         val profileButton = findViewById<Button>(R.id.profileButton)
+        val paymentButton = findViewById<Button>(R.id.paymentButton)
         val bookingButton = findViewById<Button>(R.id.bookingButton)
 
-        val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
-        if (isLoggedIn) {
-            loginButton.visibility = View.GONE
+        if (currentUser != null) {
+            loginButton.visibility = Button.GONE
         } else {
-            loginButton.visibility = View.VISIBLE
             loginButton.setOnClickListener {
                 startActivity(Intent(this, LoginActivity::class.java))
             }
@@ -36,8 +38,14 @@ class BranchOverview : AppCompatActivity() {
             startActivity(Intent(this, UserProfileActivity::class.java))
         }
 
+        paymentButton.setOnClickListener {
+            startActivity(Intent(this, PaymentDetailsActivity::class.java))
+        }
+
         bookingButton.setOnClickListener {
-            startActivity(Intent(this, BookingActivity::class.java))
+            Log.d("BranchOverview", "Booking button clicked")
+            Toast.makeText(this, "Booking clicked", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, SearchAvailableRoomActivity::class.java))
         }
 
         // Click listeners for the 3 cards
@@ -56,5 +64,6 @@ class BranchOverview : AppCompatActivity() {
         cityCard.setOnClickListener {
             startActivity(Intent(this, CityBranch::class.java))
         }
+
     }
 }
