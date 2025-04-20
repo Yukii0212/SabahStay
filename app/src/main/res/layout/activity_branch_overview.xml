@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/purple_400"
         android:padding="10dp"
-        android:text="Go to booking lah"
+        android:text="Go to search lah"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/paymentButton"

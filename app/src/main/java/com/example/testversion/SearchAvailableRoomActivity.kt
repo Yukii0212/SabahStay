@@ -49,11 +49,17 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         searchButton = findViewById(R.id.button_search)
 
         selectedBranchId = intent.getStringExtra("branchId")
+
         if (selectedBranchId == null) {
-            Toast.makeText(this, "Missing branch selection", Toast.LENGTH_SHORT).show()
-            finish()
-            return
+            // ✅ TEMP fallback branch & room type
+            selectedBranchId = "branch-excel"
+            selectedRoomType = "Deluxe"
+            branchEditText.setText("Excel Island Branch")
+            roomTypeEditText.setText("Deluxe")
+            Toast.makeText(this, "⚠️ Using fallback branch and room type for testing", Toast.LENGTH_SHORT).show()
         }
+
+
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }
