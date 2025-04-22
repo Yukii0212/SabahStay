@@ -8,13 +8,23 @@
     android:background="@color/white"
     tools:context=".BranchOverview">
 
-    <!-- Scrollable content area -->
+    <!-- Fixed Header -->
+    <include
+        android:id="@+id/header_container"
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_container"
         app:layout_constraintBottom_toTopOf="@id/footer_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -25,9 +35,7 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
-            <include
-                layout="@layout/header" />
-
+            <!-- Cards Section -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/mountainCard"
                 android:layout_width="match_parent"
@@ -55,7 +63,6 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Island -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/islandCard"
                 android:layout_width="match_parent"
@@ -83,7 +90,6 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- City -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cityCard"
                 android:layout_width="match_parent"
@@ -147,24 +153,21 @@
                 android:backgroundTint="@color/purple_400"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="16dp" />
-          
-              <Button
-        android:id="@+id/paymentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/blue_500"
-        android:padding="10dp"
-        android:text="Go to payment bah"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/profileButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/paymentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue_500"
+                android:padding="10dp"
+                android:text="Go to payment bah"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 
     <!-- Fixed Footer -->
     <include
