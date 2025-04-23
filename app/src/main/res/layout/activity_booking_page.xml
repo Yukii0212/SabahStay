@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/booking_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/booking_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/header"
+            android:id="@+id/header_view"
+            android:clickable="false"
+            android:focusable="false" />
+
+        <ImageView
+            android:id="@+id/mountain_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bookingmountain"
+            android:alpha="0.6" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/form_background"
+            android:padding="20dp"
+            android:layout_margin="16dp"
+            android:elevation="6dp">
+
+            <TextView
+                android:id="@+id/booking_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Booking Details"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#002B7F"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_name"
+                style="@style/EditBox"
+                android:hint="Name" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_email"
+                style="@style/EditBox"
+                android:hint="Email" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_phone"
+                style="@style/EditBox"
+                android:hint="Phone Number" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Branch"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/spinner_branch"
+                style="@style/EditBox"
+                android:hint="Branch"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Type"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/spinner_room_type"
+                style="@style/EditBox"
+                android:hint="Room Type"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check-In Date"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_check_in"
+                style="@style/EditBox"
+                android:hint="Check-in"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check-Out Date"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_check_out"
+                style="@style/EditBox"
+                android:hint="Check-out"
+                android:focusable="false"
+                android:clickable="false"
+                android:cursorVisible="false" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Rooms"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_room_count"
+                style="@style/EditBox"
+                android:inputType="number"
+                android:hint="Number of Rooms" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Adults"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_adult_count"
+                style="@style/EditBox"
+                android:inputType="number"
+                android:hint="Number of Adults" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Children"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edit_child_count"
+                style="@style/EditBox"
+                android:inputType="number"
+                android:hint="Number of Children" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox_extra_bed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Add extra single bed (RM 100/night)"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <CheckBox
+                android:id="@+id/checkbox_buffet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Add lunch buffet (RM 120/adult, RM 80/child per day)"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/text_cost_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:textColor="#333"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:lineSpacingExtra="4dp" />
+
+            <Button
+                android:id="@+id/button_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Book Now"
+                android:textAllCaps="true"
+                android:background="#002B7F"
+                android:textColor="#FFFFFF"
+                android:clickable="true"
+                android:focusable="true"
+                android:translationZ="10dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
