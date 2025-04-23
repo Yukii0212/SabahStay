@@ -20,8 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:translationY="150dp"/>
 
-        <!-- Title Text (Moved Down Slightly) -->
-        <!-- Title Text (Moved Down to Center) -->
+        <!-- Title Text -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
@@ -36,7 +35,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="-20dp"/> <!-- Adjusted for better positioning -->
 
-        <!-- Subtitle Text (Moved Down Below Title) -->
+        <!-- Subtitle Text -->
         <TextView
             android:id="@+id/subtitleText"
             android:layout_width="wrap_content"
@@ -52,7 +51,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Clouds (Placed Above Mountain) -->
+    <!-- Clouds -->
     <ImageView
         android:id="@+id/cloud1"
         android:layout_width="300dp"

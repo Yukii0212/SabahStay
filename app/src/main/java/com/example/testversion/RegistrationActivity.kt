@@ -267,9 +267,9 @@ class RegistrationActivity : AppCompatActivity() {
         }
 
         if (genderRadioGroup.checkedRadioButtonId != -1) {
-            genderRadioGroup.setBackgroundResource(0) // ✅ Reset only if valid
+            genderRadioGroup.setBackgroundResource(0) //Reset only if valid
         } else if (hasAttemptedRegister) {
-            genderRadioGroup.setBackgroundResource(R.drawable.input_error_border) // ❌ Keep red if still invalid
+            genderRadioGroup.setBackgroundResource(R.drawable.input_error_border) //Keep red if still invalid
         }
 
     }
@@ -403,13 +403,13 @@ class RegistrationActivity : AppCompatActivity() {
                                 if (verifyTask.isSuccessful) {
                                     val userDao = UserDatabase.getDatabase(this@RegistrationActivity).userDao()
 
-                                    // ✅ Delete old local user data (if any) before inserting new data
+                                    //Delete old local user data (if any) before inserting new data
                                     val existingUser = userDao.getUserByEmail(email)
                                     if (existingUser != null) {
                                         userDao.delete(existingUser)
                                     }
 
-                                    // ✅ Save user data in local Room Database
+                                    //Save user data in local Room Database
                                     saveUserToDatabase(name, passport, phone, gender, email, password, defaultPrefix)
 
                                     val intent = Intent(this@RegistrationActivity, EmailVerificationActivity::class.java)

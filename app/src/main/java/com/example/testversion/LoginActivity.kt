@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     if (user != null && user.isEmailVerified) {
-                        // ✅ Load user profile from local database
+                        //Load user profile from local database
                         loadUserDataFromDatabase(user.email!!)
                     } else {
                         showToast("Please verify your email before logging in.")
