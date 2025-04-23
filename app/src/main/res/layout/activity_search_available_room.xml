@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/mountain_image"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:src="@drawable/bookingmountain"
             android:alpha="0.6" />
@@ -53,6 +53,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:hint="Select branch"
+                android:textSize="18dp"
+                android:padding="10dp"
                 android:background="@drawable/edittext_background"
                 android:focusable="false"
                 android:clickable="true"
@@ -68,6 +70,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:hint="Check-in"
+                android:textSize="18dp"
+                android:padding="10dp"
                 android:background="@drawable/edittext_background"
                 android:focusable="false"
                 android:clickable="true"
@@ -83,6 +87,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:hint="Check-out"
+                android:textSize="18dp"
+                android:padding="10dp"
                 android:background="@drawable/edittext_background"
                 android:focusable="false"
                 android:clickable="true"
@@ -98,6 +104,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:hint="Room type"
+                android:textSize="18dp"
+                android:padding="10dp"
                 android:background="@drawable/edittext_background"
                 android:focusable="false"
                 android:clickable="true"
@@ -113,6 +121,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:hint="Room and guest"
+                android:textSize="18dp"
+                android:padding="10dp"
                 android:background="@drawable/edittext_background"
                 android:focusable="false"
                 android:clickable="true"
@@ -131,6 +141,7 @@
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:elevation="4dp" />
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

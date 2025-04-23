@@ -3,6 +3,7 @@ package com.example.testversion
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -18,6 +19,7 @@ import com.example.testversion.database.HotelRoom
 import com.example.testversion.database.User
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import android.content.Intent
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
@@ -30,6 +32,7 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
     private lateinit var roomTypeEditText: EditText
     private lateinit var branchEditText: EditText
     private lateinit var searchButton: Button
+    private lateinit var bookPromptButton: Button
 
     private var checkInDateMillis: Long? = null
     private var checkOutDateMillis: Long? = null
@@ -58,7 +61,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
             roomTypeEditText.setText("Deluxe")
             Toast.makeText(this, "⚠️ Using fallback branch and room type for testing", Toast.LENGTH_SHORT).show()
         }
-
 
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
@@ -112,12 +114,51 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
                 if (availableRooms.isEmpty()) {
                     showUnavailableDatesDialog(unavailableDates)
+                    bookPromptButton.visibility = View.GONE
                 } else {
-                    Toast.makeText(this@SearchAvailableRoomActivity, "${availableRooms.size} rooms available", Toast.LENGTH_SHORT).show()
+                    AlertDialog.Builder(this@SearchAvailableRoomActivity)
+                        .setTitle("Rooms Available")
+                        .setMessage("${availableRooms.size} room(s) are available for your selected dates.")
+                        .setPositiveButton("OK") { _, _ ->
+                            AlertDialog.Builder(this@SearchAvailableRoomActivity)
+                                .setTitle("Book Now?")
+                                .setMessage("Do you want to book a room?")
+                                .setPositiveButton("Continue for Booking") { _, _ ->
+                                    val (roomCount, adults, children) = parseRoomGuestInfo(roomGuestEditText.text.toString())
+
+                                    val intent = Intent(this@SearchAvailableRoomActivity, BookingActivity::class.java).apply {
+                                        putExtra("email", "tester@excel.com") // ✅ Replace with actual login info if available
+                                        putExtra("branch", branchEditText.text.toString())
+                                        putExtra("roomType", selectedRoomType)
+                                        putExtra("checkIn", checkInEditText.text.toString())
+                                        putExtra("checkOut", checkOutEditText.text.toString())
+                                        putExtra("roomCount", roomCount)
+                                        putExtra("adults", adults)
+                                        putExtra("children", children)
+                                    }
+                                    startActivity(intent)
+                                }
+                                .setNegativeButton("Cancel", null)
+                                .show()
+                        }
+                        .show()
+
                 }
             }
         }
+
         insertTestRoomData()
+    }
+
+    private fun parseRoomGuestInfo(info: String): Triple<Int, Int, Int> {
+        val regex = Regex("""(\d+)\s+Room.*?(\d+)\s+Adult.*?(\d+)\s+Child""")
+        val match = regex.find(info)
+        return if (match != null) {
+            val (room, adult, child) = match.destructured
+            Triple(room.toInt(), adult.toInt(), child.toInt())
+        } else {
+            Triple(1, 1, 0)
+        }
     }
 
     private fun showRoomTypeDialog() {
@@ -455,5 +496,4 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
             Toast.makeText(this@SearchAvailableRoomActivity, "🌴 Excel test data inserted successfully!", Toast.LENGTH_LONG).show()
         }
     }
-
 }

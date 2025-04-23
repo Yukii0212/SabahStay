@@ -1,4 +1,3 @@
-// File: PaymentDetailsActivity.kt
 package com.example.testversion
 
 import android.animation.ObjectAnimator
@@ -19,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 
 class PaymentDetailsActivity : AppCompatActivity() {
@@ -76,9 +76,10 @@ class PaymentDetailsActivity : AppCompatActivity() {
             return
         }
 
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.getDefault())
         try {
-            checkInDate = LocalDate.parse(checkInStr)
-            checkOutDate = LocalDate.parse(checkOutStr)
+            checkInDate = LocalDate.parse(checkInStr, formatter)
+            checkOutDate = LocalDate.parse(checkOutStr, formatter)
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show()
@@ -124,8 +125,22 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val db = AppDatabase.getInstance(applicationContext)
             val roomDao = db.roomDao()
             val bookingDao = db.finalizedBookingDao()
-            val room = roomDao.getAll().find { it.roomId == roomId } ?: return@launch
-            val branch = db.branchDao().getAll().find { it.branchId == room.branchId } ?: return@launch
+
+            val room = roomDao.getAll().find { it.roomId == roomId }
+            if (room == null) {
+                runOnUiThread {
+                    Toast.makeText(this@PaymentDetailsActivity, "Room not found. Please try again.", Toast.LENGTH_LONG).show()
+                }
+                return@launch
+            }
+
+            val branch = db.branchDao().getAll().find { it.branchId == room.branchId }
+            if (branch == null) {
+                runOnUiThread {
+                    Toast.makeText(this@PaymentDetailsActivity, "Branch not found. Please try again.", Toast.LENGTH_LONG).show()
+                }
+                return@launch
+            }
 
             val nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate).toInt()
             val basePrice = room.pricePerNight * nights
@@ -176,6 +191,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
             finish()
         }
     }
+
 
     private fun validateAndProceed() {
         val cardNumber = cardNumberEditText.text.toString().replace(" ", "")

@@ -25,6 +25,10 @@ interface RoomDao {
 
     @Query("SELECT * FROM rooms WHERE branchId = :branchId")
     suspend fun getByBranch(branchId: String): List<HotelRoom>
+
+    @Query("SELECT * FROM rooms WHERE branchId = :branchId AND roomType = :roomType LIMIT 1")
+    suspend fun getByBranchAndRoomType(branchId: String, roomType: String): HotelRoom?
+
 }
 
 
