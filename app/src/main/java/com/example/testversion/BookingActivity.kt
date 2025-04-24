@@ -163,7 +163,7 @@ class BookingActivity : AppCompatActivity() {
                 val intent = Intent(this, PaymentDetailsActivity::class.java).apply {
                     putExtra("totalCost", totalCost)
                     putExtra("name", nameEditText.text.toString())
-                    putExtra("email", emailEditText.text.toString())
+                    putExtra("userEmail", emailEditText.text.toString())
                     putExtra("phone", phoneEditText.text.toString())
                     putExtra("branch", branchSpinner.selectedItem.toString())
                     putExtra("roomType", roomTypeSpinner.selectedItem.toString())
@@ -291,7 +291,7 @@ class BookingActivity : AppCompatActivity() {
     }
 
     private fun isValidPhone(phone: String): Boolean {
-        return Regex("^01[0-9]-\\d{7,8}$").matches(phone.trim())
+        return Regex("^(\\+?60)?1[0-9]{8,9}$").matches(phone.trim())
     }
 
     private fun getPrice(branch: String, roomType: String): Double {
@@ -341,7 +341,7 @@ class BookingActivity : AppCompatActivity() {
                 val intent = Intent(this, PaymentDetailsActivity::class.java).apply {
                     putExtra("totalCost", totalCost)
                     putExtra("name", nameEditText.text.toString())
-                    putExtra("email", emailEditText.text.toString())
+                    putExtra("userEmail", emailEditText.text.toString())
                     putExtra("phone", phoneEditText.text.toString())
                     putExtra("branch", branchSpinner.selectedItem.toString())
                     putExtra("roomType", roomTypeSpinner.selectedItem.toString())
