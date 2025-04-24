@@ -123,12 +123,36 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val db = AppDatabase.getInstance(applicationContext)
+            val userDao = db.userDao()
             val roomDao = db.roomDao()
             val bookingDao = db.finalizedBookingDao()
+            val user = userDao.getUserByEmail(userEmail)
+
+            if (user == null) {
+                runOnUiThread {
+                    Toast.makeText(this@PaymentDetailsActivity, "❌ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                }
+                runOnUiThread {
+                    confirmButton.text = "Confirm Payment"
+                    confirmButton.isEnabled = true
+                }
+                return@launch
+            }
 
             val room = roomDao.getAll().find { it.roomId == roomId }
             if (room == null) {
                 runOnUiThread {
+                    confirmButton.text = "Confirm Payment"
+                    confirmButton.isEnabled = true
+                    Toast.makeText(this@PaymentDetailsActivity, "❌ Room not found in database: $roomId", Toast.LENGTH_LONG).show()
+                }
+                return@launch
+            }
+
+            if (room == null) {
+                runOnUiThread {
+                    confirmButton.text = "Confirm Payment"
+                    confirmButton.isEnabled = true
                     Toast.makeText(this@PaymentDetailsActivity, "Room not found. Please try again.", Toast.LENGTH_LONG).show()
                 }
                 return@launch
@@ -137,6 +161,8 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val branch = db.branchDao().getAll().find { it.branchId == room.branchId }
             if (branch == null) {
                 runOnUiThread {
+                    confirmButton.text = "Confirm Payment"
+                    confirmButton.isEnabled = true
                     Toast.makeText(this@PaymentDetailsActivity, "Branch not found. Please try again.", Toast.LENGTH_LONG).show()
                 }
                 return@launch
