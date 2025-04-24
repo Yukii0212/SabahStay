@@ -5,7 +5,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.testversion.database.AppDatabase
+import com.example.testversion.database.User
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class EmailVerificationActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -38,6 +43,7 @@ class EmailVerificationActivity : AppCompatActivity() {
         continueButton.setOnClickListener {
             auth.currentUser?.reload()?.addOnCompleteListener {
                 if (auth.currentUser?.isEmailVerified == true) {
+                    saveUserToRoomIfNotExist()
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                 } else {
@@ -47,25 +53,35 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserDataToLocal() {
-        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
+    private fun saveUserToRoomIfNotExist() {
+        val user = auth.currentUser ?: return
+        val email = user.email ?: return
 
-        val user = FirebaseAuth.getInstance().currentUser
-        val email = user?.email ?: "Not provided"
+        val fullName = intent.getStringExtra("full_name") ?: return
+        val phone = intent.getStringExtra("phone") ?: return
+        val gender = intent.getStringExtra("gender") ?: "Other"
+        val passport = intent.getStringExtra("passport") ?: "Not set"
+        val password = intent.getStringExtra("password") ?: "Not stored"
+        val prefix = intent.getStringExtra("prefix") ?: "None"
 
-        // Retrieve stored values from RegistrationActivity (passed via intent)
-        val fullName = intent.getStringExtra("full_name") ?: "Not set"
-        val phone = intent.getStringExtra("phone") ?: "Not set"
-        val gender = intent.getStringExtra("gender") ?: "Not specified"
+        val newUser = User(
+            email = email,
+            name = fullName,
+            nickname = "",
+            passport = passport,
+            gender = gender,
+            phone = phone,
+            password = password,
+            profilePicturePath = "",
+            prefix = prefix
+        )
 
-        // Save data
-        editor.putString("full_name", fullName)
-        editor.putString("phone", phone)
-        editor.putString("email", email)
-        editor.putString("gender", gender)
-
-        editor.apply()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val dao = AppDatabase.getInstance(this@EmailVerificationActivity).userDao()
+            val existing = dao.getUserByEmail(email)
+            if (existing == null) {
+                dao.insert(newUser)
+            }
+        }
     }
-
 }

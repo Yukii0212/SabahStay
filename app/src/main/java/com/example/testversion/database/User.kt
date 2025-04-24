@@ -11,7 +11,6 @@ data class User(
     val passport: String,
     val gender: String,
     val phone: String,
-
     val password: String,
     val profilePicturePath: String = "",
     val prefix: String = "None"
