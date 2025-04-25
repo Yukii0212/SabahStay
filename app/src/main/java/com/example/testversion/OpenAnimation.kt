@@ -25,13 +25,13 @@ class OpenAnimation : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_open_animation)
 
-        // Load animations
+
         val cloudMoveLeft = AnimationUtils.loadAnimation(this, R.anim.cloud_move_left)
         val cloudMoveRight = AnimationUtils.loadAnimation(this, R.anim.cloud_move_right)
         val mountainZoom = AnimationUtils.loadAnimation(this, R.anim.mountain_zoom)
         val textFadeIn = AnimationUtils.loadAnimation(this, R.anim.text_fade_in)
 
-        // Find views
+
         val cloud1: ImageView = findViewById(R.id.cloud1)
         val cloud2: ImageView = findViewById(R.id.cloud2)
         val cloud3: ImageView = findViewById(R.id.cloud3)
@@ -47,7 +47,7 @@ class OpenAnimation : AppCompatActivity() {
 
         mountainView.visibility = View.VISIBLE
 
-        // Start cloud animations
+        // Start the cloud animations
         cloud1.startAnimation(cloudMoveLeft)
         cloud2.startAnimation(cloudMoveRight)
         cloud3.startAnimation(cloudMoveLeft)
@@ -76,7 +76,7 @@ class OpenAnimation : AppCompatActivity() {
         cloudMoveLeft.setAnimationListener(cloudAnimationListener)
         cloudMoveRight.setAnimationListener(cloudAnimationListener)
 
-        // Start mountain zoom animation
+        //  mountain zoom in animation
         mountainView.startAnimation(mountainZoom)
 
         // Make text **visible** at the right time
@@ -87,7 +87,7 @@ class OpenAnimation : AppCompatActivity() {
             subtitleText.startAnimation(textFadeIn)
         }, (mountainZoom.duration * 0.6 - 1100).toLong())
 
-        // Transition to next activity after animation
+        // Transition to next activity after the animation
         mountainZoom.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {}
             override fun onAnimationEnd(animation: Animation?) {
