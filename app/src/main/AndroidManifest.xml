@@ -57,6 +57,7 @@
 
         <activity android:name=".IslandBranch" android:exported="true"/>
 
+        <activity android:name=".MountainRoom" android:exported="true"/>
 
 
         <!-- Payment Flow Activities -->

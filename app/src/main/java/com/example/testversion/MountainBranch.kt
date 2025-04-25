@@ -1,9 +1,9 @@
 package com.example.testversion
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.testversion.R
 import com.example.testversion.databinding.ActivityMountainBranchBinding
 
 class MountainBranch : AppCompatActivity() {
@@ -14,21 +14,21 @@ class MountainBranch : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMountainBranchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setContentView(R.layout.activity_mountain_branch)
 
         Glide.with(this)
             .load(R.drawable.mount1)
-            .circleCrop()
             .into(binding.imageView1)
 
         Glide.with(this)
             .load(R.drawable.mount2)
-            .circleCrop()
             .into(binding.imageView2)
 
         Glide.with(this)
             .load(R.drawable.mount3)
-            .circleCrop()
             .into(binding.imageView3)
+
+        binding.btnSelectRoom.setOnClickListener {
+            startActivity(Intent(this, MountainRoom::class.java))
+        }
     }
 }

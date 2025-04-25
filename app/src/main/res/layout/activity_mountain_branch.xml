@@ -267,6 +267,21 @@
                 android:text="Nestled in the cool highlands of Kundasang, Sabah, our hotel branch offers a peaceful retreat with breathtaking views of Mount Kinabalu. Surrounded by lush greenery and fresh mountain air, it's the perfect place to unwind and reconnect with nature. Whether you're here for a relaxing getaway or an adventurous trip, our comfortable rooms, friendly service, and convenient location near popular attractions like Desa Dairy Farm and Kinabalu Park make your stay memorable and enjoyable."
                 android:textSize="14sp" />
 
+            <!-- Select Room Button -->
+            <Button
+                android:id="@+id/btn_select_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SELECT ROOM"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:backgroundTint="@color/button_blue"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:background="@drawable/rounded_button" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
