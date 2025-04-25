@@ -59,6 +59,9 @@
 
         <activity android:name=".MountainRoom" android:exported="true"/>
 
+        <activity android:name=".CityRoom" android:exported="true"/>
+
+        <activity android:name=".IslandRoom" android:exported="true"/>
 
         <!-- Payment Flow Activities -->
         <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>

@@ -1,15 +1,19 @@
 package com.example.testversion
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 class CityBranch : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.city_branch) // Link to city_branch.xml
+        setContentView(R.layout.activity_city_branch) // Your updated layout file
 
-        // Display a message
-        findViewById<TextView>(R.id.cityBranchText).text = "This is City Branch!"
+        val selectRoomButton: Button = findViewById(R.id.btn_select_room)
+        selectRoomButton.setOnClickListener {
+            val intent = Intent(this, CityRoom::class.java)
+            startActivity(intent)
+        }
     }
 }
