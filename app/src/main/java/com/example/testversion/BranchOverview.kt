@@ -63,7 +63,8 @@ class BranchOverview : AppCompatActivity() {
         val cityCard = findViewById<CardView>(R.id.cityCard)
 
         mountainCard.setOnClickListener {
-            startActivity(Intent(this, MountainBranch::class.java))
+            val intent = Intent(this, MountainBranch::class.java)
+            startActivity(intent)
         }
 
         islandCard.setOnClickListener {
