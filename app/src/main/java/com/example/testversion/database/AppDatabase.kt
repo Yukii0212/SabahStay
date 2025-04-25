@@ -12,7 +12,7 @@ import androidx.room.TypeConverters
     exportSchema = false
 )
 
-@TypeConverters(LocalDateConverter::class)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun branchDao(): BranchDao

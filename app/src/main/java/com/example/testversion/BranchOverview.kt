@@ -43,10 +43,19 @@ class BranchOverview : AppCompatActivity() {
         }
 
         bookingButton.setOnClickListener {
-            Log.d("BranchOverview", "Booking button clicked")
-            Toast.makeText(this, "Booking clicked", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, SearchAvailableRoomActivity::class.java))
+            val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+            val userEmail = sharedPreferences.getString("email", null)
+
+            if (userEmail.isNullOrEmpty()) {
+                Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, SearchAvailableRoomActivity::class.java)
+            intent.putExtra("userEmail", userEmail)
+            startActivity(intent)
         }
+
 
         // Click listeners for the 3 cards
         val mountainCard = findViewById<CardView>(R.id.mountainCard)

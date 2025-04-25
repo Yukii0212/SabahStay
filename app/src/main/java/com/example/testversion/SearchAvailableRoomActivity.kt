@@ -3,7 +3,6 @@ package com.example.testversion
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -13,10 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.AppDatabase
-import com.example.testversion.database.Booking
-import com.example.testversion.database.Branch
 import com.example.testversion.database.HotelRoom
-import com.example.testversion.database.User
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import android.content.Intent
@@ -54,14 +50,11 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         selectedBranchId = intent.getStringExtra("branchId")
 
         if (selectedBranchId == null) {
-            // ✅ TEMP fallback branch & room type
-            selectedBranchId = "branch-excel"
-            selectedRoomType = "Deluxe"
+            selectedBranchId = "kkcity"
+            selectedRoomType = "Single Room"
             branchEditText.setText("Excel Island Branch")
             roomTypeEditText.setText("Deluxe")
-            Toast.makeText(this, "⚠️ Using fallback branch and room type for testing", Toast.LENGTH_SHORT).show()
         }
-
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }
@@ -82,27 +75,48 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
+                val userEmail = intent.getStringExtra("userEmail")
+                if (userEmail.isNullOrBlank()) {
+                    Toast.makeText(this@SearchAvailableRoomActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                val user = db.userDao().getUserByEmail(userEmail)
+                if (user == null) {
+                    Toast.makeText(this@SearchAvailableRoomActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+
                 val roomDao = db.roomDao()
                 val bookingDao = db.bookingDao()
+                val finalizedBookingDao = db.finalizedBookingDao()
 
-                val checkIn = Instant.ofEpochMilli(checkInDateMillis!!)
-                    .atZone(ZoneId.systemDefault()).toLocalDate()
-                val checkOut = Instant.ofEpochMilli(checkOutDateMillis!!)
-                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                val checkIn = org.threeten.bp.Instant.ofEpochMilli(checkInDateMillis!!)
+                    .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
+                val checkOut = org.threeten.bp.Instant.ofEpochMilli(checkOutDateMillis!!)
+                    .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
 
-                val allRooms = roomDao.getAll().filter { it.roomType == selectedRoomType }
+                val allRooms = roomDao.getByBranch(selectedBranchId!!).filter { it.roomType == selectedRoomType }
                 val availableRooms = mutableListOf<HotelRoom>()
+                val (requestedRoomCount, adults, children) = parseRoomGuestInfo(roomGuestEditText.text.toString())
                 val unavailableDates = mutableSetOf<LocalDate>()
 
                 for (room in allRooms) {
                     if (!room.isAvailable) continue
 
-                    val conflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut)
+                    val finalizedConflicts = finalizedBookingDao.getConflictingFinalizedBookings(room.roomId, checkIn, checkOut)
+                    val liveConflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut)
 
-                    if (conflicts.isEmpty()) {
+                    if (finalizedConflicts.isEmpty() && liveConflicts.isEmpty()) {
                         availableRooms.add(room)
                     } else {
-                        conflicts.forEach { conflict ->
+                        finalizedConflicts.forEach { conflict ->
+                            var date = conflict.checkInDate
+                            while (date.isBefore(conflict.checkOutDate)) {
+                                unavailableDates.add(date)
+                                date = date.plusDays(1)
+                            }
+                        }
+                        liveConflicts.forEach { conflict ->
                             var date = conflict.checkInDate
                             while (date.isBefore(conflict.checkOutDate)) {
                                 unavailableDates.add(date)
@@ -110,45 +124,32 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                             }
                         }
                     }
+
+                }
+
+                if (availableRooms.size < requestedRoomCount) {
+                    Toast.makeText(this@SearchAvailableRoomActivity,
+                        "❌ Only ${availableRooms.size} room(s) available. You requested $requestedRoomCount.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@launch
                 }
 
                 if (availableRooms.isEmpty()) {
                     showUnavailableDatesDialog(unavailableDates)
-                    bookPromptButton.visibility = View.GONE
                 } else {
                     AlertDialog.Builder(this@SearchAvailableRoomActivity)
                         .setTitle("Rooms Available")
                         .setMessage("${availableRooms.size} room(s) are available for your selected dates.")
                         .setPositiveButton("OK") { _, _ ->
-                            AlertDialog.Builder(this@SearchAvailableRoomActivity)
-                                .setTitle("Book Now?")
-                                .setMessage("Do you want to book a room?")
-                                .setPositiveButton("Continue for Booking") { _, _ ->
-                                    val (roomCount, adults, children) = parseRoomGuestInfo(roomGuestEditText.text.toString())
-
-                                    val intent = Intent(this@SearchAvailableRoomActivity, BookingActivity::class.java).apply {
-                                        putExtra("email", "tester@excel.com") // ✅ Replace with actual login info if available
-                                        putExtra("branch", branchEditText.text.toString())
-                                        putExtra("roomType", selectedRoomType)
-                                        putExtra("checkIn", checkInEditText.text.toString())
-                                        putExtra("checkOut", checkOutEditText.text.toString())
-                                        putExtra("roomCount", roomCount)
-                                        putExtra("adults", adults)
-                                        putExtra("children", children)
-                                    }
-                                    startActivity(intent)
-                                }
-                                .setNegativeButton("Cancel", null)
-                                .show()
+                            showBookingPromptDialog(availableRooms.size, userEmail)
                         }
                         .show()
-
                 }
             }
         }
-
-        insertTestRoomData()
     }
+
 
     private fun parseRoomGuestInfo(info: String): Triple<Int, Int, Int> {
         val regex = Regex("""(\d+)\s+Room.*?(\d+)\s+Adult.*?(\d+)\s+Child""")
@@ -160,6 +161,30 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
             Triple(1, 1, 0)
         }
     }
+
+    private fun showBookingPromptDialog(availableCount: Int, userEmail: String) {
+        val (roomCount, adults, children) = parseRoomGuestInfo(roomGuestEditText.text.toString())
+
+        AlertDialog.Builder(this)
+            .setTitle("Book Now?")
+            .setMessage("Do you want to book 1 of the $availableCount available rooms?")
+            .setPositiveButton("Continue for Booking") { _, _ ->
+                val intent = Intent(this, BookingActivity::class.java).apply {
+                    putExtra("userEmail", userEmail)
+                    putExtra("branch", branchEditText.text.toString())
+                    putExtra("roomType", selectedRoomType)
+                    putExtra("checkIn", checkInEditText.text.toString())
+                    putExtra("checkOut", checkOutEditText.text.toString())
+                    putExtra("roomCount", roomCount)
+                    putExtra("adults", adults)
+                    putExtra("children", children)
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 
     private fun showRoomTypeDialog() {
         lifecycleScope.launch {
@@ -203,12 +228,15 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                     val selectedBranch = branches[which]
                     selectedBranchId = selectedBranch.branchId
                     branchEditText.setText(selectedBranch.name)
+                    selectedRoomType = null // reset roomType
+                    roomTypeEditText.setText("")
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
         }
     }
+
 
     private fun showUnavailableDatesDialog(conflictingDates: Set<LocalDate>) {
         if (conflictingDates.isEmpty()) {
@@ -367,133 +395,5 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun insertTestRoomData() {
-        lifecycleScope.launch {
-            val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
-            val roomDao = db.roomDao()
-            val branchDao = db.branchDao()
-            val bookingDao = db.bookingDao()
-            val userDao = db.userDao()
 
-            val branchId = "branch-excel"
-            val userEmail = "tester@excel.com"
-
-            // 1. Insert test branch
-            branchDao.insert(
-                Branch(
-                    branchId = branchId,
-                    name = "Excel Island Branch",
-                    location = "Island Paradise",
-                    contactNumber = "0000000000",
-                    email = "excel@branch.com"
-                )
-            )
-
-            // 2. Insert test user
-            userDao.insert(
-                User(
-                    email = userEmail,
-                    name = "Excel Tester",
-                    passport = "T1234567",
-                    gender = "Other",
-                    phone = "0000000000",
-                    password = "test123"
-                )
-            )
-
-            // 3. Insert 5 test rooms (slot 1 to slot 5)
-            for (i in 1..5) {
-                roomDao.insert(
-                    HotelRoom(
-                        roomId = "room-$i",
-                        roomNumber = "10$i",
-                        roomType = "Standard",
-                        pricePerNight = 100.0 + i,
-                        isAvailable = true,
-                        bedCount = 2,
-                        description = "Slot $i test room",
-                        maxGuests = 2,
-                        branchId = branchId
-                    )
-                )
-            }
-
-            // 4. Insert bookings based on your Excel test table
-            val bookings = listOf(
-                // Slot 1: Yuki booking from 18 to 20 April
-                Booking(
-                    bookingId = "b1",
-                    userEmail = userEmail,
-                    roomId = "room-1",
-                    checkInDate = LocalDate.parse("2025-04-18"),
-                    checkOutDate = LocalDate.parse("2025-04-20"),
-                    totalPrice = 200.0,
-                    status = "confirmed",
-                    numGuests = 2,
-                    createdAt = LocalDate.now(),
-                    paymentStatus = "paid"
-                ),
-
-                // Slot 2: Pei Pei booking from 17 to 19 April
-                Booking(
-                    bookingId = "b2",
-                    userEmail = userEmail,
-                    roomId = "room-2",
-                    checkInDate = LocalDate.parse("2025-04-17"),
-                    checkOutDate = LocalDate.parse("2025-04-19"),
-                    totalPrice = 200.0,
-                    status = "confirmed",
-                    numGuests = 2,
-                    createdAt = LocalDate.now(),
-                    paymentStatus = "paid"
-                ),
-
-                // Slot 3: Wei Wei booking from 15 to 18 April
-                Booking(
-                    bookingId = "b3",
-                    userEmail = userEmail,
-                    roomId = "room-3",
-                    checkInDate = LocalDate.parse("2025-04-15"),
-                    checkOutDate = LocalDate.parse("2025-04-18"),
-                    totalPrice = 300.0,
-                    status = "confirmed",
-                    numGuests = 2,
-                    createdAt = LocalDate.now(),
-                    paymentStatus = "paid"
-                ),
-
-                // Slot 4: Gabriel booking from 16 to 21 April
-                Booking(
-                    bookingId = "b4",
-                    userEmail = userEmail,
-                    roomId = "room-4",
-                    checkInDate = LocalDate.parse("2025-04-16"),
-                    checkOutDate = LocalDate.parse("2025-04-21"),
-                    totalPrice = 500.0,
-                    status = "confirmed",
-                    numGuests = 2,
-                    createdAt = LocalDate.now(),
-                    paymentStatus = "paid"
-                ),
-
-                // Slot 5: Rachel booking from 16 to 19 April
-                Booking(
-                    bookingId = "b5",
-                    userEmail = userEmail,
-                    roomId = "room-5",
-                    checkInDate = LocalDate.parse("2025-04-16"),
-                    checkOutDate = LocalDate.parse("2025-04-19"),
-                    totalPrice = 300.0,
-                    status = "confirmed",
-                    numGuests = 2,
-                    createdAt = LocalDate.now(),
-                    paymentStatus = "paid"
-                )
-            )
-
-            bookings.forEach { bookingDao.insert(it) }
-
-            Toast.makeText(this@SearchAvailableRoomActivity, "🌴 Excel test data inserted successfully!", Toast.LENGTH_LONG).show()
-        }
-    }
 }

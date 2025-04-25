@@ -60,7 +60,7 @@ class BookingActivity : AppCompatActivity() {
         confirmButton = findViewById(R.id.button_confirm)
 
         val intent = intent
-        val userEmail = intent.getStringExtra("email") ?: ""
+        val userEmail = intent.getStringExtra("userEmail") ?: ""
         val branchName = intent.getStringExtra("branch") ?: "KK City"
         val roomType = intent.getStringExtra("roomType") ?: "Single Room"
         val roomCount = intent.getIntExtra("roomCount", 1)
@@ -69,6 +69,24 @@ class BookingActivity : AppCompatActivity() {
 
         val checkInRaw = intent.getStringExtra("checkIn") ?: ""
         val checkOutRaw = intent.getStringExtra("checkOut") ?: ""
+
+        lifecycleScope.launch {
+            val user = AppDatabase.getInstance(this@BookingActivity).userDao().getUserByEmail(userEmail)
+            if (user == null) {
+                Toast.makeText(this@BookingActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                finish()
+                return@launch
+            }
+
+            nameEditText.setText(user.name)
+            emailEditText.setText(user.email)
+            phoneEditText.setText(user.phone)
+
+            nameEditText.isEnabled = false
+            emailEditText.isEnabled = false
+            phoneEditText.isEnabled = false
+        }
+
 
         try {
             val checkInDate = LocalDate.parse(checkInRaw, formatter)
@@ -92,9 +110,16 @@ class BookingActivity : AppCompatActivity() {
                     emailEditText.setText(it.email)
                     phoneEditText.setText(it.phone)
                 }
+
+                val branchId = when (branchName) {
+                    "KK City" -> "kkcity"
+                    "Kundasang" -> "kundasang"
+                    "Island Branch" -> "island"
+                    else -> "kkcity"
+                }
                 updatePriceAndCost()
                 val room = AppDatabase.getInstance(this@BookingActivity).roomDao()
-                    .getByBranchAndRoomType(branchName, roomType)
+                    .findAvailableRoomBetweenDates(branchId, roomType, checkInDate, checkOutDate)
 
                 if (room == null) {
                     Toast.makeText(this@BookingActivity, "Room not found. Please try again.", Toast.LENGTH_LONG).show()
@@ -138,7 +163,7 @@ class BookingActivity : AppCompatActivity() {
                 val intent = Intent(this, PaymentDetailsActivity::class.java).apply {
                     putExtra("totalCost", totalCost)
                     putExtra("name", nameEditText.text.toString())
-                    putExtra("email", emailEditText.text.toString())
+                    putExtra("userEmail", emailEditText.text.toString())
                     putExtra("phone", phoneEditText.text.toString())
                     putExtra("branch", branchSpinner.selectedItem.toString())
                     putExtra("roomType", roomTypeSpinner.selectedItem.toString())
@@ -266,7 +291,7 @@ class BookingActivity : AppCompatActivity() {
     }
 
     private fun isValidPhone(phone: String): Boolean {
-        return Regex("^01[0-9]-\\d{7,8}$").matches(phone.trim())
+        return Regex("^(\\+?60)?1[0-9]{8,9}$").matches(phone.trim())
     }
 
     private fun getPrice(branch: String, roomType: String): Double {
@@ -316,7 +341,7 @@ class BookingActivity : AppCompatActivity() {
                 val intent = Intent(this, PaymentDetailsActivity::class.java).apply {
                     putExtra("totalCost", totalCost)
                     putExtra("name", nameEditText.text.toString())
-                    putExtra("email", emailEditText.text.toString())
+                    putExtra("userEmail", emailEditText.text.toString())
                     putExtra("phone", phoneEditText.text.toString())
                     putExtra("branch", branchSpinner.selectedItem.toString())
                     putExtra("roomType", roomTypeSpinner.selectedItem.toString())

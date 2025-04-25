@@ -15,4 +15,16 @@ interface FinalizedBookingDao {
 
     @Query("SELECT MAX(bookingNumber) FROM finalized_bookings WHERE bookingNumber BETWEEN :start AND :end")
     suspend fun getMaxBookingNumberInRange(start: Long, end: Long): Long?
+
+    @Query("""
+    SELECT * FROM finalized_bookings 
+    WHERE roomId = :roomId AND 
+    NOT (checkOutDate <= :checkInDate OR checkInDate >= :checkOutDate)
+""")
+    suspend fun getConflictingFinalizedBookings(
+        roomId: String,
+        checkInDate: org.threeten.bp.LocalDate,
+        checkOutDate: org.threeten.bp.LocalDate
+    ): List<FinalizedBooking>
+
 }

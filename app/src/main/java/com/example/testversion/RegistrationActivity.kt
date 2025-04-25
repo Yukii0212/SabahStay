@@ -412,7 +412,15 @@ class RegistrationActivity : AppCompatActivity() {
                                     //Save user data in local Room Database
                                     saveUserToDatabase(name, passport, phone, gender, email, password, defaultPrefix)
 
-                                    val intent = Intent(this@RegistrationActivity, EmailVerificationActivity::class.java)
+                                    val intent = Intent(this@RegistrationActivity, EmailVerificationActivity::class.java).apply {
+                                        putExtra("full_name", name)
+                                        putExtra("passport", passport)
+                                        putExtra("phone", phone)
+                                        putExtra("gender", gender)
+                                        putExtra("email", email)
+                                        putExtra("password", password)
+                                        putExtra("prefix", defaultPrefix)
+                                    }
                                     startActivity(intent)
                                     finish()
                                 } else {
