@@ -3,7 +3,6 @@ package com.example.testversion
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -13,10 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.AppDatabase
-import com.example.testversion.database.Booking
-import com.example.testversion.database.Branch
 import com.example.testversion.database.HotelRoom
-import com.example.testversion.database.User
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import android.content.Intent
@@ -54,14 +50,11 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         selectedBranchId = intent.getStringExtra("branchId")
 
         if (selectedBranchId == null) {
-            // ✅ TEMP fallback branch & room type
-            selectedBranchId = "branch-excel"
-            selectedRoomType = "Deluxe"
+            selectedBranchId = "kkcity"
+            selectedRoomType = "Single Room"
             branchEditText.setText("Excel Island Branch")
             roomTypeEditText.setText("Deluxe")
-            Toast.makeText(this, "⚠️ Using fallback branch and room type for testing", Toast.LENGTH_SHORT).show()
         }
-
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }
@@ -95,25 +88,35 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
                 val roomDao = db.roomDao()
                 val bookingDao = db.bookingDao()
+                val finalizedBookingDao = db.finalizedBookingDao()
 
-                val checkIn = Instant.ofEpochMilli(checkInDateMillis!!)
-                    .atZone(ZoneId.systemDefault()).toLocalDate()
-                val checkOut = Instant.ofEpochMilli(checkOutDateMillis!!)
-                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                val checkIn = org.threeten.bp.Instant.ofEpochMilli(checkInDateMillis!!)
+                    .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
+                val checkOut = org.threeten.bp.Instant.ofEpochMilli(checkOutDateMillis!!)
+                    .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
 
-                val allRooms = roomDao.getAll().filter { it.roomType == selectedRoomType }
+                val allRooms = roomDao.getByBranch(selectedBranchId!!).filter { it.roomType == selectedRoomType }
                 val availableRooms = mutableListOf<HotelRoom>()
+                val (requestedRoomCount, adults, children) = parseRoomGuestInfo(roomGuestEditText.text.toString())
                 val unavailableDates = mutableSetOf<LocalDate>()
 
                 for (room in allRooms) {
                     if (!room.isAvailable) continue
 
-                    val conflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut)
+                    val finalizedConflicts = finalizedBookingDao.getConflictingFinalizedBookings(room.roomId, checkIn, checkOut)
+                    val liveConflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut)
 
-                    if (conflicts.isEmpty()) {
+                    if (finalizedConflicts.isEmpty() && liveConflicts.isEmpty()) {
                         availableRooms.add(room)
                     } else {
-                        conflicts.forEach { conflict ->
+                        finalizedConflicts.forEach { conflict ->
+                            var date = conflict.checkInDate
+                            while (date.isBefore(conflict.checkOutDate)) {
+                                unavailableDates.add(date)
+                                date = date.plusDays(1)
+                            }
+                        }
+                        liveConflicts.forEach { conflict ->
                             var date = conflict.checkInDate
                             while (date.isBefore(conflict.checkOutDate)) {
                                 unavailableDates.add(date)
@@ -121,6 +124,15 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                             }
                         }
                     }
+
+                }
+
+                if (availableRooms.size < requestedRoomCount) {
+                    Toast.makeText(this@SearchAvailableRoomActivity,
+                        "❌ Only ${availableRooms.size} room(s) available. You requested $requestedRoomCount.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@launch
                 }
 
                 if (availableRooms.isEmpty()) {
@@ -133,12 +145,11 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                             showBookingPromptDialog(availableRooms.size, userEmail)
                         }
                         .show()
-
                 }
-
             }
         }
     }
+
 
     private fun parseRoomGuestInfo(info: String): Triple<Int, Int, Int> {
         val regex = Regex("""(\d+)\s+Room.*?(\d+)\s+Adult.*?(\d+)\s+Child""")
@@ -217,12 +228,15 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                     val selectedBranch = branches[which]
                     selectedBranchId = selectedBranch.branchId
                     branchEditText.setText(selectedBranch.name)
+                    selectedRoomType = null // reset roomType
+                    roomTypeEditText.setText("")
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
         }
     }
+
 
     private fun showUnavailableDatesDialog(conflictingDates: Set<LocalDate>) {
         if (conflictingDates.isEmpty()) {

@@ -1,7 +1,8 @@
 package com.example.testversion.database
 
 import androidx.room.*
-import java.time.LocalDate
+import org.threeten.bp.LocalDate
+
 
 @Dao
 interface BranchDao {
@@ -31,6 +32,25 @@ interface RoomDao {
 
     @Query("SELECT * FROM rooms WHERE branchId = :branchId AND roomType = :roomType AND isAvailable = 1 LIMIT 1")
     suspend fun getAvailableByBranchAndRoomType(branchId: String, roomType: String): HotelRoom?
+
+    @Query("""
+    SELECT * FROM rooms 
+    WHERE branchId = :branchId 
+      AND roomType = :roomType 
+      AND isAvailable = 1
+      AND roomId NOT IN (
+          SELECT roomId FROM bookings
+          WHERE NOT (checkOutDate <= :checkIn OR checkInDate >= :checkOut)
+      )
+    LIMIT 1
+""")
+    suspend fun findAvailableRoomBetweenDates(
+        branchId: String,
+        roomType: String,
+        checkIn: LocalDate,
+        checkOut: LocalDate
+    ): HotelRoom?
+
 }
 
 

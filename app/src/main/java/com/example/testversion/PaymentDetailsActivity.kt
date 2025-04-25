@@ -208,7 +208,6 @@ class PaymentDetailsActivity : AppCompatActivity() {
             )
 
             bookingDao.insert(finalized)
-            roomDao.insert(room.copy(isAvailable = false))
 
             val intent = Intent(this@PaymentDetailsActivity, BookingSuccessActivity::class.java)
             intent.putExtra("bookingNumber", bookingNumber)

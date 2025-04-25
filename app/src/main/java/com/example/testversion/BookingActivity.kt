@@ -119,7 +119,7 @@ class BookingActivity : AppCompatActivity() {
                 }
                 updatePriceAndCost()
                 val room = AppDatabase.getInstance(this@BookingActivity).roomDao()
-                    .getAvailableByBranchAndRoomType(branchId, roomType)
+                    .findAvailableRoomBetweenDates(branchId, roomType, checkInDate, checkOutDate)
 
                 if (room == null) {
                     Toast.makeText(this@BookingActivity, "Room not found. Please try again.", Toast.LENGTH_LONG).show()
