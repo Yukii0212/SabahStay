@@ -73,7 +73,7 @@ class BookingActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val user = AppDatabase.getInstance(this@BookingActivity).userDao().getUserByEmail(userEmail)
             if (user == null) {
-                Toast.makeText(this@BookingActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@BookingActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
                 finish()
                 return@launch
             }

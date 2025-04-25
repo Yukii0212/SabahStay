@@ -130,7 +130,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
             if (user == null) {
                 runOnUiThread {
-                    Toast.makeText(this@PaymentDetailsActivity, "❌ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PaymentDetailsActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
                 }
                 runOnUiThread {
                     confirmButton.text = "Confirm Payment"
@@ -144,7 +144,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 runOnUiThread {
                     confirmButton.text = "Confirm Payment"
                     confirmButton.isEnabled = true
-                    Toast.makeText(this@PaymentDetailsActivity, "❌ Room not found in database: $roomId", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PaymentDetailsActivity, "Room not found in database: $roomId", Toast.LENGTH_LONG).show()
                 }
                 return@launch
             }
@@ -329,6 +329,5 @@ class PaymentDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupKeyboardScrolling() {
-        // Optional: handle scrolling to avoid keyboard overlap
     }
 }

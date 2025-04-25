@@ -15,7 +15,7 @@ class PendingPaymentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pending_payment)
 
-        // Find views
+
         val loadingSpinner = findViewById<ProgressBar>(R.id.loadingSpinner)
         val leftIcon = findViewById<ImageView>(R.id.leftIcon)
         val centerHourglass = findViewById<ImageView>(R.id.centerHourglass)
@@ -23,20 +23,20 @@ class PendingPaymentActivity : AppCompatActivity() {
         val stepPayment = findViewById<TextView>(R.id.stepPayment)
         val stepConfirmation = findViewById<TextView>(R.id.stepConfirmation)
 
-        // Start spinner rotate animation
+        // Start the status bar animation
         val rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_spinner)
         loadingSpinner.startAnimation(rotateAnimation)
 
-        // Step 1 ➔ After 1 second: Mark 'Payment' step as done
+        //  Mark the 'Payment' step as done
         Handler(Looper.getMainLooper()).postDelayed({
             centerHourglass.setImageResource(R.drawable.ic_checking) // Replace hourglass with checked icon
-            stepPayment.setTextColor(getColor(android.R.color.holo_green_dark)) // Change text color to green
+            stepPayment.setTextColor(getColor(android.R.color.holo_green_dark)) // Change the text color to green color
         }, 1000)
 
-        // Step 2 ➔ After 2 seconds: Mark 'Confirmation' as done and move to next page
+        //  Mark the 'Confirmation' as done and move to next page
         Handler(Looper.getMainLooper()).postDelayed({
-            rightIcon.setImageResource(R.drawable.ic_checking) // Mark Confirmation as checked
-            stepConfirmation.setTextColor(getColor(android.R.color.holo_green_dark))
+            rightIcon.setImageResource(R.drawable.ic_checking) // Mark theConfirmation as checked
+            stepConfirmation.setTextColor(getColor(android.R.color.holo_green_dark)) // Change the text color to green color
 
             val intent = Intent(this, BookingSuccessActivity::class.java)
             startActivity(intent)
