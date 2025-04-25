@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.AttributeSet
-import android.util.Log // Import added for Log
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -37,26 +37,33 @@ class FooterBar @JvmOverloads constructor(
         notificationSection = findViewById(R.id.notification_section)
         accountSection = findViewById(R.id.account_section)
         accountIcon = findViewById(R.id.account_icon)
-        accountText = findViewById(R.id.profileButton) // Corrected id reference
+        accountText = findViewById(R.id.account_text)
 
         updateFooterUI()
 
+        homeSection.setOnClickListener{
+            val intent = Intent(context, BranchOverview::class.java)
+            context.startActivity(intent)
+        }
+
         accountSection.setOnClickListener {
-            Log.d("FooterBar", "Account section clicked")
             val user = auth.currentUser
-            if (user == null) {
-                context.startActivity(Intent(context, LoginActivity::class.java))
+            Log.d("FooterBar", "User is ${user?.uid ?: "null"}")
+
+            val intent = if (user == null) {
+                Intent(context, LoginActivity::class.java)
             } else {
-                context.startActivity(Intent(context, UserProfileActivity::class.java))
+                Intent(context, UserProfileActivity::class.java)
             }
+            context.startActivity(intent)
         }
     }
 
-    fun updateFooterUI() {
+    private fun updateFooterUI() {
         val user = auth.currentUser
         if (user != null) {
             val savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
-            val savedUsername = sharedPreferences.getString("nickname", user.displayName ?: "User") ?: "User"
+            val savedUsername = sharedPreferences.getString("nickname", user.displayName) ?: user.displayName ?: "User"
 
             // Set profile picture if available, otherwise use default icon
             if (savedProfilePicturePath.isNotEmpty() && File(savedProfilePicturePath).exists()) {
