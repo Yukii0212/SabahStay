@@ -1,7 +1,11 @@
 package com.example.testversion.database
 
 import androidx.room.*
+import android.content.Context
 import org.threeten.bp.LocalDate
+import androidx.room.TypeConverters
+import androidx.room.TypeConverter
+import org.threeten.bp.format.DateTimeFormatter
 
 @Entity(tableName = "branches")
 data class Branch(
@@ -26,6 +30,7 @@ data class Branch(
     ],
     indices = [Index("branchId")]
 )
+
 data class HotelRoom(
     @PrimaryKey val roomId: String,
     val roomNumber: String,
@@ -58,6 +63,7 @@ data class HotelRoom(
     ],
     indices = [Index("userEmail"), Index("roomId")]
 )
+
 data class Booking(
     @PrimaryKey val bookingId: String,
     val userEmail: String,
@@ -96,6 +102,7 @@ data class Booking(
     ],
     indices = [Index("bookingId"), Index("userEmail"), Index("roomId")]
 )
+
 data class Review(
     @PrimaryKey val reviewId: String,
     val bookingId: String,
@@ -105,3 +112,48 @@ data class Review(
     val reviewText: String = "",
     val createdAt: LocalDate
 )
+
+@Database(
+    entities = [Branch::class, HotelRoom::class, Booking::class, Review::class, User::class],
+    version = 1,
+    exportSchema = false
+)
+
+@TypeConverters(LocalDateConverter::class)
+    abstract class BookingDatabase : RoomDatabase() {
+    abstract fun branchDao(): BranchDao
+    abstract fun roomDao(): RoomDao
+    abstract fun bookingDao(): BookingDao
+    abstract fun reviewDao(): ReviewDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: BookingDatabase? = null
+
+        fun getInstance(context: Context): BookingDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    BookingDatabase::class.java,
+                    "booking_database"
+                ).build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
+}
+
+class LocalDateConverter {
+    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+    @TypeConverter
+    fun fromLocalDate(date: LocalDate?): String? {
+        return date?.format(formatter)
+    }
+
+    @TypeConverter
+    fun toLocalDate(dateString: String?): LocalDate? {
+        return dateString?.let { LocalDate.parse(it, formatter) }
+    }
+}

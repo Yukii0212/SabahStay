@@ -79,6 +79,11 @@ interface BookingDao {
     @Query("SELECT * FROM bookings WHERE roomId = :roomId")
     suspend fun getByRoom(roomId: String): List<Booking>
 
+    @Query("SELECT * FROM bookings WHERE checkInDate >= :currentDate")
+    suspend fun getCurrentBookings(currentDate: LocalDate): List<Booking>
+
+    @Query("SELECT * FROM bookings WHERE checkOutDate < :currentDate")
+    suspend fun getPastBookings(currentDate: LocalDate): List<Booking>
 }
 
 @Dao

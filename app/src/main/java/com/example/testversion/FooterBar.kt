@@ -46,6 +46,11 @@ class FooterBar @JvmOverloads constructor(
             context.startActivity(intent)
         }
 
+        reservationSection.setOnClickListener {
+            val intent = Intent(context, ReservationActivity::class.java)
+            context.startActivity(intent)
+        }
+
         accountSection.setOnClickListener {
             val user = auth.currentUser
             Log.d("FooterBar", "User is ${user?.uid ?: "null"}")

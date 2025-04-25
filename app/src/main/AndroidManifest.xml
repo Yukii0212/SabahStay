@@ -21,49 +21,40 @@
         <!-- Main Page -->
         <activity android:name=".MainActivity" android:exported="true" />
 
-        <!--  Fake Main Page  -->
+        <!--  Branch Overview  -->
         <activity android:name=".BranchOverview" android:exported="true"/>
 
-        <!-- Login Page -->
+        <!-- Profile Pages -->
         <activity android:name=".LoginActivity" android:exported="true"/>
-
-        <!-- Registration Page -->
         <activity
             android:name=".RegistrationActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"/>
-
-        <!-- Email Verification Page -->
         <activity android:name=".EmailVerificationActivity" android:exported="true"/>
-
-        <!-- User Profile Page -->
         <activity android:name=".UserProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-        <!-- Change Settings Page -->
         <activity android:name=".ChangeSettingsActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-        <!-- Change Sensitive Information page -->
         <activity android:name=".ChangeSensitiveInformationActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <!-- Reservation Page -->
+        <activity android:name=".ReservationActivity" android:exported="true"/>
+
+        <!-- Branches Page -->
         <activity android:name=".CityBranch" android:exported="true"/>
-
         <activity android:name=".MountainBranch" android:exported="true"/>
-
         <activity android:name=".IslandBranch" android:exported="true"/>
 
+        <!-- Rooms Page -->
         <activity android:name=".MountainRoom" android:exported="true"/>
-
         <activity android:name=".CityRoom" android:exported="true"/>
-
         <activity android:name=".IslandRoom" android:exported="true"/>
 
-        <!-- Payment Flow Activities -->
+        <!-- Payment Pages-->
         <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
         <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>
         <activity android:name=".BookingSuccessActivity" android:exported="true"/>
