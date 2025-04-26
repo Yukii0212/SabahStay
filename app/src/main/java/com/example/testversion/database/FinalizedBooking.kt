@@ -27,5 +27,7 @@ data class FinalizedBooking(
     val tax: Double,
     val totalPrice: Double,
     val paymentMethod: String,
-    val createdAt: LocalDate
+    val createdAt: LocalDate,
+    val numberOfAdults: Int,
+    val numberOfChildren: Int
 )
