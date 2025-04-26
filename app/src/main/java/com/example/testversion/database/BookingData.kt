@@ -1,14 +1,7 @@
 package com.example.testversion.database
 
 import androidx.room.*
-import android.content.Context
 import org.threeten.bp.LocalDate
-import androidx.room.TypeConverters
-import androidx.room.TypeConverter
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.testversion.database.BookingDatabase.Companion.INSTANCE
-import org.threeten.bp.format.DateTimeFormatter
 
 @Entity(tableName = "branches")
 data class Branch(
@@ -115,81 +108,3 @@ data class Review(
     val reviewText: String = "",
     val createdAt: LocalDate
 )
-
-@Database(
-    entities = [Branch::class, HotelRoom::class, Booking::class, Review::class, User::class, FinalizedBooking::class],
-    version = 2,
-    exportSchema = false
-)
-@TypeConverters(BookingDatabase.LocalDateConverter::class)
-abstract class BookingDatabase : RoomDatabase() {
-    abstract fun finalizedBookingDao(): FinalizedBookingDao
-
-    companion object {
-        @Volatile
-        private var INSTANCE: BookingDatabase? = null
-
-        fun getInstance(context: Context): BookingDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    BookingDatabase::class.java,
-                    "booking_database"
-                )
-                    .addMigrations(MIGRATION_1_2)
-                    .build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
-    class LocalDateConverter {
-        private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-
-        @TypeConverter
-        fun fromLocalDate(date: LocalDate?): String? {
-            return date?.format(formatter)
-        }
-
-        @TypeConverter
-        fun toLocalDate(dateString: String?): LocalDate? {
-            return dateString?.let { LocalDate.parse(it, formatter) }
-        }
-    }
-}
-
-val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `finalized_bookings` (
-                `bookingNumber` INTEGER NOT NULL PRIMARY KEY,
-                `branchName` TEXT NOT NULL,
-                `tax` REAL NOT NULL,
-                `lunchBuffetAdult` INTEGER NOT NULL,
-                `lunchBuffetChild` INTEGER NOT NULL,
-                `extraBed` INTEGER NOT NULL,
-                `nights` INTEGER NOT NULL,
-                `paymentMethod` TEXT NOT NULL,
-                `basePrice` REAL NOT NULL,
-                `roomType` TEXT NOT NULL,
-                `totalPrice` REAL NOT NULL,
-                `userEmail` TEXT NOT NULL,
-                `roomId` TEXT NOT NULL,
-                `checkInDate` TEXT NOT NULL,
-                `checkOutDate` TEXT NOT NULL,
-                `createdAt` TEXT NOT NULL,
-                FOREIGN KEY(`roomId`) REFERENCES `rooms`(`roomId`) ON DELETE CASCADE,
-                FOREIGN KEY(`userEmail`) REFERENCES `users`(`email`) ON DELETE CASCADE
-            )
-            """
-        )
-        database.execSQL(
-            "CREATE INDEX IF NOT EXISTS `index_finalized_bookings_userEmail` ON `finalized_bookings`(`userEmail`)"
-        )
-        database.execSQL(
-            "CREATE INDEX IF NOT EXISTS `index_finalized_bookings_roomId` ON `finalized_bookings`(`roomId`)"
-        )
-    }
-}

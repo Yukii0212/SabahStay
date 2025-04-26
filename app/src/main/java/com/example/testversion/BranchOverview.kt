@@ -1,11 +1,16 @@
 package com.example.testversion
 
-import android.content.Intent
 import android.os.Bundle
+import android.content.Intent
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.lifecycleScope
+import com.example.testversion.database.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BranchOverview : AppCompatActivity() {
 
@@ -17,7 +22,14 @@ class BranchOverview : AppCompatActivity() {
         val bookingButton = findViewById<Button>(R.id.bookingButton)
 
         paymentButton.setOnClickListener {
-            startActivity(Intent(this, PaymentDetailsActivity::class.java))
+            lifecycleScope.launch {
+                val database = AppDatabase.getInstance(applicationContext)
+                val bookings = withContext(Dispatchers.IO) {
+                    database.finalizedBookingDao().getAllBookings()
+                }
+                val count = bookings.size
+                Toast.makeText(this@BranchOverview, "$count bookings in the system", Toast.LENGTH_SHORT).show()
+            }
         }
 
         bookingButton.setOnClickListener {
@@ -34,23 +46,18 @@ class BranchOverview : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Click listeners for the 3 cards
         val mountainCard = findViewById<CardView>(R.id.mountainCard)
         val islandCard = findViewById<CardView>(R.id.islandCard)
         val cityCard = findViewById<CardView>(R.id.cityCard)
 
         mountainCard.setOnClickListener {
-            val intent = Intent(this, MountainBranch::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, MountainBranch::class.java))
         }
-
         islandCard.setOnClickListener {
             startActivity(Intent(this, IslandBranch::class.java))
         }
-
         cityCard.setOnClickListener {
             startActivity(Intent(this, CityBranch::class.java))
         }
-
     }
 }

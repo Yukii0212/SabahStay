@@ -18,19 +18,22 @@ interface FinalizedBookingDao {
     suspend fun getMaxBookingNumberInRange(start: Long, end: Long): Long?
 
     @Query("""
-    SELECT * FROM finalized_bookings 
-    WHERE userEmail = :email AND 
-          checkInDate <= :currentDate AND 
-          checkOutDate >= :currentDate
-""")
+        SELECT * FROM finalized_bookings 
+        WHERE userEmail = :email 
+          AND checkInDate <= :currentDate 
+          AND checkOutDate >= :currentDate
+    """)
     suspend fun getCurrentBookings(email: String, currentDate: LocalDate): List<FinalizedBooking>
 
     @Query("""
-    SELECT * FROM finalized_bookings 
-    WHERE userEmail = :email AND 
-          checkOutDate < :currentDate
-""")
+        SELECT * FROM finalized_bookings 
+        WHERE userEmail = :email 
+          AND checkOutDate < :currentDate
+    """)
     suspend fun getPastBookings(email: String, currentDate: LocalDate): List<FinalizedBooking>
+
+    @Query("SELECT * FROM finalized_bookings")
+    suspend fun getAllBookings(): List<FinalizedBooking>
 
     @Query("""
     SELECT * FROM finalized_bookings 

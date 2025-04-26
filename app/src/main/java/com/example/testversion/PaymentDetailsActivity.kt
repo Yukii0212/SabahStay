@@ -1,7 +1,6 @@
 package com.example.testversion
 
 import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable

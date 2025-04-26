@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testversion.R
 import com.example.testversion.adapters.FinalizedBookingAdapter
-import com.example.testversion.database.BookingDatabase
+import com.example.testversion.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,7 +30,7 @@ class PastBookingFragment : Fragment() {
             val userEmail = requireActivity().intent?.getStringExtra("userEmail") ?: return@launch
 
             val pastBookings = withContext(Dispatchers.IO) {
-                val database = BookingDatabase.getInstance(requireContext())
+                val database = AppDatabase.getInstance(requireContext())
                 database.finalizedBookingDao().getPastBookings(userEmail, LocalDate.now())
             }
 
