@@ -75,10 +75,4 @@ interface BookingDao {
 interface ReviewDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(review: Review)
-
-    @Query("SELECT * FROM reviews WHERE roomId = :roomId")
-    suspend fun getByRoom(roomId: String): List<Review>
-
-    @Query("SELECT * FROM reviews WHERE userEmail = :userEmail")
-    suspend fun getByUser(userEmail: String): List<Review>
 }

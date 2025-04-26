@@ -43,6 +43,7 @@
 
         <!-- Reservation Page -->
         <activity android:name=".ReservationActivity" android:exported="true"/>
+        <activity android:name=".BookingDetailsActivity" android:exported="true"/>
 
         <!-- Branches Page -->
         <activity android:name=".CityBranch" android:exported="true"/>

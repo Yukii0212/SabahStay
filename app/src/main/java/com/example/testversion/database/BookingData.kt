@@ -70,6 +70,8 @@ data class Booking(
     val totalPrice: Double,
     val status: String,
     val numGuests: Int,
+    val numberOfAdults: Int,
+    val numberOfChildren: Int,
     val specialRequest: String = "",
     val createdAt: LocalDate,
     val paymentStatus: String

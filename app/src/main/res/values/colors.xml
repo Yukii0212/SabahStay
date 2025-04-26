@@ -21,4 +21,5 @@
     <color name="primary_button">#007AFF</color>
     <color name="blue">#2196F3</color>
     <color name="blue_reservation">#004C99</color>
+    <color name="primary">#3F51B5</color>
 </resources>

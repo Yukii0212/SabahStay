@@ -19,7 +19,7 @@ class BookingSuccessActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.totalPriceTextView).text = "Total: RM %.2f".format(totalPrice)
 
         findViewById<Button>(R.id.homeButton).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, BranchOverview::class.java))
             finish()
         }
     }
