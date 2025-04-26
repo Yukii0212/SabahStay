@@ -190,6 +190,9 @@ class BookingActivity : AppCompatActivity() {
                     putExtra("roomId", roomId ?: "")
                     putExtra("numberOfAdults", updatedAdults)
                     putExtra("numberOfChildren", updatedChildren)
+                    putExtra("extraBed", addBedCheckbox.isChecked)
+                    putExtra("buffetAdult", updatedAdults)
+                    putExtra("buffetChild", updatedChildren)
                 }
                 startActivity(intent)
             }

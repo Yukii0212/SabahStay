@@ -15,7 +15,7 @@ class BookingSuccessActivity : AppCompatActivity() {
         val bookingNumber = intent.getLongExtra("bookingNumber", -1L)
         val totalPrice = intent.getDoubleExtra("totalPrice", 0.0)
 
-        findViewById<TextView>(R.id.bookingNumberTextView).text = "Booking No: $bookingNumber"
+        findViewById<TextView>(R.id.bookingNumberTextView).text = " $bookingNumber"
         findViewById<TextView>(R.id.totalPriceTextView).text = "Total: RM %.2f".format(totalPrice)
 
         findViewById<Button>(R.id.homeButton).setOnClickListener {
