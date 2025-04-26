@@ -18,8 +18,8 @@ interface FinalizedBookingDao {
     @Query("SELECT * FROM finalized_bookings ORDER BY bookingNumber DESC")
     suspend fun getAllBookingsOrdered(): List<FinalizedBooking>
 
-    @Query("SELECT * FROM finalized_bookings")
-    suspend fun getAllBookings(): List<FinalizedBooking>
+    @Query("SELECT * FROM finalized_bookings WHERE userEmail = :email")
+    suspend fun getBookingsByEmail(email: String): List<FinalizedBooking>
 
     @Query("""
     SELECT * FROM finalized_bookings 

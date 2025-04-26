@@ -41,6 +41,20 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <!-- Service Page -->
+        <activity android:name=".ServiceActivity" android:exported="true"/>
+        <activity android:name=".RoomCleaningActivity" android:exported="true"/>
+        <activity android:name=".FoodOrderingActivity" android:exported="true"/>
+        <activity android:name=".TowelRefillActivity" android:exported="true"/>
+        <activity android:name=".WakeUpCallActivity" android:exported="true"/>
+        <activity android:name=".LaundryServiceActivity" android:exported="true"/>
+        <activity android:name=".RequestPillowsActivity" android:exported="true"/>
+        <activity android:name=".DoNotDisturbActivity" android:exported="true"/>
+        <activity android:name=".ChatReceptionActivity" android:exported="true"/>
+        <activity android:name=".TaxiBookingActivity" android:exported="true"/>
+        <activity android:name=".ViewBillsActivity" android:exported="true"/>
+        <activity android:name=".PayBillsActivity" android:exported="true"/>
+
         <!-- Reservation Page -->
         <activity android:name=".ReservationActivity" android:exported="true"/>
         <activity android:name=".BookingDetailsActivity" android:exported="true"/>
