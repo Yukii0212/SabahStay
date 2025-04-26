@@ -4,6 +4,7 @@ import androidx.room.*
 import org.threeten.bp.LocalDate
 
 @Entity(tableName = "branches")
+@TypeConverters(Converters::class)
 data class Branch(
     @PrimaryKey val branchId: String,
     val name: String,
@@ -26,7 +27,7 @@ data class Branch(
     ],
     indices = [Index("branchId")]
 )
-
+@TypeConverters(Converters::class)
 data class HotelRoom(
     @PrimaryKey val roomId: String,
     val roomNumber: String,
@@ -59,7 +60,7 @@ data class HotelRoom(
     ],
     indices = [Index("userEmail"), Index("roomId")]
 )
-
+@TypeConverters(Converters::class)
 data class Booking(
     @PrimaryKey val bookingId: String,
     val userEmail: String,
@@ -98,7 +99,7 @@ data class Booking(
     ],
     indices = [Index("bookingId"), Index("userEmail"), Index("roomId")]
 )
-
+@TypeConverters(Converters::class)
 data class Review(
     @PrimaryKey val reviewId: String,
     val bookingId: String,

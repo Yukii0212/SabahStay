@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/blue_500"
                 android:padding="10dp"
-                android:text="Go to payment bah"
+                android:text="Temporary Button: Check Bookings in the System"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:layout_gravity="center"

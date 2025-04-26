@@ -4,12 +4,10 @@ import androidx.room.*
 import org.threeten.bp.LocalDate
 
 @Dao
+@TypeConverters(Converters::class)
 interface FinalizedBookingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(booking: FinalizedBooking)
-
-    @Query("SELECT * FROM finalized_bookings WHERE userEmail = :email")
-    suspend fun getByUser(email: String): List<FinalizedBooking>
 
     @Query("SELECT * FROM finalized_bookings WHERE bookingNumber = :bookingNumber")
     suspend fun getByBookingNumber(bookingNumber: Long): FinalizedBooking?
@@ -18,11 +16,11 @@ interface FinalizedBookingDao {
     suspend fun getMaxBookingNumberInRange(start: Long, end: Long): Long?
 
     @Query("""
-        SELECT * FROM finalized_bookings 
-        WHERE userEmail = :email 
-          AND checkInDate <= :currentDate 
-          AND checkOutDate >= :currentDate
-    """)
+    SELECT * FROM finalized_bookings
+    WHERE userEmail = :email
+      AND checkInDate <= :currentDate
+      AND checkOutDate >= :currentDate
+""")
     suspend fun getCurrentBookings(email: String, currentDate: LocalDate): List<FinalizedBooking>
 
     @Query("""

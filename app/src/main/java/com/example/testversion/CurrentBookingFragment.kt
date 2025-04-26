@@ -22,7 +22,7 @@ class CurrentBookingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_current_booking, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val noBookingsText = view.findViewById<TextView>(R.id.noBookingsText)
+        val bookingsText = view.findViewById<TextView>(R.id.noBookingsText)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -35,10 +35,10 @@ class CurrentBookingFragment : Fragment() {
             }
 
             if (currentBookings.isNotEmpty()) {
-                noBookingsText.visibility = View.GONE
+                bookingsText.text = "${currentBookings.size} bookings found"
                 recyclerView.adapter = FinalizedBookingAdapter(currentBookings)
             } else {
-                noBookingsText.visibility = View.VISIBLE
+                bookingsText.text = "No bookings found"
             }
         }
 
