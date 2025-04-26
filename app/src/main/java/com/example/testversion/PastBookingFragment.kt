@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.testversion.R
+import com.example.testversion.adapters.FinalizedBookingAdapter
 import com.example.testversion.database.BookingDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,16 +21,22 @@ class PastBookingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_past_booking, container, false)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val noBookingsText = view.findViewById<TextView>(R.id.noBookingsText)
 
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         lifecycleScope.launch {
-            val hasPastBookings = withContext(Dispatchers.IO) {
+            val userEmail = requireActivity().intent?.getStringExtra("userEmail") ?: return@launch
+
+            val pastBookings = withContext(Dispatchers.IO) {
                 val database = BookingDatabase.getInstance(requireContext())
-                database.bookingDao().getPastBookings(LocalDate.now()).isNotEmpty()
+                database.finalizedBookingDao().getPastBookings(userEmail, LocalDate.now())
             }
 
-            if (hasPastBookings) {
+            if (pastBookings.isNotEmpty()) {
                 noBookingsText.visibility = View.GONE
+                recyclerView.adapter = FinalizedBookingAdapter(pastBookings)
             } else {
                 noBookingsText.visibility = View.VISIBLE
             }

@@ -1,6 +1,7 @@
 package com.example.testversion.database
 
 import androidx.room.*
+import org.threeten.bp.LocalDate
 
 @Dao
 interface FinalizedBookingDao {
@@ -18,13 +19,27 @@ interface FinalizedBookingDao {
 
     @Query("""
     SELECT * FROM finalized_bookings 
+    WHERE userEmail = :email AND 
+          checkInDate <= :currentDate AND 
+          checkOutDate >= :currentDate
+""")
+    suspend fun getCurrentBookings(email: String, currentDate: LocalDate): List<FinalizedBooking>
+
+    @Query("""
+    SELECT * FROM finalized_bookings 
+    WHERE userEmail = :email AND 
+          checkOutDate < :currentDate
+""")
+    suspend fun getPastBookings(email: String, currentDate: LocalDate): List<FinalizedBooking>
+
+    @Query("""
+    SELECT * FROM finalized_bookings 
     WHERE roomId = :roomId AND 
     NOT (checkOutDate <= :checkInDate OR checkInDate >= :checkOutDate)
 """)
     suspend fun getConflictingFinalizedBookings(
         roomId: String,
-        checkInDate: org.threeten.bp.LocalDate,
-        checkOutDate: org.threeten.bp.LocalDate
+        checkInDate: LocalDate,
+        checkOutDate: LocalDate
     ): List<FinalizedBooking>
-
 }

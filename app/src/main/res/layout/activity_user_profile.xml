@@ -223,5 +223,13 @@
                 android:textColor="@android:color/white"
                 android:layout_marginTop="20dp"/>
         </FrameLayout>
+        <!-- Footer -->
+        <com.example.testversion.FooterBar
+            android:id="@+id/footer_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>
 </ScrollView>
