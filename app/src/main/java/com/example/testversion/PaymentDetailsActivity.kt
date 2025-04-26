@@ -209,6 +209,13 @@ class PaymentDetailsActivity : AppCompatActivity() {
             intent.putExtra("totalPrice", total)
             intent.putExtra("numberOfAdults", numberOfAdults)
             intent.putExtra("numberOfChildren", numberOfChildren)
+            intent.putExtra("userName", user.name)
+            intent.putExtra("userPhone", user.phone)
+            intent.putExtra("userEmail", user.email)
+            intent.putExtra("userIc", user.passport?: "")
+
+            intent.putExtra("branchName", branch.name)
+            intent.putExtra("roomType", room.roomType)   
             startActivity(intent)
             finish()
         }
