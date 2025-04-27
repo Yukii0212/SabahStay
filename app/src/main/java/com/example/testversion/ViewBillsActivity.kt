@@ -1,6 +1,7 @@
 package com.example.testversion
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -8,49 +9,39 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testversion.database.AppDatabase
-import com.example.testversion.database.ServiceUsage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ViewBillsActivity : AppCompatActivity() {
 
-    private lateinit var billsRecyclerView: RecyclerView
-    private lateinit var noOutstandingBillsText: TextView
-    private var bookingId: String = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_bills)
 
-        billsRecyclerView = findViewById(R.id.billsRecyclerView)
-        noOutstandingBillsText = findViewById(R.id.noOutstandingBillsText)
+        val bookingId = intent.getIntExtra("bookingId", 0)
+        Log.d("ViewBillsActivity", "Received bookingId: $bookingId")
 
-        bookingId = intent.getStringExtra("bookingId") ?: ""
+        val billsRecyclerView = findViewById<RecyclerView>(R.id.billsRecyclerView)
         billsRecyclerView.layoutManager = LinearLayoutManager(this)
-        fetchAndDisplayServiceUsages()
-    }
 
-    private fun fetchAndDisplayServiceUsages() {
+        val noBillsTextView = findViewById<TextView>(R.id.noBillsTextView)
+
         lifecycleScope.launch {
-            val serviceDao = AppDatabase.getInstance(this@ViewBillsActivity).serviceDao()
-
-            val serviceUsages: List<ServiceUsage> = withContext(Dispatchers.IO) {
-                serviceDao.getServiceUsageByBookingId(bookingId)
+            val serviceUsages = withContext(Dispatchers.IO) {
+                val serviceDao = AppDatabase.getInstance(this@ViewBillsActivity).serviceDao()
+                serviceDao.getServiceUsageByBookingId(bookingId.toString())
             }
 
             if (serviceUsages.isEmpty()) {
-                // Show "No Outstanding Bills" message if no data
-                noOutstandingBillsText.visibility = View.VISIBLE
-                billsRecyclerView.visibility = View.GONE
+                noBillsTextView.visibility = View.VISIBLE
             } else {
-                // Hide "No Outstanding Bills" message and display data
-                noOutstandingBillsText.visibility = View.GONE
-                billsRecyclerView.visibility = View.VISIBLE
+                noBillsTextView.visibility = View.GONE
+                billsRecyclerView.adapter = BillsAdapter(serviceUsages, this@ViewBillsActivity)
 
-                // Set up adapter for RecyclerView
-                val adapter = BillsAdapter(serviceUsages)
-                billsRecyclerView.adapter = adapter
+                val total = serviceUsages.sumOf { it.price }
+                val totalTextView = findViewById<TextView>(R.id.totalTextView)
+                totalTextView.text = if (total == 0.0) "Total: FREE" else String.format("Total: RM%.2f", total)
             }
         }
     }

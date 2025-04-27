@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
@@ -15,7 +16,6 @@ import com.example.testversion.database.ServiceUsage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.Calendar
 
 class RoomCleaningActivity : AppCompatActivity() {
@@ -36,9 +36,11 @@ class RoomCleaningActivity : AppCompatActivity() {
 
         // Get bookingId from intent
         bookingId = intent.getIntExtra("bookingId", 0)
+        Log.d("RoomCleaningActivity", "Retrieved bookingId: $bookingId")
 
         // Set up confirm button click listener
         confirmButton.setOnClickListener {
+            Log.d("RoomCleaningActivity", "Submit button clicked")
             handleRoomCleaningRequest()
         }
 
@@ -89,7 +91,7 @@ class RoomCleaningActivity : AppCompatActivity() {
                 },
                 hour,
                 minute,
-                false // Use 12-hour format
+                false
             ).show()
         }
 
@@ -108,53 +110,62 @@ class RoomCleaningActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val serviceDao = AppDatabase.getInstance(this@RoomCleaningActivity).serviceDao()
-            val currentCount = serviceDao.getCleaningRequestCount(bookingId) ?: 0
-            cleaningRequestCount = currentCount + 1
+            try {
+                Log.d("RoomCleaningActivity", "Starting database operations")
+                val serviceDao = AppDatabase.getInstance(this@RoomCleaningActivity).serviceDao()
+                val currentCount = serviceDao.getCleaningRequestCount(bookingId) ?: 0
+                cleaningRequestCount = currentCount + 1
 
-            // Determine if payment is required
-            val isPaymentRequired = cleaningRequestCount > 1
-            val message = if (isPaymentRequired) {
-                "This request will be charged RM15. Do you want to proceed?"
-            } else {
-                "This request is free of charge. Do you want to proceed?"
-            }
+                val isPaymentRequired = cleaningRequestCount > 1
+                val message = if (isPaymentRequired) {
+                    "This request will be charged RM15. Do you want to proceed?"
+                } else {
+                    "This request is free of charge. Do you want to proceed?"
+                }
 
-            // Show confirmation dialog
-            AlertDialog.Builder(this@RoomCleaningActivity)
-                .setTitle("Confirm Room Cleaning Request")
-                .setMessage(message)
-                .setPositiveButton("Confirm") { _, _ ->
-                    lifecycleScope.launch {
-                        // Update cleaning request count
-                        serviceDao.updateCleaningRequestCount(bookingId, cleaningRequestCount)
+                Log.d("RoomCleaningActivity", "Showing confirmation dialog")
+                AlertDialog.Builder(this@RoomCleaningActivity)
+                    .setTitle("Confirm Room Cleaning Request")
+                    .setMessage(message)
+                    .setPositiveButton("Confirm") { _, _ ->
+                        lifecycleScope.launch {
+                            try {
+                                Log.d("RoomCleaningActivity", "Updating cleaning request count")
+                                withContext(Dispatchers.IO) {
+                                    serviceDao.updateCleaningRequestCount(bookingId, cleaningRequestCount)
 
-                        // Store the request in ServiceUsage
-                        val serviceUsage = ServiceUsage(
-                            bookingId = bookingId.toString(),
-                            roomNumber = roomNumber,
-                            serviceId = 1,
-                            serviceName = "Room Cleaning",
-                            price = if (isPaymentRequired) 15.0 else 0.0,
-                            requestTime = cleaningTime,
-                            requestDay = cleaningDate,
-                            isCanceled = false,
-                            cleaningRequestCount = cleaningRequestCount
-                        )
-                        serviceDao.insertServiceUsage(serviceUsage)
+                                    val serviceUsage = ServiceUsage(
+                                        bookingId = bookingId.toString(),
+                                        roomNumber = roomNumber,
+                                        serviceId = 1,
+                                        serviceName = "Room Cleaning",
+                                        price = if (isPaymentRequired) 15.0 else 0.0,
+                                        requestTime = cleaningTime,
+                                        requestDay = cleaningDate,
+                                        isCanceled = false,
+                                        cleaningRequestCount = cleaningRequestCount
+                                    )
+                                    serviceDao.insertServiceUsage(serviceUsage)
+                                }
 
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                this@RoomCleaningActivity,
-                                if (isPaymentRequired) "You have been charged RM15 for this request." else "Your request has been processed free of charge.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@RoomCleaningActivity,
+                                        if (isPaymentRequired) "You have been charged RM15 for this request." else "Your request has been processed free of charge.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    finish()
+                                }
+                            } catch (e: Exception) {
+                                Log.e("RoomCleaningActivity", "Error in inner database operation", e)
+                            }
                         }
                     }
-                }
-                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-                .show()
+                    .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            } catch (e: Exception) {
+                Log.e("RoomCleaningActivity", "Error in handleRoomCleaningRequest", e)
+            }
         }
     }
 
