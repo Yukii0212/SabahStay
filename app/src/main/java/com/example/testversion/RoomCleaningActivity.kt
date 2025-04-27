@@ -47,14 +47,30 @@ class RoomCleaningActivity : AppCompatActivity() {
         cleaningDateEditText = findViewById(R.id.cleaningDateEditText)
         cleaningTimeEditText = findViewById(R.id.cleaningTimeEditText)
 
-        // Set up date picker
+        // Show DatePickerDialog when cleaningDateEditText is clicked
         cleaningDateEditText.setOnClickListener {
-            showDatePickerDialog()
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate = "${selectedDay.toString().padStart(2, '0')}/" +
+                        "${(selectedMonth + 1).toString().padStart(2, '0')}/$selectedYear"
+                cleaningDateEditText.setText(formattedDate)
+            }, year, month, day).show()
         }
 
-        // Set up time picker
+        // Show TimePickerDialog when cleaningTimeEditText is clicked
         cleaningTimeEditText.setOnClickListener {
-            showTimePickerDialog()
+            val calendar = Calendar.getInstance()
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+
+            TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+                val formattedTime = "${selectedHour.toString().padStart(2, '0')}:${selectedMinute.toString().padStart(2, '0')}"
+                cleaningTimeEditText.setText(formattedTime)
+            }, hour, minute, true).show()
         }
 
         setupKeyboardScrolling()
@@ -97,7 +113,7 @@ class RoomCleaningActivity : AppCompatActivity() {
                         val serviceUsage = ServiceUsage(
                             bookingId = bookingId.toString(),
                             roomNumber = roomNumber,
-                            serviceId = 0, // Assuming 0 for room cleaning service
+                            serviceId = 1,
                             serviceName = "Room Cleaning",
                             price = if (isPaymentRequired) 15.0 else 0.0,
                             requestTime = cleaningTime,
@@ -120,30 +136,6 @@ class RoomCleaningActivity : AppCompatActivity() {
                 .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
                 .show()
         }
-    }
-
-    private suspend fun updateCleaningRequestCount(bookingId: Int, count: Int) {
-        val serviceDao = AppDatabase.getInstance(this).serviceDao()
-        serviceDao.updateCleaningRequestCount(bookingId, count)
-    }
-
-    private fun showDatePickerDialog() {
-        val today = LocalDate.now()
-        DatePickerDialog(this, { _, year, month, dayOfMonth ->
-            val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-            cleaningDateEditText.setText(selectedDate.format(dateFormatter))
-        }, today.year, today.monthValue - 1, today.dayOfMonth).show()
-    }
-
-    private fun showTimePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-            val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
-            cleaningTimeEditText.setText(formattedTime)
-        }, hour, minute, true).show()
     }
 
     private fun setupKeyboardScrolling() {
