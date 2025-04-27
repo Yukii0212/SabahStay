@@ -35,7 +35,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:fontFamily="@font/montserratblack" />
+                android:fontFamily="@font/montserrat" />
 
             <TextView
                 android:id="@+id/room_price"
@@ -97,6 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Book Now"
+                    android:fontFamily="@font/poppins"
                     android:background="@drawable/book_button"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"

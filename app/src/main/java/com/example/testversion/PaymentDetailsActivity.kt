@@ -127,13 +127,11 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val userDao = db.userDao()
             val roomDao = db.roomDao()
             val bookingDao = db.finalizedBookingDao()
-            val user = userDao.getUserByEmail(userEmail)
 
+            val user = userDao.getUserByEmail(userEmail)
             if (user == null) {
                 runOnUiThread {
-                    Toast.makeText(this@PaymentDetailsActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
-                }
-                runOnUiThread {
+                    Toast.makeText(this@PaymentDetailsActivity, "User not found", Toast.LENGTH_LONG).show()
                     confirmButton.text = "Confirm Payment"
                     confirmButton.isEnabled = true
                 }
@@ -143,9 +141,9 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val room = roomDao.getAll().find { it.roomId == roomId }
             if (room == null) {
                 runOnUiThread {
+                    Toast.makeText(this@PaymentDetailsActivity, "Room not found", Toast.LENGTH_LONG).show()
                     confirmButton.text = "Confirm Payment"
                     confirmButton.isEnabled = true
-                    Toast.makeText(this@PaymentDetailsActivity, "Room not found in database: $roomId", Toast.LENGTH_LONG).show()
                 }
                 return@launch
             }
@@ -153,18 +151,12 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val branch = db.branchDao().getAll().find { it.branchId == room.branchId }
             if (branch == null) {
                 runOnUiThread {
+                    Toast.makeText(this@PaymentDetailsActivity, "Branch not found", Toast.LENGTH_LONG).show()
                     confirmButton.text = "Confirm Payment"
                     confirmButton.isEnabled = true
-                    Toast.makeText(this@PaymentDetailsActivity, "Branch not found. Please try again.", Toast.LENGTH_LONG).show()
                 }
                 return@launch
             }
-
-            val nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate).toInt()
-            val total = totalCostPassed
-            val subtotal = total / 1.10
-            val tax = total - subtotal
-            val basePrice = subtotal
 
             val range = when (branch.name) {
                 "KK City" -> 10_000_000L to 30_000_000L
@@ -175,11 +167,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val lastNum = withContext(Dispatchers.IO) {
                 bookingDao.getMaxBookingNumberInRange(range.first, range.second) ?: (range.first - 1)
             }
-
             val bookingNumber = lastNum + 1
-
-            val numberOfAdults = intent.getIntExtra("numberOfAdults", 0)
-            val numberOfChildren = intent.getIntExtra("numberOfChildren", 0)
 
             val finalized = FinalizedBooking(
                 bookingNumber = bookingNumber,
@@ -189,7 +177,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 branchName = branch.name,
                 checkInDate = checkInDate,
                 checkOutDate = checkOutDate,
-                nights = nights,
+                nights = numberOfNights,
                 basePrice = basePrice,
                 extraBed = extraBed,
                 lunchBuffetAdult = buffetAdult,
@@ -197,32 +185,18 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 numberOfAdults = numberOfAdults,
                 numberOfChildren = numberOfChildren,
                 tax = tax,
-                totalPrice = total,
+                totalPrice = totalCostFromBookingActivity,
                 paymentMethod = selectedPaymentMethod,
                 createdAt = LocalDate.now()
             )
 
             bookingDao.insert(finalized)
 
-            val updatedRoom = room.copy(isAvailable = false)
-            roomDao.updateRoom(updatedRoom)
-
-            val intent = Intent(this@PaymentDetailsActivity, BookingSuccessActivity::class.java)
-            intent.putExtra("bookingNumber", bookingNumber)
-            intent.putExtra("totalPrice", total)
-            intent.putExtra("numberOfAdults", numberOfAdults)
-            intent.putExtra("numberOfChildren", numberOfChildren)
-            intent.putExtra("userName", user.name)
-            intent.putExtra("userPhone", user.phone)
-            intent.putExtra("userEmail", user.email)
-            intent.putExtra("userIc", user.passport?: "")
-
-            intent.putExtra("branchName", branch.name)
-            intent.putExtra("roomType", room.roomType)   
             startActivity(intent)
             finish()
         }
     }
+
 
     private fun validateAndProceed() {
         val cardNumber = cardNumberEditText.text.toString().replace(" ", "")
