@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
@@ -15,8 +16,6 @@ import com.example.testversion.database.ServiceUsage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.Calendar
 
 class RoomCleaningActivity : AppCompatActivity() {
@@ -27,7 +26,6 @@ class RoomCleaningActivity : AppCompatActivity() {
     private var cleaningRequestCount: Int = 0
     private lateinit var cleaningDateEditText: EditText
     private lateinit var cleaningTimeEditText: EditText
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +36,11 @@ class RoomCleaningActivity : AppCompatActivity() {
 
         // Get bookingId from intent
         bookingId = intent.getIntExtra("bookingId", 0)
+        Log.d("RoomCleaningActivity", "Retrieved bookingId: $bookingId")
 
         // Set up confirm button click listener
         confirmButton.setOnClickListener {
+            Log.d("RoomCleaningActivity", "Submit button clicked")
             handleRoomCleaningRequest()
         }
 
@@ -54,11 +54,20 @@ class RoomCleaningActivity : AppCompatActivity() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val formattedDate = "${selectedDay.toString().padStart(2, '0')}/" +
-                        "${(selectedMonth + 1).toString().padStart(2, '0')}/$selectedYear"
-                cleaningDateEditText.setText(formattedDate)
-            }, year, month, day).show()
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    val formattedDate = "${selectedDay.toString().padStart(2, '0')}/" +
+                            "${(selectedMonth + 1).toString().padStart(2, '0')}/$selectedYear"
+                    cleaningDateEditText.setText(formattedDate)
+                },
+                year,
+                month,
+                day
+            )
+            // Set minimum date to today
+            datePickerDialog.datePicker.minDate = calendar.timeInMillis
+            datePickerDialog.show()
         }
 
         // Show TimePickerDialog when cleaningTimeEditText is clicked
@@ -67,10 +76,23 @@ class RoomCleaningActivity : AppCompatActivity() {
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
 
-            TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-                val formattedTime = "${selectedHour.toString().padStart(2, '0')}:${selectedMinute.toString().padStart(2, '0')}"
-                cleaningTimeEditText.setText(formattedTime)
-            }, hour, minute, true).show()
+            TimePickerDialog(
+                this,
+                { _, selectedHour, selectedMinute ->
+                    val isPM = selectedHour >= 12
+                    val formattedHour = if (selectedHour % 12 == 0) 12 else selectedHour % 12
+                    val formattedTime = String.format(
+                        "%02d:%02d %s",
+                        formattedHour,
+                        selectedMinute,
+                        if (isPM) "PM" else "AM"
+                    )
+                    cleaningTimeEditText.setText(formattedTime)
+                },
+                hour,
+                minute,
+                false
+            ).show()
         }
 
         setupKeyboardScrolling()
@@ -88,53 +110,62 @@ class RoomCleaningActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val serviceDao = AppDatabase.getInstance(this@RoomCleaningActivity).serviceDao()
-            val currentCount = serviceDao.getCleaningRequestCount(bookingId) ?: 0
-            cleaningRequestCount = currentCount + 1
+            try {
+                Log.d("RoomCleaningActivity", "Starting database operations")
+                val serviceDao = AppDatabase.getInstance(this@RoomCleaningActivity).serviceDao()
+                val currentCount = serviceDao.getCleaningRequestCount(bookingId) ?: 0
+                cleaningRequestCount = currentCount + 1
 
-            // Determine if payment is required
-            val isPaymentRequired = cleaningRequestCount > 1
-            val message = if (isPaymentRequired) {
-                "This request will be charged RM15. Do you want to proceed?"
-            } else {
-                "This request is free of charge. Do you want to proceed?"
-            }
+                val isPaymentRequired = cleaningRequestCount > 1
+                val message = if (isPaymentRequired) {
+                    "This request will be charged RM15. Do you want to proceed?"
+                } else {
+                    "This request is free of charge. Do you want to proceed?"
+                }
 
-            // Show confirmation dialog
-            AlertDialog.Builder(this@RoomCleaningActivity)
-                .setTitle("Confirm Room Cleaning Request")
-                .setMessage(message)
-                .setPositiveButton("Confirm") { _, _ ->
-                    lifecycleScope.launch {
-                        // Update cleaning request count
-                        serviceDao.updateCleaningRequestCount(bookingId, cleaningRequestCount)
+                Log.d("RoomCleaningActivity", "Showing confirmation dialog")
+                AlertDialog.Builder(this@RoomCleaningActivity)
+                    .setTitle("Confirm Room Cleaning Request")
+                    .setMessage(message)
+                    .setPositiveButton("Confirm") { _, _ ->
+                        lifecycleScope.launch {
+                            try {
+                                Log.d("RoomCleaningActivity", "Updating cleaning request count")
+                                withContext(Dispatchers.IO) {
+                                    serviceDao.updateCleaningRequestCount(bookingId, cleaningRequestCount)
 
-                        // Store the request in ServiceUsage
-                        val serviceUsage = ServiceUsage(
-                            bookingId = bookingId.toString(),
-                            roomNumber = roomNumber,
-                            serviceId = 1,
-                            serviceName = "Room Cleaning",
-                            price = if (isPaymentRequired) 15.0 else 0.0,
-                            requestTime = cleaningTime,
-                            requestDay = cleaningDate,
-                            isCanceled = false,
-                            cleaningRequestCount = cleaningRequestCount
-                        )
-                        serviceDao.insertServiceUsage(serviceUsage)
+                                    val serviceUsage = ServiceUsage(
+                                        bookingId = bookingId.toString(),
+                                        roomNumber = roomNumber,
+                                        serviceId = 1,
+                                        serviceName = "Room Cleaning",
+                                        price = if (isPaymentRequired) 15.0 else 0.0,
+                                        requestTime = cleaningTime,
+                                        requestDay = cleaningDate,
+                                        isCanceled = false,
+                                        cleaningRequestCount = cleaningRequestCount
+                                    )
+                                    serviceDao.insertServiceUsage(serviceUsage)
+                                }
 
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                this@RoomCleaningActivity,
-                                if (isPaymentRequired) "You have been charged RM15 for this request." else "Your request has been processed free of charge.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@RoomCleaningActivity,
+                                        if (isPaymentRequired) "You have been charged RM15 for this request." else "Your request has been processed free of charge.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    finish()
+                                }
+                            } catch (e: Exception) {
+                                Log.e("RoomCleaningActivity", "Error in inner database operation", e)
+                            }
                         }
                     }
-                }
-                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-                .show()
+                    .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            } catch (e: Exception) {
+                Log.e("RoomCleaningActivity", "Error in handleRoomCleaningRequest", e)
+            }
         }
     }
 

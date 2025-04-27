@@ -2,8 +2,15 @@ package com.example.testversion
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.testversion.database.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ServiceActivity : AppCompatActivity() {
 
@@ -66,9 +73,32 @@ class ServiceActivity : AppCompatActivity() {
             navigateToPage(PayBillsActivity::class.java)
         }
     }
+    private fun getCurrentUserEmail(): String? {
+        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        return sharedPreferences.getString("email", null)
+    }
 
     private fun navigateToPage(activityClass: Class<*>) {
-        val intent = Intent(this, activityClass)
-        startActivity(intent)
+        lifecycleScope.launch {
+            val bookingId = withContext(Dispatchers.IO) {
+                val userEmail = getCurrentUserEmail()
+                Log.d("ServiceActivity", "User email: $userEmail")
+
+                userEmail?.let {
+                    AppDatabase.getInstance(this@ServiceActivity).finalizedBookingDao()
+                        .getLatestBookingIdForUser(it)
+                }
+            }
+
+            Log.d("ServiceActivity", "Booking ID: $bookingId")
+
+            if (bookingId != null) {
+                val intent = Intent(this@ServiceActivity, activityClass)
+                intent.putExtra("bookingId", bookingId)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this@ServiceActivity, "No active booking found", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

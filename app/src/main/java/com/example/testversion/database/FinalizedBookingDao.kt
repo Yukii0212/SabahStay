@@ -21,6 +21,9 @@ interface FinalizedBookingDao {
     @Query("SELECT * FROM finalized_bookings WHERE userEmail = :email")
     suspend fun getBookingsByEmail(email: String): List<FinalizedBooking>
 
+    @Query("SELECT bookingNumber FROM finalized_bookings WHERE userEmail = :email ORDER BY createdAt DESC LIMIT 1")
+    suspend fun getLatestBookingIdForUser(email: String): Int?
+
     @Query("""
     SELECT * FROM finalized_bookings 
     WHERE roomId = :roomId AND 
