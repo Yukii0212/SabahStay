@@ -69,7 +69,12 @@
         <activity android:name=".CityRoom" android:exported="true"/>
         <activity android:name=".IslandRoom" android:exported="true"/>
 
+
+        <activity android:name=".CitySingle" android:exported="true"/>
+
+        <!-- Payment Flow Activities -->
         <!-- Payment Pages-->
+
         <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
         <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>
         <activity android:name=".BookingSuccessActivity" android:exported="true"/>

@@ -3,6 +3,7 @@ package com.example.testversion
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 class CityBranch : AppCompatActivity() {
@@ -14,6 +15,10 @@ class CityBranch : AppCompatActivity() {
         selectRoomButton.setOnClickListener {
             val intent = Intent(this, CityRoom::class.java)
             startActivity(intent)
+        }
+        val backButton = findViewById<ImageView>(R.id.back_button)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }
