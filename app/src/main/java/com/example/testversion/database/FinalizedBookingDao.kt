@@ -15,14 +15,14 @@ interface FinalizedBookingDao {
     @Query("SELECT MAX(bookingNumber) FROM finalized_bookings WHERE bookingNumber BETWEEN :start AND :end")
     suspend fun getMaxBookingNumberInRange(start: Long, end: Long): Long?
 
-    @Query("SELECT * FROM finalized_bookings ORDER BY bookingNumber DESC")
-    suspend fun getAllBookingsOrdered(): List<FinalizedBooking>
-
     @Query("SELECT * FROM finalized_bookings WHERE userEmail = :email")
     suspend fun getBookingsByEmail(email: String): List<FinalizedBooking>
 
     @Query("SELECT bookingNumber FROM finalized_bookings WHERE userEmail = :email ORDER BY createdAt DESC LIMIT 1")
     suspend fun getLatestBookingIdForUser(email: String): Int?
+
+    @Query("SELECT branchName FROM finalized_bookings WHERE bookingNumber = :bookingNumber")
+    suspend fun getBranchByBookingNumber(bookingNumber: Int): String?
 
     @Query("""
     SELECT * FROM finalized_bookings 
