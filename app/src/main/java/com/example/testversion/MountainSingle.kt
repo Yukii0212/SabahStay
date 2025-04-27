@@ -1,4 +1,6 @@
 package com.example.testversion
 
-class MountainSingle {
+import androidx.appcompat.app.AppCompatActivity
+
+class MountainSingle: AppCompatActivity() {
 }
