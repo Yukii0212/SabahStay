@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [Service::class, ServiceUsage::class, User::class, Branch::class, HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class],
-    version = 6,
+    version = 8,
     exportSchema = false
 )
 
