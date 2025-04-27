@@ -1,7 +1,6 @@
 package com.example.testversion
 
 import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -130,7 +129,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
             if (user == null) {
                 runOnUiThread {
-                    Toast.makeText(this@PaymentDetailsActivity, "❌ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PaymentDetailsActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
                 }
                 runOnUiThread {
                     confirmButton.text = "Confirm Payment"
@@ -144,16 +143,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 runOnUiThread {
                     confirmButton.text = "Confirm Payment"
                     confirmButton.isEnabled = true
-                    Toast.makeText(this@PaymentDetailsActivity, "❌ Room not found in database: $roomId", Toast.LENGTH_LONG).show()
-                }
-                return@launch
-            }
-
-            if (room == null) {
-                runOnUiThread {
-                    confirmButton.text = "Confirm Payment"
-                    confirmButton.isEnabled = true
-                    Toast.makeText(this@PaymentDetailsActivity, "Room not found. Please try again.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PaymentDetailsActivity, "Room not found in database: $roomId", Toast.LENGTH_LONG).show()
                 }
                 return@launch
             }
@@ -188,6 +178,9 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
             val bookingNumber = lastNum + 1
 
+            val numberOfAdults = intent.getIntExtra("numberOfAdults", 0)
+            val numberOfChildren = intent.getIntExtra("numberOfChildren", 0)
+
             val finalized = FinalizedBooking(
                 bookingNumber = bookingNumber,
                 userEmail = userEmail,
@@ -201,6 +194,8 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 extraBed = extraBed,
                 lunchBuffetAdult = buffetAdult,
                 lunchBuffetChild = buffetChild,
+                numberOfAdults = numberOfAdults,
+                numberOfChildren = numberOfChildren,
                 tax = tax,
                 totalPrice = total,
                 paymentMethod = selectedPaymentMethod,
@@ -212,11 +207,19 @@ class PaymentDetailsActivity : AppCompatActivity() {
             val intent = Intent(this@PaymentDetailsActivity, BookingSuccessActivity::class.java)
             intent.putExtra("bookingNumber", bookingNumber)
             intent.putExtra("totalPrice", total)
+            intent.putExtra("numberOfAdults", numberOfAdults)
+            intent.putExtra("numberOfChildren", numberOfChildren)
+            intent.putExtra("userName", user.name)
+            intent.putExtra("userPhone", user.phone)
+            intent.putExtra("userEmail", user.email)
+            intent.putExtra("userIc", user.passport?: "")
+
+            intent.putExtra("branchName", branch.name)
+            intent.putExtra("roomType", room.roomType)   
             startActivity(intent)
             finish()
         }
     }
-
 
     private fun validateAndProceed() {
         val cardNumber = cardNumberEditText.text.toString().replace(" ", "")
@@ -329,6 +332,5 @@ class PaymentDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupKeyboardScrolling() {
-        // Optional: handle scrolling to avoid keyboard overlap
     }
 }

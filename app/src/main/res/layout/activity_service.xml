@@ -1,0 +1,408 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_blue">
+
+    <!-- Header -->
+    <include
+        android:id="@+id/header_container"
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ScrollView for services -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/header_container"
+        app:layout_constraintBottom_toTopOf="@id/footer_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:spacing="16dp">
+
+            <!-- Core Services Section -->
+            <TextView
+                android:id="@+id/coreServicesHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFA500"
+                android:gravity="center"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="C O R E   S E R V I C E S"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <!-- Room Cleaning Request -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/roomCleaning"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/room_cleaning"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/roomCleaningText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Room Cleaning Request"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Food & Drinks Ordering -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/foodOrdering"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/food_ordering"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/foodOrderingText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Food and Drinks Ordering"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Towel / Toiletries Refill Request -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/towelRefill"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/towel_refill"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/towelRefillText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Towel / Toiletries Refill Request"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Wake-up Call Request -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/wakeUpCall"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/wake_up_call"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/wakeUpCallText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Wake-up Call Request"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Premium Services Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFA500"
+                android:gravity="center"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="P R E M I U M   S E R V I C E S"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <!-- Taxi / Airport Shuttle Booking -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/taxiBooking"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/taxi_booking"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Taxi / Airport Shuttle Booking"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Laundry Service Request -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/laundryService"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/laundry_services"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/laundryServiceText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Laundry Service Request"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Billing Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFA500"
+                android:gravity="center"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="B I L L I N G   S E C T I O N"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <!-- View Outstanding Bills -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/viewBills"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/view_bills"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="View Outstanding Bills"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Pay Outstanding Bills -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/payBills"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/pay_bills"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Pay Outstanding Bills"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Extras Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFA500"
+                android:gravity="center"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="E X T R A S"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <!-- Chat with Reception -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/chatReception"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/chat_reception"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Chat with Reception"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Request for Extra Pillows, Blankets -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/requestPillows"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/request_pillows"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/requestPillowsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Request for Extra Pillows, Blankets"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <!-- Do Not Disturb / Cleaning Now -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#004C99"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/doNotDisturb"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/do_not_disturb"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/doNotDisturbText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Do Not Disturb / Cleaning Now"
+                        android:textColor="@android:color/white"
+                        android:padding="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Footer -->
+    <com.example.testversion.FooterBar
+        android:id="@+id/footer_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

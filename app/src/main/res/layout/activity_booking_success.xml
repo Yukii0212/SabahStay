@@ -7,12 +7,7 @@
     android:layout_height="match_parent"
     android:background="#1A2345">
 
-    <!-- Profile Icon -->
-
-    <!-- Success Icon -->
-
-    <!-- Booking Success Text -->
-    <ImageView
+        <ImageView
         android:id="@+id/successIcon"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -37,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"/>
 
-    <!-- Booking Number Label -->
+
     <TextView
         android:id="@+id/bookingNumberLabel"
         android:layout_width="wrap_content"
@@ -51,27 +46,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Booking Number Value -->
-
-    <!-- Important Information -->
-
-    <!-- Info Details -->
-
-    <!-- Contact Us -->
-
     <TextView
-        android:id="@+id/bookingNumber"
+        android:id="@+id/bookingNumberTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text=" Here need link to booking number "
+        android:layout_marginTop="20dp"
+        android:text="Loading booking number..."
         android:textColor="#FFFFFF"
-        android:textSize="10sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bookingNumberLabel" />
+
+    <TextView
+        android:id="@+id/totalPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: RM 0.00"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintTop_toBottomOf="@id/bookingNumberTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/infoDetails"
@@ -95,7 +96,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bookingNumber">
+        app:layout_constraintTop_toBottomOf="@id/bookingNumberTextView">
 
         <ImageView
             android:layout_width="24dp"
@@ -159,6 +160,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/downloadReceiptButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download Receipt"
+        app:layout_constraintTop_toBottomOf="@id/homeButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

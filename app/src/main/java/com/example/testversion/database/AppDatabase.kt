@@ -7,14 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [User::class, Branch::class, HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class],
-    version = 1,
+    entities = [Service::class, ServiceUsage::class, User::class, Branch::class, HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class],
+    version = 6,
     exportSchema = false
 )
 
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun serviceDao(): ServiceDao
     abstract fun branchDao(): BranchDao
     abstract fun roomDao(): RoomDao
     abstract fun bookingDao(): BookingDao
@@ -30,14 +31,15 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "sabahstay_db"
-                ).fallbackToDestructiveMigration().build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }
         }
-
-
     }
+
 }
 
 

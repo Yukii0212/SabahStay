@@ -52,8 +52,8 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         if (selectedBranchId == null) {
             selectedBranchId = "kkcity"
             selectedRoomType = "Single Room"
-            branchEditText.setText("Excel Island Branch")
-            roomTypeEditText.setText("Deluxe")
+            branchEditText.setText("Select Branch")
+            roomTypeEditText.setText("Room Type")
         }
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
@@ -77,12 +77,12 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
                 val userEmail = intent.getStringExtra("userEmail")
                 if (userEmail.isNullOrBlank()) {
-                    Toast.makeText(this@SearchAvailableRoomActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SearchAvailableRoomActivity, " User not found in database: $userEmail", Toast.LENGTH_LONG).show()
                     return@launch
                 }
                 val user = db.userDao().getUserByEmail(userEmail)
                 if (user == null) {
-                    Toast.makeText(this@SearchAvailableRoomActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SearchAvailableRoomActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
                     return@launch
                 }
 
@@ -129,7 +129,7 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
                 if (availableRooms.size < requestedRoomCount) {
                     Toast.makeText(this@SearchAvailableRoomActivity,
-                        "❌ Only ${availableRooms.size} room(s) available. You requested $requestedRoomCount.",
+                        "Only ${availableRooms.size} room(s) available. You requested $requestedRoomCount.",
                         Toast.LENGTH_LONG
                     ).show()
                     return@launch
@@ -188,13 +188,20 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
     private fun showRoomTypeDialog() {
         lifecycleScope.launch {
+            if (selectedBranchId.isNullOrEmpty()) {
+                Toast.makeText(this@SearchAvailableRoomActivity, "Please select a branch first", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
             val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
-            val roomTypes = db.roomDao().getAll()
+            val roomsInBranch = db.roomDao().getByBranch(selectedBranchId!!)
+
+            val roomTypes = roomsInBranch
                 .map { it.roomType }
                 .distinct()
 
             if (roomTypes.isEmpty()) {
-                Toast.makeText(this@SearchAvailableRoomActivity, "No room types available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SearchAvailableRoomActivity, "No room types available for selected branch", Toast.LENGTH_SHORT).show()
                 return@launch
             }
 
@@ -209,6 +216,7 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 .show()
         }
     }
+
 
     private fun showBranchDialog() {
         lifecycleScope.launch {
@@ -267,19 +275,19 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         val userCheckOutBlocked = conflictingDates.contains(userCheckOut.minusDays(1))
 
         val message = buildString {
-            appendLine("❌ You cannot stay on these nights:")
+            appendLine("You cannot stay on these nights:")
             appendLine(unavailableNights)
             appendLine()
 
-            // 🔁 Message priority based on which part of user's input is invalid
+
             if (userCheckOutBlocked) {
-                appendLine("✅ You may check out on:")
+                appendLine("You may check out on:")
                 appendLine("• $latestCheckout")
                 appendLine()
             }
 
             if (userCheckInBlocked) {
-                appendLine("✅ Next available check-in:")
+                appendLine("Next available check-in:")
                 appendLine("• $nextCheckIn")
             }
         }

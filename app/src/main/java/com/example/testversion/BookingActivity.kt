@@ -37,6 +37,8 @@ class BookingActivity : AppCompatActivity() {
     private var numberOfNights = 0L
     private var totalCost = 0.0
     private var roomId: String? = null
+    private var updatedAdults: Int = 1
+    private var updatedChildren: Int = 0
 
     private val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.getDefault())
 
@@ -70,10 +72,26 @@ class BookingActivity : AppCompatActivity() {
         val checkInRaw = intent.getStringExtra("checkIn") ?: ""
         val checkOutRaw = intent.getStringExtra("checkOut") ?: ""
 
+        adultCountTextView.addTextChangedListener(object : android.text.TextWatcher {
+            override fun afterTextChanged(s: android.text.Editable?) {
+                updatedAdults = s.toString().toIntOrNull() ?: 1
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        childCountTextView.addTextChangedListener(object : android.text.TextWatcher {
+            override fun afterTextChanged(s: android.text.Editable?) {
+                updatedChildren = s.toString().toIntOrNull() ?: 0
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
         lifecycleScope.launch {
             val user = AppDatabase.getInstance(this@BookingActivity).userDao().getUserByEmail(userEmail)
             if (user == null) {
-                Toast.makeText(this@BookingActivity, "⚠️ User not found in database: $userEmail", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@BookingActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
                 finish()
                 return@launch
             }
@@ -170,6 +188,11 @@ class BookingActivity : AppCompatActivity() {
                     putExtra("checkIn", checkInTextView.text.toString())
                     putExtra("checkOut", checkOutTextView.text.toString())
                     putExtra("roomId", roomId ?: "")
+                    putExtra("numberOfAdults", updatedAdults)
+                    putExtra("numberOfChildren", updatedChildren)
+                    putExtra("extraBed", addBedCheckbox.isChecked)
+                    putExtra("buffetAdult", updatedAdults)
+                    putExtra("buffetChild", updatedChildren)
                 }
                 startActivity(intent)
             }

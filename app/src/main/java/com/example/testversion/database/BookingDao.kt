@@ -27,11 +27,8 @@ interface RoomDao {
     @Query("SELECT * FROM rooms WHERE branchId = :branchId")
     suspend fun getByBranch(branchId: String): List<HotelRoom>
 
-    @Query("SELECT * FROM rooms WHERE branchId = :branchId AND roomType = :roomType LIMIT 1")
-    suspend fun getByBranchAndRoomType(branchId: String, roomType: String): HotelRoom?
-
-    @Query("SELECT * FROM rooms WHERE branchId = :branchId AND roomType = :roomType AND isAvailable = 1 LIMIT 1")
-    suspend fun getAvailableByBranchAndRoomType(branchId: String, roomType: String): HotelRoom?
+    @Query("SELECT roomNumber FROM rooms WHERE roomId = :roomId")
+    suspend fun getRoomNumberById(roomId: String): String
 
     @Query("""
     SELECT * FROM rooms 
@@ -53,17 +50,10 @@ interface RoomDao {
 
 }
 
-
 @Dao
 interface BookingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(booking: Booking)
-
-    @Query("SELECT * FROM bookings")
-    suspend fun getAll(): List<Booking>
-
-    @Query("SELECT * FROM bookings WHERE userEmail = :userEmail")
-    suspend fun getByUser(userEmail: String): List<Booking>
 
     @Query("""
     SELECT * FROM bookings 
@@ -72,23 +62,13 @@ interface BookingDao {
 """)
     suspend fun getConflictingBookings(
         roomId: String,
-        checkInDate: org.threeten.bp.LocalDate,
-        checkOutDate: org.threeten.bp.LocalDate
+        checkInDate: LocalDate,
+        checkOutDate: LocalDate
     ): List<Booking>
-
-    @Query("SELECT * FROM bookings WHERE roomId = :roomId")
-    suspend fun getByRoom(roomId: String): List<Booking>
-
 }
 
 @Dao
 interface ReviewDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(review: Review)
-
-    @Query("SELECT * FROM reviews WHERE roomId = :roomId")
-    suspend fun getByRoom(roomId: String): List<Review>
-
-    @Query("SELECT * FROM reviews WHERE userEmail = :userEmail")
-    suspend fun getByUser(userEmail: String): List<Review>
 }
