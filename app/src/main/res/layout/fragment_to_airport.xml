@@ -172,6 +172,29 @@
                 android:clickable="true"
                 android:textColorHint="#A0A0A0" />
 
+            <!-- Price -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/priceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/input_default_border"
+                android:hint="Price will be displayed here"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:paddingStart="10dp"
+                android:focusable="false"
+                android:clickable="false"
+                android:textColorHint="#A0A0A0" />
+
             <!-- Submit Button -->
             <Button
                 android:id="@+id/submitBookingRequestButton"
