@@ -67,6 +67,8 @@
         </LinearLayout>
     </ScrollView>
 
+
+
     <!-- Fixed Footer -->
     <include
         android:id="@+id/footer_container"

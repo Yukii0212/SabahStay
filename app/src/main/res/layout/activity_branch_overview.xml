@@ -117,17 +117,7 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/bookingButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Go to booking lah"
-                android:textSize="18sp"
-                android:padding="10dp"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/purple_400"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="16dp" />
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

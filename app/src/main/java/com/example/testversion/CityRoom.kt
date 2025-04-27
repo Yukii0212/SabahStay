@@ -71,20 +71,33 @@ class CityRoom : AppCompatActivity() {
         val roomPrice = cardView.findViewById<TextView>(R.id.room_price)
         val personNum = cardView.findViewById<TextView>(R.id.person_number)
         val roomDetailsRow = cardView.findViewById<LinearLayout>(R.id.room_details_row)
-        val bookNowButton = cardView.findViewById<Button>(R.id.book_now_button)
+        val bookNowButton = cardView.findViewById<Button>(R.id.bookingButton)
 
         roomImage.setImageResource(imageResId)
         roomTitle.text = title
         roomPrice.text = price
         personNum.text = personNumber
 
+        val bookingButton = findViewById<Button>(R.id.bookingButton)
+
+        bookingButton.setOnClickListener {
+            val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+            val userEmail = sharedPreferences.getString("email", null)
+
+            if (userEmail.isNullOrEmpty()) {
+                Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, SearchAvailableRoomActivity::class.java)
+            intent.putExtra("userEmail", userEmail)
+            startActivity(intent)
+        }
+
         roomDetailsRow.setOnClickListener {
             startActivity(Intent(this, detailActivity))
         }
 
-        bookNowButton.setOnClickListener {
-            Toast.makeText(this, "Booking $title...", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, BookingActivity::class.java))
-        }
+
     }
 }
