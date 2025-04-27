@@ -52,8 +52,8 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         if (selectedBranchId == null) {
             selectedBranchId = "kkcity"
             selectedRoomType = "Single Room"
-            branchEditText.setText("Excel Island Branch")
-            roomTypeEditText.setText("Deluxe")
+            branchEditText.setText("Select Branch")
+            roomTypeEditText.setText("Room Type")
         }
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
