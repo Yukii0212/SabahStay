@@ -37,6 +37,8 @@ class PaymentDetailsActivity : AppCompatActivity() {
     private var extraBed: Boolean = false
     private var buffetAdult: Int = 0
     private var buffetChild: Int = 0
+    private var totalCostPassed: Double = 0.0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +66,7 @@ class PaymentDetailsActivity : AppCompatActivity() {
         extraBed = intent.getBooleanExtra("extraBed", false)
         buffetAdult = intent.getIntExtra("buffetAdult", 0)
         buffetChild = intent.getIntExtra("buffetChild", 0)
+        totalCostPassed = intent.getDoubleExtra("totalCost", 0.0)
 
         val checkInStr = intent.getStringExtra("checkIn")
         val checkOutStr = intent.getStringExtra("checkOut")
@@ -155,22 +158,6 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 return@launch
             }
 
-            val checkInStr = intent.getStringExtra("checkIn") ?: ""
-            val checkOutStr = intent.getStringExtra("checkOut") ?: ""
-
-            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.getDefault())
-            val checkInDate = LocalDate.parse(checkInStr, formatter)
-            val checkOutDate = LocalDate.parse(checkOutStr, formatter)
-
-            val numberOfNights = ChronoUnit.DAYS.between(checkInDate, checkOutDate).toInt()
-            val totalCostFromBookingActivity = intent.getDoubleExtra("totalCost", 0.0)
-
-            val tax = totalCostFromBookingActivity * 10.0 / 110.0
-            val basePrice = totalCostFromBookingActivity - tax
-
-            val numberOfAdults = intent.getIntExtra("numberOfAdults", 0)
-            val numberOfChildren = intent.getIntExtra("numberOfChildren", 0)
-
             val range = when (branch.name) {
                 "KK City" -> 10_000_000L to 30_000_000L
                 "Kundasang" -> 40_000_000L to 60_000_000L
@@ -205,18 +192,6 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
             bookingDao.insert(finalized)
 
-            val intent = Intent(this@PaymentDetailsActivity, BookingSuccessActivity::class.java).apply {
-                putExtra("bookingNumber", bookingNumber)
-                putExtra("totalPrice", totalCostFromBookingActivity)
-                putExtra("numberOfAdults", numberOfAdults)
-                putExtra("numberOfChildren", numberOfChildren)
-                putExtra("userName", user.name)
-                putExtra("userPhone", user.phone)
-                putExtra("userEmail", user.email)
-                putExtra("userIc", user.passport ?: "")
-                putExtra("branchName", branch.name)
-                putExtra("roomType", room.roomType)
-            }
             startActivity(intent)
             finish()
         }
