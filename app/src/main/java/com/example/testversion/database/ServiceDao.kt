@@ -12,8 +12,8 @@ interface ServiceDao {
     @Query("SELECT * FROM services WHERE id = :id")
     suspend fun getServiceById(id: Int): Service?
 
-    @Query("SELECT * FROM services")
-    suspend fun getAllServices(): List<Service>
+    @Query("UPDATE services SET price = :newPrice WHERE id = :serviceId")
+    suspend fun updateServicePrice(serviceId: Int, newPrice: Double)
 
     // Service usage operations
     @Insert
@@ -30,4 +30,7 @@ interface ServiceDao {
 
     @Update
     suspend fun updateServiceUsage(serviceUsage: ServiceUsage)
+
+    @Query("SELECT cleaningRequestCount FROM service_usage WHERE bookingId = :bookingId ORDER BY id DESC LIMIT 1")
+    suspend fun getCleaningRequestCount(bookingId: Int): Int?
 }

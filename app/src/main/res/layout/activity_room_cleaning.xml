@@ -1,3 +1,12 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background_blue">
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -85,7 +94,9 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:paddingStart="10dp"
-            android:enabled="false"
+            android:enabled="true"
+            android:focusable="true"
+            android:clickable="true"
             android:textColorHint="#A0A0A0" />
 
         <!-- Guest Name -->
@@ -107,7 +118,9 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:paddingStart="10dp"
-            android:enabled="false"
+            android:enabled="true"
+            android:focusable="true"
+            android:clickable="true"
             android:textColorHint="#A0A0A0" />
 
         <!-- Cleaning Date -->
@@ -132,7 +145,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:paddingStart="10dp"
-            android:focusable="false"
+            android:focusable="true"
             android:clickable="true"
             android:textColorHint="#A0A0A0"
             app:layout_constraintTop_toBottomOf="@id/cleaningTimeEditText"
@@ -158,7 +171,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:paddingStart="10dp"
-            android:focusable="false"
+            android:focusable="true"
             android:clickable="true"
             android:textColorHint="#A0A0A0" />
 
@@ -171,14 +184,15 @@
             android:backgroundTint="@color/button_blue"
             android:textColor="@android:color/white"
             android:layout_marginTop="24dp" />
-    </LinearLayout>
 
-    <!-- Footer -->
-    <com.example.testversion.FooterBar
-        android:id="@+id/footer_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <!-- Footer -->
+        <com.example.testversion.FooterBar
+            android:id="@+id/footer_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
