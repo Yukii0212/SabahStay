@@ -37,6 +37,8 @@ class PaymentDetailsActivity : AppCompatActivity() {
     private var extraBed: Boolean = false
     private var buffetAdult: Int = 0
     private var buffetChild: Int = 0
+    private var totalCostPassed: Double = 0.0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +61,12 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
         confirmButton.visibility = View.GONE
 
-        // Safely extract and parse intent data
         userEmail = intent.getStringExtra("userEmail") ?: ""
         roomId = intent.getStringExtra("roomId") ?: ""
         extraBed = intent.getBooleanExtra("extraBed", false)
         buffetAdult = intent.getIntExtra("buffetAdult", 0)
         buffetChild = intent.getIntExtra("buffetChild", 0)
+        totalCostPassed = intent.getDoubleExtra("totalCost", 0.0)
 
         val checkInStr = intent.getStringExtra("checkIn")
         val checkOutStr = intent.getStringExtra("checkOut")
@@ -159,12 +161,10 @@ class PaymentDetailsActivity : AppCompatActivity() {
             }
 
             val nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate).toInt()
-            val basePrice = room.pricePerNight * nights
-            val extraBedCost = if (extraBed) 100.0 else 0.0
-            val buffetCost = buffetAdult * 120.0 + buffetChild * 80.0
-            val subtotal = basePrice + extraBedCost + buffetCost
-            val tax = subtotal * 0.10
-            val total = subtotal + tax
+            val total = totalCostPassed
+            val subtotal = total / 1.10
+            val tax = total - subtotal
+            val basePrice = subtotal
 
             val range = when (branch.name) {
                 "KK City" -> 10_000_000L to 30_000_000L
@@ -203,6 +203,9 @@ class PaymentDetailsActivity : AppCompatActivity() {
             )
 
             bookingDao.insert(finalized)
+
+            val updatedRoom = room.copy(isAvailable = false)
+            roomDao.updateRoom(updatedRoom)
 
             val intent = Intent(this@PaymentDetailsActivity, BookingSuccessActivity::class.java)
             intent.putExtra("bookingNumber", bookingNumber)

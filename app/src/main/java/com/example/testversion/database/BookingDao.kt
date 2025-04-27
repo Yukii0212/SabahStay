@@ -48,6 +48,8 @@ interface RoomDao {
         checkOut: LocalDate
     ): HotelRoom?
 
+    @Update
+    suspend fun updateRoom(room: HotelRoom)
 }
 
 @Dao
