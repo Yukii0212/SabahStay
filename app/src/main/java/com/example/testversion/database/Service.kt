@@ -21,5 +21,6 @@ data class ServiceUsage(
     val requestTime: String,
     val requestDay: String,
     val isCanceled: Boolean = false,
-    var cleaningRequestCount: Int = 0
+    var cleaningRequestCount: Int = 0,
+    val isPaid: Boolean = false
 )

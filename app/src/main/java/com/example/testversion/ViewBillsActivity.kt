@@ -1,17 +1,11 @@
 package com.example.testversion
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.testversion.database.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class ViewBillsActivity : AppCompatActivity() {
 
@@ -19,30 +13,18 @@ class ViewBillsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_bills)
 
-        val bookingId = intent.getIntExtra("bookingId", 0)
-        Log.d("ViewBillsActivity", "Received bookingId: $bookingId")
+        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
 
-        val billsRecyclerView = findViewById<RecyclerView>(R.id.billsRecyclerView)
-        billsRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        val noBillsTextView = findViewById<TextView>(R.id.noBillsTextView)
-
-        lifecycleScope.launch {
-            val serviceUsages = withContext(Dispatchers.IO) {
-                val serviceDao = AppDatabase.getInstance(this@ViewBillsActivity).serviceDao()
-                serviceDao.getServiceUsageByBookingId(bookingId.toString())
-            }
-
-            if (serviceUsages.isEmpty()) {
-                noBillsTextView.visibility = View.VISIBLE
-            } else {
-                noBillsTextView.visibility = View.GONE
-                billsRecyclerView.adapter = BillsAdapter(serviceUsages, this@ViewBillsActivity)
-
-                val total = serviceUsages.sumOf { it.price }
-                val totalTextView = findViewById<TextView>(R.id.totalTextView)
-                totalTextView.text = if (total == 0.0) "Total: FREE" else String.format("Total: RM%.2f", total)
-            }
+        val adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount() = 2
+            override fun createFragment(position: Int) =
+                if (position == 0) OutstandingFragment() else PaidFragment()
         }
+
+        viewPager.adapter = adapter
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = if (position == 0) "OUTSTANDING" else "PAID"
+        }.attach()
     }
 }

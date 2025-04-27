@@ -218,31 +218,6 @@
                         android:textColor="@android:color/white"
                         android:padding="8dp" />
                 </LinearLayout>
-
-                <!-- Pay Outstanding Bills -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="#004C99"
-                    android:layout_marginBottom="8dp">
-
-                    <ImageView
-                        android:id="@+id/payBills"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:layout_margin="8dp"
-                        android:src="@drawable/pay_bills"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Pay Outstanding Bills"
-                        android:textColor="@android:color/white"
-                        android:padding="8dp" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
