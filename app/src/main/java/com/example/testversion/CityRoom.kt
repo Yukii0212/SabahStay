@@ -84,7 +84,7 @@ class CityRoom : AppCompatActivity() {
 
         bookNowButton.setOnClickListener {
             Toast.makeText(this, "Booking $title...", Toast.LENGTH_SHORT).show()
-            // Navigate to Booking Page if you have one
+            startActivity(Intent(this, BookingActivity::class.java))
         }
     }
 }
