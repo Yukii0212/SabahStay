@@ -21,7 +21,7 @@ class MountainRoom : AppCompatActivity() {
             R.id.single_room_card,
             R.drawable.mountain_single,
             "Single Room",
-            "RM250 /per night",
+            "RM220 /per night",
             "1",
             MountainSingle::class.java
         )
@@ -31,7 +31,7 @@ class MountainRoom : AppCompatActivity() {
             R.id.double_room_card,
             R.drawable.mountain_double,
             "Double Room",
-            "RM320 /per night",
+            "RM260 /per night",
             "2",
             MountainDouble::class.java
         )
@@ -41,7 +41,7 @@ class MountainRoom : AppCompatActivity() {
             R.id.queen_room_card,
             R.drawable.mountain_queen,
             "Queen Room",
-            "RM4000 /per night",
+            "RM370 /per night",
             "2",
             MountainQueen::class.java
         )
@@ -51,7 +51,7 @@ class MountainRoom : AppCompatActivity() {
             R.id.deluxe_suite_card,
             R.drawable.mountain_deluxe,
             "Deluxe Suite",
-            "RM700 /per night",
+            "RM580 /per night",
             "3",
             MountainDeluxe::class.java
         )

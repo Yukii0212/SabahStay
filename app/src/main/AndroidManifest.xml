@@ -66,8 +66,22 @@
         <activity android:name=".CityRoom" android:exported="true"/>
         <activity android:name=".IslandRoom" android:exported="true"/>
 
-
+        <!-- All rooms details -->
+        <activity android:name=".MountainSingle" android:exported="true"/>
+        <activity android:name=".MountainDouble" android:exported="true"/>
+        <activity android:name=".MountainQueen" android:exported="true"/>
+        <activity android:name=".MountainDeluxe" android:exported="true"/>
         <activity android:name=".CitySingle" android:exported="true"/>
+        <activity android:name=".CityDouble" android:exported="true"/>
+        <activity android:name=".CityQueen" android:exported="true"/>
+        <activity android:name=".CityDeluxe" android:exported="true"/>
+        <activity android:name=".IslandSingle" android:exported="true"/>
+        <activity android:name=".IslandDouble" android:exported="true"/>
+        <activity android:name=".IslandQueen" android:exported="true"/>
+        <activity android:name=".IslandDeluxe" android:exported="true"/>
+
+        <!-- Fullscreen -->
+        <activity android:name=".FullscreenImageActivity" android:exported="true"/>
 
         <!-- Payment Flow Activities -->
         <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
