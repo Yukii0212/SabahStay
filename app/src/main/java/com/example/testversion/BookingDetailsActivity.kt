@@ -23,10 +23,18 @@ class BookingDetailsActivity : AppCompatActivity() {
                     database.finalizedBookingDao().getByBookingNumber(bookingId)
                 }
 
+                val roomNumber = withContext(Dispatchers.IO) {
+                    val database = AppDatabase.getInstance(this@BookingDetailsActivity)
+                    booking?.let {
+                        database.roomDao().getRoomNumberById(it.roomId)
+                    }
+                }
+
                 booking?.let {
                     findViewById<TextView>(R.id.bookingIdText).text = "Booking ID: ${it.bookingNumber}"
                     findViewById<TextView>(R.id.branchNameText).text = "Branch: ${it.branchName}"
                     findViewById<TextView>(R.id.roomTypeText).text = "Room Type: ${it.roomType}"
+                    findViewById<TextView>(R.id.roomNumberText).text = "Room Number: $roomNumber"
                     findViewById<TextView>(R.id.checkInDateText).text = "Check-In: ${it.checkInDate}"
                     findViewById<TextView>(R.id.checkOutDateText).text = "Check-Out: ${it.checkOutDate}"
                     findViewById<TextView>(R.id.nightsText).text = "Nights: ${it.nights}"

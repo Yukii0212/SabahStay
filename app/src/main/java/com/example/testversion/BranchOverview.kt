@@ -18,19 +18,7 @@ class BranchOverview : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_branch_overview)
 
-        val paymentButton = findViewById<Button>(R.id.paymentButton)
         val bookingButton = findViewById<Button>(R.id.bookingButton)
-
-        paymentButton.setOnClickListener {
-            lifecycleScope.launch {
-                val database = AppDatabase.getInstance(applicationContext)
-                val bookings = withContext(Dispatchers.IO) {
-                    database.finalizedBookingDao().getAllBookings()
-                }
-                val count = bookings.size
-                Toast.makeText(this@BranchOverview, "$count bookings in the system", Toast.LENGTH_SHORT).show()
-            }
-        }
 
         bookingButton.setOnClickListener {
             val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)

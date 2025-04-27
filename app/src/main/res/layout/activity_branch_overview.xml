@@ -129,18 +129,6 @@
                 android:textColor="@android:color/white"
                 android:layout_marginTop="16dp" />
 
-            <Button
-                android:id="@+id/paymentButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/blue_500"
-                android:padding="10dp"
-                android:text="Temporary Button: Check Bookings in the System"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

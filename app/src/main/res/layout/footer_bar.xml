@@ -65,7 +65,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/notification_section"
+        android:id="@+id/service_section"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -75,17 +75,17 @@
         android:focusable="true">
 
         <ImageView
-            android:id="@+id/notification_icon"
+            android:id="@+id/service_icon"
             android:layout_width="35dp"
             android:layout_height="36dp"
-            android:src="@drawable/notification_button"
+            android:src="@drawable/service_button"
             app:tint="@android:color/white" />
 
         <TextView
-            android:id="@+id/notification_text"
+            android:id="@+id/service_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notification"
+            android:text="Service"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:textSize="10sp" />

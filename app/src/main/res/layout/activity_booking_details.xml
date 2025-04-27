@@ -93,6 +93,15 @@
                         android:layout_marginBottom="12dp" />
 
                     <TextView
+                        android:id="@+id/roomNumberText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Room Number: 101"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
                         android:id="@+id/checkInDateText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
