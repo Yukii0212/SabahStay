@@ -18,21 +18,6 @@ class BranchOverview : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_branch_overview)
 
-        val bookingButton = findViewById<Button>(R.id.bookingButton)
-
-        bookingButton.setOnClickListener {
-            val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
-            val userEmail = sharedPreferences.getString("email", null)
-
-            if (userEmail.isNullOrEmpty()) {
-                Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val intent = Intent(this, SearchAvailableRoomActivity::class.java)
-            intent.putExtra("userEmail", userEmail)
-            startActivity(intent)
-        }
 
         val mountainCard = findViewById<CardView>(R.id.mountainCard)
         val islandCard = findViewById<CardView>(R.id.islandCard)
