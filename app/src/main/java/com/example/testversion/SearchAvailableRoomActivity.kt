@@ -52,8 +52,8 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         if (selectedBranchId == null) {
             selectedBranchId = "kkcity"
             selectedRoomType = "Single Room"
-            branchEditText.setText("Excel Island Branch")
-            roomTypeEditText.setText("Deluxe")
+            branchEditText.setText("Select Branch")
+            roomTypeEditText.setText("Room Type")
         }
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
@@ -188,13 +188,20 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
     private fun showRoomTypeDialog() {
         lifecycleScope.launch {
+            if (selectedBranchId.isNullOrEmpty()) {
+                Toast.makeText(this@SearchAvailableRoomActivity, "Please select a branch first", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
             val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
-            val roomTypes = db.roomDao().getAll()
+            val roomsInBranch = db.roomDao().getByBranch(selectedBranchId!!)
+
+            val roomTypes = roomsInBranch
                 .map { it.roomType }
                 .distinct()
 
             if (roomTypes.isEmpty()) {
-                Toast.makeText(this@SearchAvailableRoomActivity, "No room types available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SearchAvailableRoomActivity, "No room types available for selected branch", Toast.LENGTH_SHORT).show()
                 return@launch
             }
 
@@ -209,6 +216,7 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 .show()
         }
     }
+
 
     private fun showBranchDialog() {
         lifecycleScope.launch {
