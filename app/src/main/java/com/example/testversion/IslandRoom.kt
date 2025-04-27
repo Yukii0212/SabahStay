@@ -21,7 +21,7 @@ class IslandRoom : AppCompatActivity() {
             R.id.single_room_card,
             R.drawable.island_single,
             "Single Room",
-            "RM220 /per night",
+            "RM250 /per night",
             "1",
             IslandSingle::class.java
         )
@@ -31,7 +31,7 @@ class IslandRoom : AppCompatActivity() {
             R.id.double_room_card,
             R.drawable.island_double,
             "Double Room",
-            "RM260 /per night",
+            "RM320 /per night",
             "2",
             IslandDouble::class.java
         )
@@ -41,7 +41,7 @@ class IslandRoom : AppCompatActivity() {
             R.id.queen_room_card,
             R.drawable.island_queen,
             "Queen Room",
-            "RM370 /per night",
+            "RM400 /per night",
             "2",
             IslandQueen::class.java
         )
@@ -51,7 +51,7 @@ class IslandRoom : AppCompatActivity() {
             R.id.deluxe_suite_card,
             R.drawable.island_deluxe,
             "Deluxe Suite",
-            "RM580 /per night",
+            "RM700 /per night",
             "3",
             IslandDeluxe::class.java
         )
