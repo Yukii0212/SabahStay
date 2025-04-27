@@ -6,7 +6,9 @@
         android:allowBackup="true"
         android:label="Sabah Stay"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:name=".SSApp">
+        android:name=".SSApp"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
 
         <!-- Splash / Opening Animation -->
         <activity
