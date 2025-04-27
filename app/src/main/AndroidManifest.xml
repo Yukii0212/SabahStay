@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="Sabah Stay"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:name=".SSApp">
 
@@ -45,12 +45,7 @@
         <activity android:name=".ServiceActivity" android:exported="true"/>
         <activity android:name=".RoomCleaningActivity" android:exported="true"/>
         <activity android:name=".FoodOrderingActivity" android:exported="true"/>
-        <activity android:name=".TowelRefillActivity" android:exported="true"/>
-        <activity android:name=".WakeUpCallActivity" android:exported="true"/>
         <activity android:name=".LaundryServiceActivity" android:exported="true"/>
-        <activity android:name=".RequestPillowsActivity" android:exported="true"/>
-        <activity android:name=".DoNotDisturbActivity" android:exported="true"/>
-        <activity android:name=".ChatReceptionActivity" android:exported="true"/>
         <activity android:name=".TaxiBookingActivity" android:exported="true"/>
         <activity android:name=".ViewBillsActivity" android:exported="true"/>
         <activity android:name=".PayBillsActivity" android:exported="true"/>
@@ -73,8 +68,6 @@
         <activity android:name=".CitySingle" android:exported="true"/>
 
         <!-- Payment Flow Activities -->
-        <!-- Payment Pages-->
-
         <activity android:name=".PaymentDetailsActivity" android:windowSoftInputMode="adjustResize|stateHidden" android:exported="true"/>
         <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>
         <activity android:name=".BookingSuccessActivity" android:exported="true"/>
