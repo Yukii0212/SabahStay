@@ -42,11 +42,6 @@ class ServiceActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.viewBills).setOnClickListener {
             navigateToPage(ViewBillsActivity::class.java)
         }
-
-        // Redirect to Pay Bills page
-        findViewById<ImageView>(R.id.payBills).setOnClickListener {
-            navigateToPage(PayBillsActivity::class.java)
-        }
     }
     private fun getCurrentUserEmail(): String? {
         val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)

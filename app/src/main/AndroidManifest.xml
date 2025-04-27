@@ -74,6 +74,7 @@
         <activity android:name=".PendingPaymentActivity" android:windowSoftInputMode="adjustResize" android:exported="true"/>
         <activity android:name=".BookingSuccessActivity" android:exported="true"/>
         <activity android:name=".PaymentFailedActivity" android:exported="true"/>
+        <activity android:name=".PaymentSuccessActivity" android:exported="true"/>
         <activity android:name=".SearchAvailableRoomActivity" android:exported="true"/>
         <activity android:name=".BookingActivity" />
     </application>

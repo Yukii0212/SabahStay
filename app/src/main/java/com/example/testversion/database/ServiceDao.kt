@@ -30,4 +30,7 @@ interface ServiceDao {
 
     @Query("SELECT * FROM service_usage WHERE bookingId = :bookingId AND serviceid = 5")
     fun getLaundryServiceUsageByBookingId(bookingId: String): List<ServiceUsage>
+
+    @Query("UPDATE service_usage SET isPaid = 1 WHERE isPaid = 0")
+    suspend fun updateAllIsPaid()
 }
