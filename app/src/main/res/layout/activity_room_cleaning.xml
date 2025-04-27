@@ -145,13 +145,9 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:paddingStart="10dp"
-            android:focusable="true"
+            android:focusable="false"
             android:clickable="true"
-            android:textColorHint="#A0A0A0"
-            app:layout_constraintTop_toBottomOf="@id/cleaningTimeEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
+            android:textColorHint="#A0A0A0" />
         <!-- Cleaning Time -->
         <TextView
             android:layout_width="match_parent"
@@ -171,7 +167,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:paddingStart="10dp"
-            android:focusable="true"
+            android:focusable="false"
             android:clickable="true"
             android:textColorHint="#A0A0A0" />
 

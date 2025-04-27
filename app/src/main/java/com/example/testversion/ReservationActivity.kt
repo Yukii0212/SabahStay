@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testversion.database.AppDatabase
-import com.example.testversion.database.FinalizedBooking
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,9 +22,14 @@ class ReservationActivity : AppCompatActivity() {
         bookingsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         lifecycleScope.launch {
-            val bookings = withContext(Dispatchers.IO) {
-                val database = AppDatabase.getInstance(this@ReservationActivity)
-                database.finalizedBookingDao().getAllBookingsOrdered()
+            val userEmail = getCurrentUserEmail()
+            val bookings = if (userEmail != null) {
+                withContext(Dispatchers.IO) {
+                    val database = AppDatabase.getInstance(this@ReservationActivity)
+                    database.finalizedBookingDao().getBookingsByEmail(userEmail)
+                }
+            } else {
+                emptyList()
             }
 
             val noBookingsTextView = findViewById<TextView>(R.id.noBookingsTextView)
@@ -42,5 +46,10 @@ class ReservationActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun getCurrentUserEmail(): String? {
+        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        return sharedPreferences.getString("email", null)
     }
 }

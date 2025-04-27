@@ -15,7 +15,6 @@ import com.example.testversion.database.ServiceUsage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -27,7 +26,6 @@ class RoomCleaningActivity : AppCompatActivity() {
     private var cleaningRequestCount: Int = 0
     private lateinit var cleaningDateEditText: EditText
     private lateinit var cleaningTimeEditText: EditText
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +52,20 @@ class RoomCleaningActivity : AppCompatActivity() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val formattedDate = "${selectedDay.toString().padStart(2, '0')}/" +
-                        "${(selectedMonth + 1).toString().padStart(2, '0')}/$selectedYear"
-                cleaningDateEditText.setText(formattedDate)
-            }, year, month, day).show()
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    val formattedDate = "${selectedDay.toString().padStart(2, '0')}/" +
+                            "${(selectedMonth + 1).toString().padStart(2, '0')}/$selectedYear"
+                    cleaningDateEditText.setText(formattedDate)
+                },
+                year,
+                month,
+                day
+            )
+            // Set minimum date to today
+            datePickerDialog.datePicker.minDate = calendar.timeInMillis
+            datePickerDialog.show()
         }
 
         // Show TimePickerDialog when cleaningTimeEditText is clicked
@@ -67,10 +74,23 @@ class RoomCleaningActivity : AppCompatActivity() {
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
 
-            TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-                val formattedTime = "${selectedHour.toString().padStart(2, '0')}:${selectedMinute.toString().padStart(2, '0')}"
-                cleaningTimeEditText.setText(formattedTime)
-            }, hour, minute, true).show()
+            TimePickerDialog(
+                this,
+                { _, selectedHour, selectedMinute ->
+                    val isPM = selectedHour >= 12
+                    val formattedHour = if (selectedHour % 12 == 0) 12 else selectedHour % 12
+                    val formattedTime = String.format(
+                        "%02d:%02d %s",
+                        formattedHour,
+                        selectedMinute,
+                        if (isPM) "PM" else "AM"
+                    )
+                    cleaningTimeEditText.setText(formattedTime)
+                },
+                hour,
+                minute,
+                false // Use 12-hour format
+            ).show()
         }
 
         setupKeyboardScrolling()
