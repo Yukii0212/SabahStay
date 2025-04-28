@@ -118,15 +118,6 @@
                         android:textSize="14sp"
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/nightsText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nights: 4"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/black"
-                        android:layout_marginBottom="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

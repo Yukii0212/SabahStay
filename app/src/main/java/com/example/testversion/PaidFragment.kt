@@ -26,7 +26,7 @@ class PaidFragment : Fragment(R.layout.fragment_paid) {
         lifecycleScope.launch {
             val serviceUsages = withContext(Dispatchers.IO) {
                 val serviceDao = AppDatabase.getInstance(requireContext()).serviceDao()
-                serviceDao.getServiceUsageByBookingId(bookingId.toString())
+                serviceDao.getPaidBillsForBooking(bookingId)
                     .filter { it.isPaid }
             }
 

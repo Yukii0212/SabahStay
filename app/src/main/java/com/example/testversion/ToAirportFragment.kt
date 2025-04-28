@@ -150,7 +150,6 @@ class ToAirportFragment : Fragment() {
                                     requestTime = pickupTime,
                                     requestDay = pickupDate,
                                     isCanceled = false,
-                                    cleaningRequestCount = 0
                                 )
                                 serviceDao.insertServiceUsage(serviceUsage)
                             }

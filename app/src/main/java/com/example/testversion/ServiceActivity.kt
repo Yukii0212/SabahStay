@@ -4,19 +4,56 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDate
 
 class ServiceActivity : AppCompatActivity() {
+
+    private var selectedBookingId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service)
+
+        val selectedBookingTextView = findViewById<TextView>(R.id.selectedBookingTextView)
+
+        lifecycleScope.launch {
+            val bookings = withContext(Dispatchers.IO) {
+                val userEmail = getCurrentUserEmail()
+                Log.d("ServiceActivity", "User email: $userEmail")
+
+                userEmail?.let {
+                    AppDatabase.getInstance(this@ServiceActivity).finalizedBookingDao()
+                        .getActiveBookingsForUser(it, LocalDate.now())
+                } ?: emptyList()
+            }
+
+            if (bookings.isEmpty()) {
+                Toast.makeText(this@ServiceActivity, "No active booking found", Toast.LENGTH_SHORT).show()
+                finish()
+            } else if (bookings.size == 1) {
+                selectedBookingId = bookings[0].bookingNumber
+                selectedBookingTextView.text = "Selected Booking ID: $selectedBookingId"
+            } else {
+                val bookingNumbers = bookings.map { "Booking ID: ${it.bookingNumber}, Branch: ${it.branchName}" }
+                val builder = AlertDialog.Builder(this@ServiceActivity)
+                builder.setTitle("Select a Booking")
+                builder.setItems(bookingNumbers.toTypedArray()) { _, which ->
+                    selectedBookingId = bookings[which].bookingNumber
+                    selectedBookingTextView.text = "Selected Booking ID: $selectedBookingId"
+                }
+                builder.setCancelable(false)
+                builder.show()
+            }
+        }
 
         // Redirect to Room Cleaning page
         findViewById<ImageView>(R.id.roomCleaning).setOnClickListener {
@@ -43,32 +80,20 @@ class ServiceActivity : AppCompatActivity() {
             navigateToPage(ViewBillsActivity::class.java)
         }
     }
+
     private fun getCurrentUserEmail(): String? {
         val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
         return sharedPreferences.getString("email", null)
     }
 
     private fun navigateToPage(activityClass: Class<*>) {
-        lifecycleScope.launch {
-            val bookingId = withContext(Dispatchers.IO) {
-                val userEmail = getCurrentUserEmail()
-                Log.d("ServiceActivity", "User email: $userEmail")
-
-                userEmail?.let {
-                    AppDatabase.getInstance(this@ServiceActivity).finalizedBookingDao()
-                        .getLatestBookingIdForUser(it)
-                }
-            }
-
-            Log.d("ServiceActivity", "Booking ID: $bookingId")
-
-            if (bookingId != null) {
-                val intent = Intent(this@ServiceActivity, activityClass)
-                intent.putExtra("bookingId", bookingId)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this@ServiceActivity, "No active booking found", Toast.LENGTH_SHORT).show()
-            }
+        if (selectedBookingId == null) {
+            Toast.makeText(this, "No booking selected", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val intent = Intent(this, activityClass)
+        intent.putExtra("bookingId", selectedBookingId?.toInt())
+        startActivity(intent)
     }
 }
