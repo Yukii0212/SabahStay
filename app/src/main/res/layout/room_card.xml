@@ -35,7 +35,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:fontFamily="@font/montserrat" />
+                android:fontFamily="@font/poppins" />
 
             <TextView
                 android:id="@+id/room_price"
@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="Price"
                 android:textColor="@android:color/black"
+                android:fontFamily="@font/lora"
                 android:textSize="16sp"
                 android:layout_marginTop="4dp" />
 
@@ -97,10 +98,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Book Now"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/lato"
                     android:background="@drawable/book_button"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:minHeight="52dp"
                     android:minWidth="140dp" />
             </LinearLayout>
