@@ -82,9 +82,7 @@ class IslandRoom : AppCompatActivity() {
             startActivity(Intent(this, detailActivity))
         }
 
-        val bookingButton = findViewById<Button>(R.id.bookingButton)
-
-        bookingButton.setOnClickListener {
+        bookNowButton.setOnClickListener {
             val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
             val userEmail = sharedPreferences.getString("email", null)
 

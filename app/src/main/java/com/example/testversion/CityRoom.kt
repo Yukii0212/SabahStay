@@ -78,9 +78,11 @@ class CityRoom : AppCompatActivity() {
         roomPrice.text = price
         personNum.text = personNumber
 
-        val bookingButton = findViewById<Button>(R.id.bookingButton)
+        roomDetailsRow.setOnClickListener {
+            startActivity(Intent(this, detailActivity))
+        }
 
-        bookingButton.setOnClickListener {
+        bookNowButton.setOnClickListener {
             val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
             val userEmail = sharedPreferences.getString("email", null)
 
@@ -93,11 +95,5 @@ class CityRoom : AppCompatActivity() {
             intent.putExtra("userEmail", userEmail)
             startActivity(intent)
         }
-
-        roomDetailsRow.setOnClickListener {
-            startActivity(Intent(this, detailActivity))
-        }
-
-
     }
 }
