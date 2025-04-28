@@ -5,10 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.testversion.Food
+import com.example.testversion.FoodCart
+import com.example.testversion.FoodDao
+import com.example.testversion.FoodOrder
 
 @Database(
-    entities = [Service::class, ServiceUsage::class, User::class, Branch::class, HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class],
-    version = 10,
+    entities = [
+        Service::class, ServiceUsage::class, User::class, Branch::class,
+        HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class,
+        Food::class, FoodOrder::class, FoodCart::class
+    ],
+    version = 13,
     exportSchema = false
 )
 
@@ -21,6 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun bookingDao(): BookingDao
     abstract fun reviewDao(): ReviewDao
     abstract fun finalizedBookingDao(): FinalizedBookingDao
+    abstract fun foodDao(): FoodDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
