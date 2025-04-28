@@ -112,30 +112,45 @@ class CartFragment : Fragment() {
         val database = AppDatabase.getInstance(requireContext())
         val foodDao = database.foodDao()
 
-        when (actionType) {
-            CartAdapter.ActionType.INCREASE -> {
-                cartItem.quantityOrdered++
-                lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            when (actionType) {
+                CartAdapter.ActionType.INCREASE -> {
+                    cartItem.quantityOrdered++
                     foodDao.updateOrderQuantity(cartItem.id, cartItem.quantityOrdered)
                 }
-            }
-            CartAdapter.ActionType.DECREASE -> {
-                if (cartItem.quantityOrdered > 1) {
-                    cartItem.quantityOrdered--
-                    lifecycleScope.launch(Dispatchers.IO) {
+                CartAdapter.ActionType.DECREASE -> {
+                    if (cartItem.quantityOrdered > 1) {
+                        cartItem.quantityOrdered--
                         foodDao.updateOrderQuantity(cartItem.id, cartItem.quantityOrdered)
+                    } else {
+                        foodDao.deleteOrder(cartItem.id)
                     }
                 }
-            }
-            CartAdapter.ActionType.REMOVE -> {
-                lifecycleScope.launch(Dispatchers.IO) {
+                CartAdapter.ActionType.REMOVE -> {
                     foodDao.deleteOrder(cartItem.id)
                 }
-                cartItems.remove(cartItem)
             }
-        }
-        activity?.runOnUiThread {
-            updateUI()
+            
+            val cartId = getOrCreateCartId(foodDao)
+            val foodOrders = foodDao.getOrdersByCartId(cartId)
+            cartItems = foodOrders.map { foodOrder ->
+                val food = foodDao.getFoodById(foodOrder.foodId)
+                CartItem(
+                    id = foodOrder.id,
+                    name = food.name,
+                    price = food.price,
+                    quantityOrdered = foodOrder.quantityOrdered,
+                    cartId = foodOrder.cartId,
+                    category = food.category,
+                    description = food.description,
+                    ingredientsUsed = food.ingredientsUsed,
+                    imageResId = food.imageResId
+                )
+            }.toMutableList()
+
+            withContext(Dispatchers.Main) {
+                updateUI()
+            }
         }
     }
 
