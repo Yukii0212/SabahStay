@@ -31,7 +31,7 @@ data class CartItem(
     val id: Int,
     val name: String,
     val price: Double,
-    val quantityOrdered: Int,
+    var quantityOrdered: Int,
     val cartId: Int,
     val category: Int,
     val description: String,

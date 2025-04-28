@@ -25,8 +25,8 @@
         <!-- RecyclerView for cart items -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cartRecyclerView"
-            android:layout_width="389dp"
-            android:layout_height="200dp"
+            android:layout_width="324dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
 
         <!-- Empty Cart Message -->
@@ -40,98 +40,6 @@
             android:visibility="gone"
             android:layout_marginBottom="16dp"
             android:layout_gravity="center_horizontal" />
-
-        <!-- Room Number -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:id="@+id/roomNumberLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Room Number"
-                android:textColor="@android:color/white" />
-
-            <EditText
-                android:id="@+id/roomNumberInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter room number"
-                android:textColorHint="@color/white"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <!-- Branch Name -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:id="@+id/branchNameLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Branch Name"
-                android:textColor="@android:color/white" />
-
-            <EditText
-                android:id="@+id/branchNameInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter branch name"
-                android:textColorHint="@color/white"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <!-- Delivery Date -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:id="@+id/deliveryDateLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delivery Date"
-                android:textColor="@android:color/white" />
-
-            <EditText
-                android:id="@+id/deliveryDateInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter delivery date"
-                android:textColorHint="@color/white"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <!-- Delivery Time -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:id="@+id/deliveryTimeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delivery Time"
-                android:textColor="@android:color/white" />
-
-            <EditText
-                android:id="@+id/deliveryTimeInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter delivery time"
-                android:textColorHint="@color/white"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
 
         <!-- Cart Total -->
         <TextView
@@ -159,6 +67,78 @@
             android:text="Subtotal: RM 0.00"
             android:textColor="@android:color/white"
             android:layout_marginTop="8dp" />
+
+        <!-- Room Number -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/roomNumberLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Number"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:id="@+id/roomNumberInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter room number"
+                android:textColorHint="@color/white"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Delivery Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/deliveryDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Date"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:id="@+id/deliveryDateInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter delivery date"
+                android:textColorHint="@color/white"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Delivery Time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/deliveryTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Time"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:id="@+id/deliveryTimeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter delivery time"
+                android:textColorHint="@color/white"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
 
         <!-- Confirm Order Button -->
         <Button

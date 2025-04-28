@@ -9,11 +9,11 @@ import com.example.testversion.CartItem
 import com.example.testversion.R
 
 class CartAdapter(
-    private val cartItems: List<CartItem>,
-    private val onIncreaseQuantity: (CartItem) -> Unit,
-    private val onDecreaseQuantity: (CartItem) -> Unit,
-    private val onRemoveItem: (CartItem) -> Unit
+    private val cartItems: MutableList<CartItem>,
+    private val onItemAction: (CartItem, ActionType) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+
+    enum class ActionType { INCREASE, DECREASE, REMOVE }
 
     inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemImage: ImageView = itemView.findViewById(R.id.cartItemImage)
@@ -37,9 +37,23 @@ class CartAdapter(
         holder.itemQuantity.text = "Quantity: ${cartItem.quantityOrdered}"
         holder.itemImage.setImageResource(cartItem.imageResId)
 
-        holder.increaseButton.setOnClickListener { onIncreaseQuantity(cartItem) }
-        holder.decreaseButton.setOnClickListener { onDecreaseQuantity(cartItem) }
-        holder.removeButton.setOnClickListener { onRemoveItem(cartItem) }
+        holder.increaseButton.setOnClickListener {
+            onItemAction(cartItem, ActionType.INCREASE)
+        }
+
+        holder.decreaseButton.setOnClickListener {
+            onItemAction(cartItem, ActionType.DECREASE)
+        }
+
+        holder.removeButton.setOnClickListener {
+            onItemAction(cartItem, ActionType.REMOVE)
+        }
+    }
+
+    fun updateCartItems(newCartItems: List<CartItem>) {
+        cartItems.clear()
+        cartItems.addAll(newCartItems)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = cartItems.size

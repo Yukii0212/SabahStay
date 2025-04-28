@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testversion.CartItem
 import com.example.testversion.FoodCart
 import com.example.testversion.FoodDao
-import com.example.testversion.FoodOrder
 import com.example.testversion.R
 import com.example.testversion.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
@@ -21,41 +20,49 @@ import kotlinx.coroutines.withContext
 
 class CartFragment : Fragment() {
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyCartMessage: TextView
+    private lateinit var cartTotalLabel: TextView
+    private lateinit var taxLabel: TextView
+    private lateinit var subtotalLabel: TextView
+    private var cartItems: MutableList<CartItem> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cart, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.cartRecyclerView)
+
+        recyclerView = view.findViewById(R.id.cartRecyclerView)
+        emptyCartMessage = view.findViewById(R.id.emptyCartMessage)
+        cartTotalLabel = view.findViewById(R.id.cartTotalLabel)
+        taxLabel = view.findViewById(R.id.taxLabel)
+        subtotalLabel = view.findViewById(R.id.subtotalLabel)
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        loadCartData()
+
+        parentFragmentManager.setFragmentResultListener("cartUpdated", this) { _, _ ->
+            Log.d("CartFragment", "cartUpdated event received")
+            loadCartData()
+        }
+
+        return view
+    }
+
+    private fun loadCartData() {
         lifecycleScope.launch {
             val database = AppDatabase.getInstance(requireContext())
             val foodDao = database.foodDao()
 
             try {
-                Log.d("CartDebug", "Starting to fetch cart data")
+                val cartId = withContext(Dispatchers.IO) { getOrCreateCartId(foodDao) }
+                val foodOrders = withContext(Dispatchers.IO) { foodDao.getOrdersByCartId(cartId) }
 
-                val cartId = withContext(Dispatchers.IO) {
-                    Log.d("CartDebug", "Fetching or creating cart ID")
-                    getOrCreateCartId(foodDao).also {
-                        Log.d("CartDebug", "Cart ID fetched/created: $it")
-                    }
-                }
-
-                val foodOrders = withContext(Dispatchers.IO) {
-                    Log.d("CartDebug", "Fetching food orders for cart ID: $cartId")
-                    foodDao.getOrdersByCartId(cartId).also {
-                        Log.d("CartDebug", "Fetched Food Orders: $it")
-                    }
-                }
-
-                val cartItems = withContext(Dispatchers.IO) {
-                    Log.d("CartDebug", "Mapping food orders to cart items")
+                cartItems = withContext(Dispatchers.IO) {
                     foodOrders.map { foodOrder ->
-                        val food = foodDao.getFoodById(foodOrder.foodId).also {
-                            Log.d("CartDebug", "Fetched Food for FoodOrder ID ${foodOrder.id}: $it")
-                        }
+                        val food = foodDao.getFoodById(foodOrder.foodId)
                         CartItem(
                             id = foodOrder.id,
                             name = food.name,
@@ -67,26 +74,69 @@ class CartFragment : Fragment() {
                             ingredientsUsed = food.ingredientsUsed,
                             imageResId = food.imageResId
                         )
-                    }.also {
-                        Log.d("CartDebug", "Mapped Cart Items: $it")
-                    }
+                    }.toMutableList()
                 }
 
-                Log.d("CartDebug", "Finished fetching and mapping cart data")
-
-                recyclerView.adapter = CartAdapter(
-                    cartItems,
-                    onIncreaseQuantity = { _ ->  },
-                    onDecreaseQuantity = { _ -> },
-                    onRemoveItem = { _ ->  }
-                )
+                Log.d("CartFragment", "Cart items loaded: ${cartItems.size}")
+                activity?.runOnUiThread {
+                    updateUI()
+                }
             } catch (e: Exception) {
-                Log.e("CartDebug", "Error fetching cart items", e)
+                Log.e("CartFragment", "Error fetching cart items", e)
                 Toast.makeText(requireContext(), "Failed to load cart items", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
-        return view
+    private fun updateUI() {
+        if (cartItems.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyCartMessage.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyCartMessage.visibility = View.GONE
+
+            // Always refresh the adapter with the latest data
+            if (recyclerView.adapter == null) {
+                recyclerView.adapter = CartAdapter(cartItems) { cartItem, actionType ->
+                    handleCartAction(cartItem, actionType)
+                }
+            } else {
+                (recyclerView.adapter as CartAdapter).updateCartItems(cartItems)
+            }
+        }
+        calculateCartSummary()
+    }
+
+    private fun handleCartAction(cartItem: CartItem, actionType: CartAdapter.ActionType) {
+        val database = AppDatabase.getInstance(requireContext())
+        val foodDao = database.foodDao()
+
+        when (actionType) {
+            CartAdapter.ActionType.INCREASE -> {
+                cartItem.quantityOrdered++
+                lifecycleScope.launch(Dispatchers.IO) {
+                    foodDao.updateOrderQuantity(cartItem.id, cartItem.quantityOrdered)
+                }
+            }
+            CartAdapter.ActionType.DECREASE -> {
+                if (cartItem.quantityOrdered > 1) {
+                    cartItem.quantityOrdered--
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        foodDao.updateOrderQuantity(cartItem.id, cartItem.quantityOrdered)
+                    }
+                }
+            }
+            CartAdapter.ActionType.REMOVE -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    foodDao.deleteOrder(cartItem.id)
+                }
+                cartItems.remove(cartItem)
+            }
+        }
+        activity?.runOnUiThread {
+            updateUI()
+        }
     }
 
     private suspend fun getOrCreateCartId(foodDao: FoodDao): Int {
@@ -94,9 +144,13 @@ class CartFragment : Fragment() {
         return existingCart?.id ?: foodDao.createCart(FoodCart()).toInt()
     }
 
-    private fun refreshCart() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            onCreateView(layoutInflater, null, null)
-        }
+    private fun calculateCartSummary() {
+        val total = cartItems.sumOf { it.price * it.quantityOrdered }
+        val tax = total * 0.1
+        val subtotal = total + tax
+
+        cartTotalLabel.text = "Cart Total: RM %.2f".format(total)
+        taxLabel.text = "Tax: RM %.2f".format(tax)
+        subtotalLabel.text = "Subtotal: RM %.2f".format(subtotal)
     }
 }

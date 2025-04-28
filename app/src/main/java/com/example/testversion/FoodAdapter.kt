@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-
 class FoodAdapter(
     private val foodItems: List<Food>,
     private val onAddToCartClick: (Food) -> Unit

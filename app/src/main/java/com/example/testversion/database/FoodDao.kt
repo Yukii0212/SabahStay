@@ -25,6 +25,12 @@ interface FoodDao {
     @Query("SELECT * FROM food_order WHERE cartId = :cartId")
     suspend fun getOrdersByCartId(cartId: Int): List<FoodOrder>
 
+    @Query("UPDATE food_order SET quantityOrdered = :quantity WHERE id = :orderId")
+    suspend fun updateOrderQuantity(orderId: Int, quantity: Int)
+
+    @Query("DELETE FROM food_order WHERE id = :orderId")
+    suspend fun deleteOrder(orderId: Int)
+
     @Delete
     suspend fun deleteFoodOrder(foodOrder: FoodOrder)
 
@@ -32,20 +38,9 @@ interface FoodDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createCart(foodCart: FoodCart): Long
 
-    @Query("SELECT * FROM food")
-    suspend fun getAllCartItems(): List<Food>
-
     @Query("DELETE FROM food_cart WHERE id = :cartId")
     suspend fun clearCart(cartId: Int)
 
     @Query("SELECT * FROM food_cart WHERE id = :cartId")
     suspend fun getCartById(cartId: Int): FoodCart?
-
-    @Query("""
-    SELECT f.*, fo.quantityOrdered, fo.cartId
-    FROM food f
-    INNER JOIN food_order fo ON f.id = fo.foodId
-    WHERE fo.cartId = :cartId
-""")
-    suspend fun getCartItemsByCartId(cartId: Int): List<CartItem>
 }

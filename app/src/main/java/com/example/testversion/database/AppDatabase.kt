@@ -16,7 +16,7 @@ import com.example.testversion.FoodOrder
         HotelRoom::class, Booking::class, Review::class, FinalizedBooking::class,
         Food::class, FoodOrder::class, FoodCart::class
     ],
-    version = 13,
+    version = 14,
     exportSchema = false
 )
 

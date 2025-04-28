@@ -68,6 +68,7 @@ class DrinksFragment : Fragment() {
                     "${food.name} added to cart",
                     Toast.LENGTH_SHORT
                 ).show()
+                parentFragmentManager.setFragmentResult("cartUpdated", Bundle())
             }
         }
     }
