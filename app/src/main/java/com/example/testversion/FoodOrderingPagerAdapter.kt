@@ -1,5 +1,6 @@
 package com.example.testversion
 
+import CartFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter

@@ -869,8 +869,6 @@ class OpenAnimation : AppCompatActivity() {
                 val database = AppDatabase.getInstance(this@OpenAnimation)
                 val foodDao = database.foodDao()
 
-                foodDao.deleteAllFood()
-
                 val existingFoodItems = foodDao.getAllFoodItems()
                 if (existingFoodItems.isEmpty()) {
                     val foodItems = listOf(

@@ -1,8 +1,7 @@
 package com.example.testversion
 
-import FoodAdapter
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,11 +36,44 @@ class FoodFragment : Fragment() {
 
             // Set up the adapter
             val adapter = FoodAdapter(foodList) { food ->
-                Toast.makeText(requireContext(), "${food.name} added to cart", Toast.LENGTH_SHORT).show()
+                addToCart(food, foodDao)
             }
             recyclerView.adapter = adapter
         }
 
         return view
+    }
+
+    private fun addToCart(food: Food, foodDao: FoodDao) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val cartId = getOrCreateCartId(foodDao)
+            Log.d("CartDebug", "Cart ID: $cartId")
+
+            val existingOrder = foodDao.getOrdersByCartId(cartId).find { it.foodId == food.id }
+            Log.d("CartDebug", "Existing Order: $existingOrder")
+
+            if (existingOrder != null) {
+                val updatedOrder = existingOrder.copy(quantityOrdered = existingOrder.quantityOrdered + 1)
+                foodDao.insertFoodOrder(updatedOrder)
+                Log.d("CartDebug", "Updated Order: $updatedOrder")
+            } else {
+                val newOrder = FoodOrder(foodId = food.id, cartId = cartId, quantityOrdered = 1)
+                foodDao.insertFoodOrder(newOrder)
+                Log.d("CartDebug", "New Order: $newOrder")
+            }
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    requireContext(),
+                    "${food.name} added to cart",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private suspend fun getOrCreateCartId(foodDao: FoodDao): Int {
+        val existingCart = foodDao.getCartById(1)
+        return existingCart?.id ?: foodDao.createCart(FoodCart()).toInt()
     }
 }

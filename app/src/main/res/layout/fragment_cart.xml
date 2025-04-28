@@ -1,151 +1,194 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/cartTitle"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Food Cart"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="16dp"
+        android:background="@color/background_blue">
 
-    <!-- RecyclerView for cart items -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cartRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/cartTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/roomNumberLabel"
-        android:layout_marginTop="16dp" />
+        <!-- Title -->
+        <TextView
+            android:id="@+id/cartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Food Cart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="16dp" />
 
-    <!-- Room Number -->
-    <TextView
-        android:id="@+id/roomNumberLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Room Number"
-        app:layout_constraintTop_toBottomOf="@+id/cartRecyclerView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        <!-- RecyclerView for cart items -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cartRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/cartTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/emptyCartSpacer"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
 
-    <EditText
-        android:id="@+id/roomNumberInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter room number"
-        app:layout_constraintStart_toEndOf="@+id/roomNumberLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/roomNumberLabel"
-        android:layout_marginStart="8dp" />
+        <!-- Empty Cart Message -->
+        <TextView
+            android:id="@+id/emptyCartMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You have not added anything to your cart"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/cartRecyclerView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
 
-    <!-- Branch Name -->
-    <TextView
-        android:id="@+id/branchNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Branch Name"
-        app:layout_constraintTop_toBottomOf="@+id/roomNumberLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        <!-- Spacer after empty cart message -->
+        <View
+            android:id="@+id/emptyCartSpacer"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toBottomOf="@+id/emptyCartMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/branchNameInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter branch name"
-        app:layout_constraintStart_toEndOf="@+id/branchNameLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/branchNameLabel"
-        android:layout_marginStart="8dp" />
+        <!-- Room Number -->
+        <TextView
+            android:id="@+id/roomNumberLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Room Number"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/emptyCartSpacer"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="200dp" />
 
-    <!-- Delivery Date -->
-    <TextView
-        android:id="@+id/deliveryDateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delivery Date"
-        app:layout_constraintTop_toBottomOf="@+id/branchNameLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        <EditText
+            android:id="@+id/roomNumberInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter room number"
+            android:textColorHint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/roomNumberLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/roomNumberLabel"
+            android:layout_marginStart="8dp" />
 
-    <EditText
-        android:id="@+id/deliveryDateInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter delivery date"
-        app:layout_constraintStart_toEndOf="@+id/deliveryDateLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/deliveryDateLabel"
-        android:layout_marginStart="8dp" />
+        <!-- Branch Name -->
+        <TextView
+            android:id="@+id/branchNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Branch Name"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/roomNumberLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
 
-    <!-- Delivery Time -->
-    <TextView
-        android:id="@+id/deliveryTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delivery Time"
-        app:layout_constraintTop_toBottomOf="@+id/deliveryDateLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        <EditText
+            android:id="@+id/branchNameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter branch name"
+            android:textColorHint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/branchNameLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/branchNameLabel"
+            android:layout_marginStart="8dp" />
 
-    <EditText
-        android:id="@+id/deliveryTimeInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter delivery time"
-        app:layout_constraintStart_toEndOf="@+id/deliveryTimeLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/deliveryTimeLabel"
-        android:layout_marginStart="8dp" />
+        <!-- Delivery Date -->
+        <TextView
+            android:id="@+id/deliveryDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery Date"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/branchNameLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
 
-    <!-- Cart Total -->
-    <TextView
-        android:id="@+id/cartTotalLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cart Total: RM 0.00"
-        app:layout_constraintTop_toBottomOf="@+id/deliveryTimeLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        <EditText
+            android:id="@+id/deliveryDateInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter delivery date"
+            android:textColorHint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/deliveryDateLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/deliveryDateLabel"
+            android:layout_marginStart="8dp" />
 
-    <!-- Tax -->
-    <TextView
-        android:id="@+id/taxLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tax: RM 0.00"
-        app:layout_constraintTop_toBottomOf="@+id/cartTotalLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp" />
+        <!-- Delivery Time -->
+        <TextView
+            android:id="@+id/deliveryTimeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery Time"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/deliveryDateLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
 
-    <!-- Subtotal -->
-    <TextView
-        android:id="@+id/subtotalLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Subtotal: RM 0.00"
-        app:layout_constraintTop_toBottomOf="@+id/taxLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp" />
+        <EditText
+            android:id="@+id/deliveryTimeInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter delivery time"
+            android:textColorHint="@color/white"
+            app:layout_constraintStart_toEndOf="@+id/deliveryTimeLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/deliveryTimeLabel"
+            android:layout_marginStart="8dp" />
 
-    <!-- Confirm Order Button -->
-    <Button
-        android:id="@+id/confirmOrderButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Confirm Order"
-        app:layout_constraintTop_toBottomOf="@+id/subtotalLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        <!-- Cart Total -->
+        <TextView
+            android:id="@+id/cartTotalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cart Total: RM 0.00"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/deliveryTimeLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Tax -->
+        <TextView
+            android:id="@+id/taxLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tax: RM 0.00"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/cartTotalLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <!-- Subtotal -->
+        <TextView
+            android:id="@+id/subtotalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal: RM 0.00"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@+id/taxLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <!-- Confirm Order Button -->
+        <Button
+            android:id="@+id/confirmOrderButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Confirm Order"
+            app:layout_constraintTop_toBottomOf="@+id/subtotalLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -29,12 +29,12 @@ data class FoodCart(
 
 data class CartItem(
     val id: Int,
-    val category: Int,
     val name: String,
-    val description: String,
     val price: Double,
-    val ingredientsUsed: String,
-    val imageResId: Int,
     val quantityOrdered: Int,
-    val cartId: Int
+    val cartId: Int,
+    val category: Int,
+    val description: String,
+    val ingredientsUsed: String,
+    val imageResId: Int
 )

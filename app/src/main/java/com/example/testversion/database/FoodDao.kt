@@ -15,8 +15,8 @@ interface FoodDao {
     @Query("SELECT * FROM food")
     suspend fun getAllFoodItems(): List<Food>
 
-    @Query("DELETE FROM food")
-    suspend fun deleteAllFood()
+    @Query("SELECT * FROM Food WHERE id = :foodId")
+    fun getFoodById(foodId: Int): Food
 
     // FoodOrder operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)

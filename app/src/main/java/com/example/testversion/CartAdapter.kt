@@ -1,5 +1,3 @@
-package com.example.testversion
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,23 +5,23 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
-interface OnQuantityChangeListener {
-    fun onQuantityChanged(position: Int, newQuantity: Int)
-}
+import com.example.testversion.R
+import com.example.testversion.CartItem
 
 class CartAdapter(
-    private val cartItems: List<FoodOrder>,
-    private val foodMap: Map<Int, Food>, // Map to get Food details by foodId
-    private val listener: OnQuantityChangeListener
+    private val cartItems: List<CartItem>,
+    private val onRemove: (CartItem) -> Unit,
+    private val onIncrease: (CartItem) -> Unit,
+    private val onDecrease: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
-    inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.cartItemTitle)
-        val price: TextView = itemView.findViewById(R.id.cartItemPrice)
-        val quantity: TextView = itemView.findViewById(R.id.cartItemQuantity)
-        val increaseButton: Button = itemView.findViewById(R.id.increaseQuantityButton)
-        val decreaseButton: Button = itemView.findViewById(R.id.decreaseQuantityButton)
+    inner class CartViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val title = view.findViewById<TextView>(R.id.cartItemTitle)
+        val price = view.findViewById<TextView>(R.id.cartItemPrice)
+        val quantity = view.findViewById<TextView>(R.id.cartItemQuantity)
+        val increaseButton = view.findViewById<Button>(R.id.increaseQuantityButton)
+        val decreaseButton = view.findViewById<Button>(R.id.decreaseQuantityButton)
+        val removeButton = view.findViewById<ImageView>(R.id.removeFromCartButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -32,24 +30,14 @@ class CartAdapter(
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        val order = cartItems[position]
-        val food = foodMap[order.foodId] ?: return
+        val item = cartItems[position]
+        holder.title.text = item.name
+        holder.price.text = "RM${item.price}"
+        holder.quantity.text = "Quantity: ${item.quantityOrdered}"
 
-        holder.title.text = food.name
-        holder.quantity.text = "Quantity: ${order.quantityOrdered}"
-        holder.price.text = "RM ${food.price * order.quantityOrdered}"
-
-        holder.increaseButton.setOnClickListener {
-            val newQuantity = order.quantityOrdered + 1
-            listener.onQuantityChanged(position, newQuantity)
-        }
-
-        holder.decreaseButton.setOnClickListener {
-            if (order.quantityOrdered > 1) {
-                val newQuantity = order.quantityOrdered - 1
-                listener.onQuantityChanged(position, newQuantity)
-            }
-        }
+        holder.increaseButton.setOnClickListener { onIncrease(item) }
+        holder.decreaseButton.setOnClickListener { onDecrease(item) }
+        holder.removeButton.setOnClickListener { onRemove(item) }
     }
 
     override fun getItemCount(): Int = cartItems.size
