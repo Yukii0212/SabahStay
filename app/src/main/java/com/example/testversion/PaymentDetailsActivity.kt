@@ -204,6 +204,12 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 val intent = Intent(this@PaymentDetailsActivity, PendingPaymentActivity::class.java)
                 intent.putExtra("totalPrice", totalCostFromBookingActivity)
                 intent.putExtra("bookingNumber", bookingNumber)
+                intent.putExtra("roomType", room.roomType)
+                intent.putExtra("userEmail", userEmail)
+                intent.putExtra("userName", user.name)
+                intent.putExtra("userPassport", user.passport)
+                intent.putExtra("userPhone", user.phone)
+                intent.putExtra("branchName", branch.name)
                 startActivity(intent)
                 finish()
             }
