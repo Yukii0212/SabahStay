@@ -11,11 +11,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class PendingPaymentActivity : AppCompatActivity() {
+    private var bookingNumber: Long = -1L
+    private var totalPrice: Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pending_payment)
 
-
+        bookingNumber = intent.getLongExtra("bookingNumber", -1L)
+        totalPrice = intent.getDoubleExtra("totalPrice", 0.0)
         val loadingSpinner = findViewById<ProgressBar>(R.id.loadingSpinner)
         val leftIcon = findViewById<ImageView>(R.id.leftIcon)
         val centerHourglass = findViewById<ImageView>(R.id.centerHourglass)
@@ -39,6 +43,8 @@ class PendingPaymentActivity : AppCompatActivity() {
             stepConfirmation.setTextColor(getColor(android.R.color.holo_green_dark)) // Change the text color to green color
 
             val intent = Intent(this, BookingSuccessActivity::class.java)
+            intent.putExtra("totalPrice", totalPrice)
+            intent.putExtra("bookingNumber", bookingNumber)
             startActivity(intent)
             finish()
         }, 2000)

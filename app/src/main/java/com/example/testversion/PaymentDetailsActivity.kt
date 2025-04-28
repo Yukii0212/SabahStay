@@ -169,6 +169,13 @@ class PaymentDetailsActivity : AppCompatActivity() {
             }
             val bookingNumber = lastNum + 1
 
+            val totalCostFromBookingActivity = intent.getDoubleExtra("totalCost", 0.0)
+            val adultsCount = intent.getIntExtra("numberOfAdults", 0)
+            val childrenCount = intent.getIntExtra("numberOfChildren", 0)
+            val numberOfNights = intent.getIntExtra("numberOfNights", 0)
+            val basePrice = intent.getDoubleExtra("basePrice", 0.0)
+            val tax = totalCostFromBookingActivity / 11
+
             val finalized = FinalizedBooking(
                 bookingNumber = bookingNumber,
                 userEmail = userEmail,
@@ -182,8 +189,8 @@ class PaymentDetailsActivity : AppCompatActivity() {
                 extraBed = extraBed,
                 lunchBuffetAdult = buffetAdult,
                 lunchBuffetChild = buffetChild,
-                numberOfAdults = numberOfAdults,
-                numberOfChildren = numberOfChildren,
+                numberOfAdults = adultsCount,
+                numberOfChildren = childrenCount,
                 tax = tax,
                 totalPrice = totalCostFromBookingActivity,
                 paymentMethod = selectedPaymentMethod,
@@ -192,11 +199,16 @@ class PaymentDetailsActivity : AppCompatActivity() {
 
             bookingDao.insert(finalized)
 
-            startActivity(intent)
-            finish()
+            runOnUiThread {
+                Toast.makeText(this@PaymentDetailsActivity, "Booking finalized successfully!", Toast.LENGTH_LONG).show()
+                val intent = Intent(this@PaymentDetailsActivity, PendingPaymentActivity::class.java)
+                intent.putExtra("totalPrice", totalCostFromBookingActivity)
+                intent.putExtra("bookingNumber", bookingNumber)
+                startActivity(intent)
+                finish()
+            }
         }
     }
-
 
     private fun validateAndProceed() {
         val cardNumber = cardNumberEditText.text.toString().replace(" ", "")

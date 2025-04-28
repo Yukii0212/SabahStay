@@ -180,6 +180,8 @@ class BookingActivity : AppCompatActivity() {
 
                 val intent = Intent(this, PaymentDetailsActivity::class.java).apply {
                     putExtra("totalCost", totalCost)
+                    putExtra("basePrice", basePricePerNight)
+                    putExtra("numberOfNights", numberOfNights)
                     putExtra("name", nameEditText.text.toString())
                     putExtra("userEmail", emailEditText.text.toString())
                     putExtra("phone", phoneEditText.text.toString())
@@ -295,6 +297,7 @@ class BookingActivity : AppCompatActivity() {
             if (checkOutDate.isBefore(checkInDate)) return
 
             numberOfNights = ChronoUnit.DAYS.between(checkInDate, checkOutDate)
+            numberOfNights.toInt()
             val roomCount = maxOf(roomCountTextView.text.toString().toIntOrNull() ?: 1, 1)
             val adults = maxOf(adultCountTextView.text.toString().toIntOrNull() ?: 1, 1)
             val children = maxOf(childCountTextView.text.toString().toIntOrNull() ?: 0, 0)

@@ -38,9 +38,8 @@ class BookingSuccessActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_booking_success)
 
-         bookingNumber = intent.getLongExtra("bookingNumber", -1L)
-         totalPrice = intent.getDoubleExtra("totalPrice", 0.0)
-
+        bookingNumber = intent.getLongExtra("bookingNumber", -1L)
+        totalPrice = intent.getDoubleExtra("totalPrice", 0.0)
         userName = intent.getStringExtra("userName") ?: ""
         userPhone = intent.getStringExtra("userPhone") ?: ""
         userEmail = intent.getStringExtra("userEmail") ?: ""
