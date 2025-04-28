@@ -5,23 +5,24 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.testversion.R
 import com.example.testversion.CartItem
+import com.example.testversion.R
 
 class CartAdapter(
     private val cartItems: List<CartItem>,
-    private val onRemove: (CartItem) -> Unit,
-    private val onIncrease: (CartItem) -> Unit,
-    private val onDecrease: (CartItem) -> Unit
+    private val onIncreaseQuantity: (CartItem) -> Unit,
+    private val onDecreaseQuantity: (CartItem) -> Unit,
+    private val onRemoveItem: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
-    inner class CartViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title = view.findViewById<TextView>(R.id.cartItemTitle)
-        val price = view.findViewById<TextView>(R.id.cartItemPrice)
-        val quantity = view.findViewById<TextView>(R.id.cartItemQuantity)
-        val increaseButton = view.findViewById<Button>(R.id.increaseQuantityButton)
-        val decreaseButton = view.findViewById<Button>(R.id.decreaseQuantityButton)
-        val removeButton = view.findViewById<ImageView>(R.id.removeFromCartButton)
+    inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val itemImage: ImageView = itemView.findViewById(R.id.cartItemImage)
+        val itemTitle: TextView = itemView.findViewById(R.id.cartItemTitle)
+        val itemPrice: TextView = itemView.findViewById(R.id.cartItemPrice)
+        val itemQuantity: TextView = itemView.findViewById(R.id.cartItemQuantity)
+        val increaseButton: Button = itemView.findViewById(R.id.increaseQuantityButton)
+        val decreaseButton: Button = itemView.findViewById(R.id.decreaseQuantityButton)
+        val removeButton: ImageView = itemView.findViewById(R.id.removeFromCartButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -30,14 +31,15 @@ class CartAdapter(
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        val item = cartItems[position]
-        holder.title.text = item.name
-        holder.price.text = "RM${item.price}"
-        holder.quantity.text = "Quantity: ${item.quantityOrdered}"
+        val cartItem = cartItems[position]
+        holder.itemTitle.text = cartItem.name
+        holder.itemPrice.text = "RM ${cartItem.price}"
+        holder.itemQuantity.text = "Quantity: ${cartItem.quantityOrdered}"
+        holder.itemImage.setImageResource(cartItem.imageResId)
 
-        holder.increaseButton.setOnClickListener { onIncrease(item) }
-        holder.decreaseButton.setOnClickListener { onDecrease(item) }
-        holder.removeButton.setOnClickListener { onRemove(item) }
+        holder.increaseButton.setOnClickListener { onIncreaseQuantity(cartItem) }
+        holder.decreaseButton.setOnClickListener { onDecreaseQuantity(cartItem) }
+        holder.removeButton.setOnClickListener { onRemoveItem(cartItem) }
     }
 
     override fun getItemCount(): Int = cartItems.size

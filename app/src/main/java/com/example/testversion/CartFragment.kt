@@ -34,18 +34,28 @@ class CartFragment : Fragment() {
             val foodDao = database.foodDao()
 
             try {
+                Log.d("CartDebug", "Starting to fetch cart data")
+
                 val cartId = withContext(Dispatchers.IO) {
-                    getOrCreateCartId(foodDao)
+                    Log.d("CartDebug", "Fetching or creating cart ID")
+                    getOrCreateCartId(foodDao).also {
+                        Log.d("CartDebug", "Cart ID fetched/created: $it")
+                    }
                 }
 
                 val foodOrders = withContext(Dispatchers.IO) {
-                    foodDao.getOrdersByCartId(cartId)
+                    Log.d("CartDebug", "Fetching food orders for cart ID: $cartId")
+                    foodDao.getOrdersByCartId(cartId).also {
+                        Log.d("CartDebug", "Fetched Food Orders: $it")
+                    }
                 }
-                Log.d("CartDebug", "Fetched Food Orders: $foodOrders")
 
                 val cartItems = withContext(Dispatchers.IO) {
+                    Log.d("CartDebug", "Mapping food orders to cart items")
                     foodOrders.map { foodOrder ->
-                        val food = foodDao.getFoodById(foodOrder.foodId)
+                        val food = foodDao.getFoodById(foodOrder.foodId).also {
+                            Log.d("CartDebug", "Fetched Food for FoodOrder ID ${foodOrder.id}: $it")
+                        }
                         CartItem(
                             id = foodOrder.id,
                             name = food.name,
@@ -57,54 +67,19 @@ class CartFragment : Fragment() {
                             ingredientsUsed = food.ingredientsUsed,
                             imageResId = food.imageResId
                         )
+                    }.also {
+                        Log.d("CartDebug", "Mapped Cart Items: $it")
                     }
                 }
 
-                // Define callbacks and set adapter (unchanged)
-                val onIncreaseQuantity: (CartItem) -> Unit = { cartItem ->
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val updatedOrder = FoodOrder(
-                            id = cartItem.id,
-                            foodId = cartItem.id,
-                            cartId = cartItem.cartId,
-                            quantityOrdered = cartItem.quantityOrdered + 1
-                        )
-                        foodDao.insertFoodOrder(updatedOrder)
-                        refreshCart()
-                    }
-                }
+                Log.d("CartDebug", "Finished fetching and mapping cart data")
 
-                val onDecreaseQuantity: (CartItem) -> Unit = { cartItem ->
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        if (cartItem.quantityOrdered > 1) {
-                            val updatedOrder = FoodOrder(
-                                id = cartItem.id,
-                                foodId = cartItem.id,
-                                cartId = cartItem.cartId,
-                                quantityOrdered = cartItem.quantityOrdered - 1
-                            )
-                            foodDao.insertFoodOrder(updatedOrder)
-                        } else {
-                            foodDao.deleteFoodOrder(FoodOrder(cartItem.id, cartItem.id, cartItem.cartId, cartItem.quantityOrdered))
-                        }
-                        refreshCart()
-                    }
-                }
-
-                val onRemoveItem: (CartItem) -> Unit = { cartItem ->
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        foodDao.deleteFoodOrder(FoodOrder(cartItem.id, cartItem.id, cartItem.cartId, cartItem.quantityOrdered))
-                        refreshCart()
-                    }
-                }
-
-                recyclerView.adapter = CartAdapter(cartItems, onIncreaseQuantity, onDecreaseQuantity, onRemoveItem)
-
-                if (cartItems.isEmpty()) {
-                    view.findViewById<TextView>(R.id.emptyCartMessage).visibility = View.VISIBLE
-                } else {
-                    view.findViewById<TextView>(R.id.emptyCartMessage).visibility = View.GONE
-                }
+                recyclerView.adapter = CartAdapter(
+                    cartItems,
+                    onIncreaseQuantity = { _ ->  },
+                    onDecreaseQuantity = { _ -> },
+                    onRemoveItem = { _ ->  }
+                )
             } catch (e: Exception) {
                 Log.e("CartDebug", "Error fetching cart items", e)
                 Toast.makeText(requireContext(), "Failed to load cart items", Toast.LENGTH_SHORT).show()
