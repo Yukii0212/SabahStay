@@ -17,6 +17,7 @@ import android.content.ContentValues
 import android.provider.MediaStore
 import android.os.Build
 import android.graphics.Bitmap
+import android.widget.ImageButton
 
 class BookingSuccessActivity : AppCompatActivity() {
     private var bookingNumber: Long = -1L
@@ -48,8 +49,8 @@ class BookingSuccessActivity : AppCompatActivity() {
             startActivity(Intent(this, BranchOverview::class.java))
             finish()
         }
-        findViewById<Button>(R.id.downloadReceiptButton)?.setOnClickListener {
-            generateReceiptPdf()
+        findViewById<ImageButton>(R.id.downloadReceiptButton)?.setOnClickListener {
+        generateReceiptPdf()
         }
     }
 

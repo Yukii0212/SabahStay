@@ -151,25 +151,36 @@
 
     <Button
         android:id="@+id/homeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ok"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="OK"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="#28A745"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="85dp"
+        app:cornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/downloadReceiptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Download Receipt"
-        app:layout_constraintTop_toBottomOf="@id/homeButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        android:contentDescription="Download Receipt"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_downloadpdf"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
 
 
