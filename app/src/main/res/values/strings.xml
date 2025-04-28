@@ -7,4 +7,5 @@
     <string name="e_wallet">E-Wallet</string>
     <string name="e_wallet_icon">E-Wallet Icon</string>
     <string name="confirm">Confirm</string>
+    <string name="airportInformationText">Shuttle:\n- RM20 (City)\n- RM50 (Mountain/Island)\n\nTaxi:\n- RM50 (City)\n- RM100 (Mountain/Island)</string>
 </resources>
