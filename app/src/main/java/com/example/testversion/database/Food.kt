@@ -24,7 +24,7 @@ data class FoodOrder(
 
 @Entity(tableName = "food_cart")
 data class FoodCart(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
+    @PrimaryKey val id: Int = 1
 )
 
 data class CartItem(
