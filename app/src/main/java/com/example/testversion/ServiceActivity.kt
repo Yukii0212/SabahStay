@@ -3,7 +3,9 @@ package com.example.testversion
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -44,14 +46,30 @@ class ServiceActivity : AppCompatActivity() {
                 selectedBookingTextView.text = "Selected Booking ID: $selectedBookingId"
             } else {
                 val bookingNumbers = bookings.map { "Booking ID: ${it.bookingNumber}, Branch: ${it.branchName}" }
+
+                val dialogView = layoutInflater.inflate(R.layout.dialog_booking_selection, null)
+                val listView = dialogView.findViewById<ListView>(R.id.bookingListView)
+
+                val adapter = ArrayAdapter<String>(this@ServiceActivity, android.R.layout.simple_list_item_1, bookingNumbers)
+                listView.adapter = adapter
+
                 val builder = AlertDialog.Builder(this@ServiceActivity)
                 builder.setTitle("Select a Booking")
-                builder.setItems(bookingNumbers.toTypedArray()) { _, which ->
+                builder.setView(dialogView)
+                val dialog = builder.create()
+
+                listView.setOnItemClickListener { _, _, which, _ ->
                     selectedBookingId = bookings[which].bookingNumber
                     selectedBookingTextView.text = "Selected Booking ID: $selectedBookingId"
+                    dialog.dismiss()
                 }
-                builder.setCancelable(false)
-                builder.show()
+
+                val displayMetrics = resources.displayMetrics
+                val screenWidth = displayMetrics.widthPixels
+                val screenHeight = displayMetrics.heightPixels
+
+                dialog.show()
+                dialog.window?.setLayout((screenWidth * 0.9).toInt(), (screenHeight * 0.7).toInt())
             }
         }
 
