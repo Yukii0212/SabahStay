@@ -28,7 +28,7 @@ class OutstandingFragment : Fragment(R.layout.fragment_outstanding) {
         viewLifecycleOwner.lifecycleScope.launch {
             val serviceUsages = withContext(Dispatchers.IO) {
                 val serviceDao = AppDatabase.getInstance(requireContext()).serviceDao()
-                serviceDao.getServiceUsageByBookingId(bookingId.toString())
+                serviceDao.getOutstandingBillsForBooking(bookingId)
                     .filter { !it.isPaid }
             }
 

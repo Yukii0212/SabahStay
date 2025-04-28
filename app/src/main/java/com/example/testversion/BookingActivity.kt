@@ -297,7 +297,6 @@ class BookingActivity : AppCompatActivity() {
             if (checkOutDate.isBefore(checkInDate)) return
 
             numberOfNights = ChronoUnit.DAYS.between(checkInDate, checkOutDate)
-            numberOfNights.toInt()
             val roomCount = maxOf(roomCountTextView.text.toString().toIntOrNull() ?: 1, 1)
             val adults = maxOf(adultCountTextView.text.toString().toIntOrNull() ?: 1, 1)
             val children = maxOf(childCountTextView.text.toString().toIntOrNull() ?: 0, 0)

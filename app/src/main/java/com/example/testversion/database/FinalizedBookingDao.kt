@@ -26,6 +26,12 @@ interface FinalizedBookingDao {
 
     @Query("""
     SELECT * FROM finalized_bookings 
+    WHERE userEmail = :email AND checkOutDate > :currentDate
+""")
+    suspend fun getActiveBookingsForUser(email: String, currentDate: LocalDate): List<FinalizedBooking>
+
+    @Query("""
+    SELECT * FROM finalized_bookings 
     WHERE roomId = :roomId AND 
     NOT (checkOutDate <= :checkInDate OR checkInDate >= :checkOutDate)
 """)

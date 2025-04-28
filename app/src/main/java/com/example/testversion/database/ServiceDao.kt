@@ -19,14 +19,11 @@ interface ServiceDao {
     @Insert
     suspend fun insertServiceUsage(serviceUsage: ServiceUsage)
 
-    @Query("UPDATE service_usage SET cleaningRequestCount = :count WHERE bookingId = :bookingId")
-    suspend fun updateCleaningRequestCount(bookingId: Int, count: Int)
+    @Query("SELECT * FROM service_usage WHERE bookingId = :bookingId AND isPaid = 0")
+    suspend fun getOutstandingBillsForBooking(bookingId: Int): List<ServiceUsage>
 
-    @Query("SELECT * FROM service_usage WHERE bookingId = :bookingId")
-    suspend fun getServiceUsageByBookingId(bookingId: String): List<ServiceUsage>
-
-    @Query("SELECT cleaningRequestCount FROM service_usage WHERE bookingId = :bookingId ORDER BY id DESC LIMIT 1")
-    suspend fun getCleaningRequestCount(bookingId: Int): Int?
+    @Query("SELECT * FROM service_usage WHERE bookingId = :bookingId AND isPaid = 1")
+    suspend fun getPaidBillsForBooking(bookingId: Int): List<ServiceUsage>
 
     @Query("SELECT * FROM service_usage WHERE bookingId = :bookingId AND serviceid = 5")
     fun getLaundryServiceUsageByBookingId(bookingId: String): List<ServiceUsage>

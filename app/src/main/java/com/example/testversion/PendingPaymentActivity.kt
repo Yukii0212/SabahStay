@@ -11,15 +11,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class PendingPaymentActivity : AppCompatActivity() {
-    private var bookingNumber: Long = -1L
-    private var totalPrice: Double = 0.0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pending_payment)
 
-        bookingNumber = intent.getLongExtra("bookingNumber", -1L)
-        totalPrice = intent.getDoubleExtra("totalPrice", 0.0)
+        val bookingNumber = intent.getLongExtra("bookingNumber", -1L)
+        val totalPrice = intent.getDoubleExtra("totalPrice", 0.0)
+        val userName = intent.getStringExtra("userName") ?: ""
+        val userPassport = intent.getStringExtra("userPassport") ?: ""
+        val userPhone = intent.getStringExtra("userPhone") ?: ""
+        val userEmail = intent.getStringExtra("userEmail") ?: ""
+        val roomType = intent.getStringExtra("roomType") ?: ""
+        val branchName = intent.getStringExtra("branchName") ?: ""
+
         val loadingSpinner = findViewById<ProgressBar>(R.id.loadingSpinner)
         val leftIcon = findViewById<ImageView>(R.id.leftIcon)
         val centerHourglass = findViewById<ImageView>(R.id.centerHourglass)
@@ -43,8 +47,15 @@ class PendingPaymentActivity : AppCompatActivity() {
             stepConfirmation.setTextColor(getColor(android.R.color.holo_green_dark)) // Change the text color to green color
 
             val intent = Intent(this, BookingSuccessActivity::class.java)
-            intent.putExtra("totalPrice", totalPrice)
             intent.putExtra("bookingNumber", bookingNumber)
+            intent.putExtra("totalPrice", totalPrice)
+            intent.putExtra("userName", userName)
+            intent.putExtra("userPassport", userPassport)
+            intent.putExtra("userPhone", userPhone)
+            intent.putExtra("userEmail", userEmail)
+            intent.putExtra("roomType", roomType)
+            intent.putExtra("branchName", branchName)
+
             startActivity(intent)
             finish()
         }, 2000)

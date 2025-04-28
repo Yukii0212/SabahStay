@@ -23,7 +23,6 @@ class RoomCleaningActivity : AppCompatActivity() {
     private lateinit var roomNumberEditText: EditText
     private lateinit var confirmButton: Button
     private var bookingId: Int = 0
-    private var cleaningRequestCount: Int = 0
     private lateinit var cleaningDateEditText: EditText
     private lateinit var cleaningTimeEditText: EditText
 
@@ -113,37 +112,25 @@ class RoomCleaningActivity : AppCompatActivity() {
             try {
                 Log.d("RoomCleaningActivity", "Starting database operations")
                 val serviceDao = AppDatabase.getInstance(this@RoomCleaningActivity).serviceDao()
-                val currentCount = serviceDao.getCleaningRequestCount(bookingId) ?: 0
-                cleaningRequestCount = currentCount + 1
-
-                val isPaymentRequired = cleaningRequestCount > 1
-                val message = if (isPaymentRequired) {
-                    "This request will be charged RM15. Do you want to proceed?"
-                } else {
-                    "This request is free of charge. Do you want to proceed?"
-                }
 
                 Log.d("RoomCleaningActivity", "Showing confirmation dialog")
                 AlertDialog.Builder(this@RoomCleaningActivity)
                     .setTitle("Confirm Room Cleaning Request")
-                    .setMessage(message)
+                    .setMessage("This request will be charged RM15. Do you want to proceed?")
                     .setPositiveButton("Confirm") { _, _ ->
                         lifecycleScope.launch {
                             try {
-                                Log.d("RoomCleaningActivity", "Updating cleaning request count")
+                                Log.d("RoomCleaningActivity", "Inserting cleaning request")
                                 withContext(Dispatchers.IO) {
-                                    serviceDao.updateCleaningRequestCount(bookingId, cleaningRequestCount)
-
                                     val serviceUsage = ServiceUsage(
                                         bookingId = bookingId.toString(),
                                         roomNumber = roomNumber,
                                         serviceId = 1,
                                         serviceName = "Room Cleaning",
-                                        price = if (isPaymentRequired) 15.0 else 0.0,
+                                        price = 15.0,
                                         requestTime = cleaningTime,
                                         requestDay = cleaningDate,
                                         isCanceled = false,
-                                        cleaningRequestCount = cleaningRequestCount
                                     )
                                     serviceDao.insertServiceUsage(serviceUsage)
                                 }
@@ -151,7 +138,7 @@ class RoomCleaningActivity : AppCompatActivity() {
                                 withContext(Dispatchers.Main) {
                                     Toast.makeText(
                                         this@RoomCleaningActivity,
-                                        if (isPaymentRequired) "You have been charged RM15 for this request." else "Your request has been processed free of charge.",
+                                        "You have been charged RM15 for this request.",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     finish()
