@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@color/background_blue"
+    android:gravity="center_vertical">
+
+    <!-- Item Image -->
+    <ImageView
+        android:id="@+id/cartItemImage"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Cart Item Image" />
+
+    <!-- Item Details -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/cartItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Title"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/cartItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RM0.00"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/cartItemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quantity: 1"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Quantity Controls -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginEnd="8dp">
+
+        <Button
+            android:id="@+id/increaseQuantityButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="+"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:textColor="@android:color/white"
+            android:contentDescription="Increase Quantity" />
+
+        <Button
+            android:id="@+id/decreaseQuantityButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="-"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
+            android:contentDescription="Decrease Quantity"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+    <!-- Remove Button -->
+    <ImageView
+        android:id="@+id/removeFromCartButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_remove"
+        android:contentDescription="Remove from Cart Button" />
+
+</LinearLayout>

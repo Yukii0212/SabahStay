@@ -106,7 +106,7 @@ class OpenAnimation : AppCompatActivity() {
         insertRoomData()
     }
 
-    private fun insertRoomData(){
+    private fun insertRoomData() {
         lifecycleScope.launch {
             val database = AppDatabase.getInstance(this@OpenAnimation)
             val serviceDao = database.serviceDao()
@@ -863,6 +863,230 @@ class OpenAnimation : AppCompatActivity() {
                         description = "Laundry service for RM20 per request."
                     )
                 )
+            }
+
+            lifecycleScope.launch {
+                val database = AppDatabase.getInstance(this@OpenAnimation)
+                val foodDao = database.foodDao()
+
+                val existingFoodItems = foodDao.getAllFoodItems()
+                if (existingFoodItems.isEmpty()) {
+                    val foodItems = listOf(
+                        Food(
+                            category = 1,
+                            name = "Grilled Chicken Caesar Salad",
+                            description = "A classic Caesar salad with tender, grilled chicken breast, crisp Romaine lettuce, crunchy croutons, and creamy Caesar dressing topped with parmesan shavings.",
+                            price = 28.90,
+                            ingredientsUsed = "Romaine lettuce, grilled chicken, Caesar dressing, croutons, parmesan cheese, olive oil, garlic",
+                            imageResId = R.drawable.grilled_chicken_caesar_salad
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Truffle Mushroom Pasta",
+                            description = "A luxurious pasta dish with a rich and earthy truffle mushroom sauce, served with perfectly al dente fettuccine, finished with a sprinkle of parmesan and a drizzle of truffle oil.",
+                            price = 36.50,
+                            ingredientsUsed = "Fettuccine pasta, wild mushrooms, truffle oil, garlic, cream, parmesan cheese, olive oil, fresh herbs.",
+                            imageResId = R.drawable.truffle_mushroom_pasta
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Wagyu Beef Burger",
+                            description = "A premium Wagyu beef patty grilled to perfection, served on a toasted brioche bun with lettuce, tomato, pickles, and our special sauce. Accompanied by crispy, golden fries.",
+                            price = 42.00,
+                            ingredientsUsed = "Wagyu beef patty, brioche bun, lettuce, tomato, pickles, special sauce, fries, olive oil.",
+                            imageResId = R.drawable.wagyu_beef_burger
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Pan-Seared Salmon with Asparagus",
+                            description = "Fresh Atlantic salmon fillet pan-seared to a crispy golden brown, served with tender asparagus and a light citrus butter sauce to enhance the flavors.",
+                            price = 48.00,
+                            ingredientsUsed = "Atlantic salmon fillet, asparagus, lemon butter sauce, olive oil, garlic, fresh herbs.",
+                            imageResId = R.drawable.salmon_with_asparagus
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Margherita Pizza (Wood-Fired)",
+                            description = "A classic Neapolitan pizza with a crisp, wood-fired crust topped with tangy tomato sauce, fresh mozzarella, and fragrant basil leaves.",
+                            price = 32.50,
+                            ingredientsUsed = "Pizza dough, mozzarella cheese, tomatoes, basil, olive oil, salt.",
+                            imageResId = R.drawable.margherita_pizza
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Lamb Shank with Red Wine Sauce",
+                            description = "Slow-braised lamb shank, tender and flavorful, served with a rich, velvety red wine sauce and paired with creamy mashed potatoes.",
+                            price = 58.00,
+                            ingredientsUsed = "Lamb shank, red wine, carrots, onions, garlic, rosemary, thyme, potatoes, butter.",
+                            imageResId = R.drawable.lamb_shank_red_wine
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Seafood Aglio Olio",
+                            description = "A decadent pasta dish with a medley of succulent seafood, tossed in a savory garlic and chili-infused olive oil sauce, and topped with a touch of fresh parsley.",
+                            price = 39.90,
+                            ingredientsUsed = "Spaghetti, shrimp, squid, garlic, chili flakes, olive oil, parsley, lemon zest.",
+                            imageResId = R.drawable.seafood_aglio_olio
+                        ),
+                        Food(
+                            category = 1,
+                            name = "Roasted Duck Breast with Orange Glaze",
+                            description = "A crispy-skinned duck breast, roasted to perfection and glazed with a sweet and tangy orange sauce, served with sautéed greens and roasted vegetables.",
+                            price = 52.00,
+                            ingredientsUsed = "Duck breast, orange juice, honey, garlic, thyme, olive oil, roasted vegetables.",
+                            imageResId = R.drawable.roasted_duck_breast
+                        ),
+                    )
+
+                    val drinksItems = listOf(
+                        Food(
+                            category = 2,
+                            name = "Fresh Orange Juice",
+                            description = "A refreshing and naturally sweet juice made with freshly squeezed oranges, perfect to start your day or complement any meal.",
+                            price = 10.00,
+                            ingredientsUsed = "Fresh oranges, ice.",
+                            imageResId = R.drawable.orange_juice
+                        ),
+                        Food(
+                            category = 2,
+                            name = "Iced Latte",
+                            description = "A smooth and bold espresso mixed with chilled milk and served over ice, a perfectly balanced pick-me-up.",
+                            price = 14.50,
+                            ingredientsUsed = "Espresso, milk, ice, sugar (optional)",
+                            imageResId = R.drawable.iced_latte
+                        ),
+                        Food(
+                            category = 2,
+                            name = "Sparkling Water",
+                            description = "Crisp, refreshing sparkling water with a gentle effervescence that cleanses your palate and pairs beautifully with any meal.",
+                            price = 8.00,
+                            ingredientsUsed = "Carbonated water.",
+                            imageResId = R.drawable.sparkling_water
+                        ),
+                        Food(
+                            category = 2,
+                            name = "Coke-Cola",
+                            description = "A fizzy and sweet cola, a perfect classic beverage for any occasion.",
+                            price = 5.00,
+                            ingredientsUsed = "Carbonated water, sugar, caramel color, caffeine, flavorings.",
+                            imageResId = R.drawable.cola
+                        ),
+                        Food(
+                            category = 2,
+                            name = "English Breakfast Tea",
+                            description = "A robust and full-bodied black tea, served hot with a splash of milk or lemon, ideal for a comforting break.",
+                            price = 8.50,
+                            ingredientsUsed = "Black tea leaves, milk (optional), lemon (optional).",
+                            imageResId = R.drawable.english_tea
+                        ),
+                        Food(
+                            category = 2,
+                            name = "Matcha Latte (Hot/Iced)",
+                            description = "A creamy and smooth matcha latte made with premium green tea powder and steamed milk, served hot or iced.",
+                            price = 15.00,
+                            ingredientsUsed = "Matcha powder, milk, ice (for iced version), honey (optional).",
+                            imageResId = R.drawable.matcha_latte
+                        ),
+                        Food(
+                            category = 2,
+                            name = "Mineral Water (Still)",
+                            description = "Pure and refreshing still mineral water, offering a clean taste and a perfect way to hydrate.",
+                            price = 4.50,
+                            ingredientsUsed = "Natural spring water.",
+                            imageResId = R.drawable.mineral_water
+                        ),
+                    )
+
+                    val alcoholItems = listOf(
+                        Food(
+                            category = 3,
+                            name = "Red Wine",
+                            description = "A smooth and velvety red wine with notes of dark berries and a hint of oak, perfect to pair with any of our rich dishes.",
+                            price = 28.00,
+                            ingredientsUsed = "Red wine (grape variety will vary by selection).",
+                            imageResId = R.drawable.red_wine
+                        ),
+                        Food(
+                            category = 3,
+                            name = "White Wine",
+                            description = "A crisp and refreshing white wine with citrus and floral notes, offering a light and bright complement to seafood and lighter dishes.",
+                            price = 28.00,
+                            ingredientsUsed = "White wine (grape variety will vary by selection).",
+                            imageResId = R.drawable.white_wine
+                        ),
+                        Food(
+                            category = 3,
+                            name = "Mojito",
+                            description = "A refreshing cocktail made with white rum, fresh mint leaves, lime juice, and a touch of sugar, topped off with soda water.",
+                            price = 32.00,
+                            ingredientsUsed = "White rum, mint leaves, lime, sugar, soda water.",
+                            imageResId = R.drawable.mojito
+                        ),
+                        Food(
+                            category = 3,
+                            name = "Margarita",
+                            description = "A tangy and flavorful cocktail with tequila, triple sec, and lime juice, served with a salted rim for that perfect balance of sweet and sour.",
+                            price = 35.00,
+                            ingredientsUsed = "Tequila, triple sec, lime juice, salt.",
+                            imageResId = R.drawable.margarita
+                        ),
+                        Food(
+                            category = 3,
+                            name = "Gin & Tonic",
+                            description = "A refreshing and crisp cocktail made with premium gin, tonic water, and a squeeze of lime.",
+                            price = 30.00,
+                            ingredientsUsed = "Gin, tonic water, lime.",
+                            imageResId = R.drawable.gin_and_tonic
+                        ),
+                        Food(
+                            category = 3,
+                            name = "Whiskey (Single Shot)",
+                            description = "A rich and smoky whiskey served neat, allowing the bold flavors of the spirit to shine through.",
+                            price = 40.00,
+                            ingredientsUsed = "Whiskey (distilled spirit, variety may vary).",
+                            imageResId = R.drawable.whiskey
+                        ),
+                        Food(
+                            category = 3,
+                            name = "Beer",
+                            description = " A rich and smoky whiskey served neat, allowing the bold flavors of the spirit to shine through.",
+                            price = 18.00,
+                            ingredientsUsed = "Water, malt, hops, yeast.",
+                            imageResId = R.drawable.beer
+                        ),
+                    )
+
+                    val dessertItems = listOf(
+                        Food(
+                            category = 4,
+                            name = "Classic Tiramisu",
+                            description = "A rich and creamy Italian dessert made with layers of coffee-soaked ladyfingers, mascarpone cream, and a dusting of cocoa powder.",
+                            price = 24.00,
+                            ingredientsUsed = "Ladyfingers, mascarpone cheese, coffee, cocoa powder, eggs, sugar.",
+                            imageResId = R.drawable.tiramisu
+                        ),
+                        Food(
+                            category = 4,
+                            name = "Molten Lava Cake",
+                            description = "A decadent chocolate cake with a gooey molten center, served warm with a scoop of vanilla ice cream",
+                            price = 26.00,
+                            ingredientsUsed = "Dark chocolate, butter, eggs, sugar, flour, vanilla ice cream.",
+                            imageResId = R.drawable.lava_cake
+                        ),
+                        Food(
+                            category = 4,
+                            name = "Fruit Platter",
+                            description = "A refreshing and colorful assortment of seasonal fruits, perfectly cut and served as a light and healthy option to finish your meal.",
+                            price = 22.00,
+                            ingredientsUsed = "Mixed seasonal fruits (e.g., watermelon, pineapple, strawberries, grapes).",
+                            imageResId = R.drawable.fruit_platter
+                        )
+                    )
+
+                    (foodItems + drinksItems + alcoholItems + dessertItems).forEach { food ->
+                        foodDao.insertFood(food)
+                    }
+                }
             }
         }
     }
