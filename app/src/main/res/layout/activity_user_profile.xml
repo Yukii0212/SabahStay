@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_blue"
-    android:fillViewport="true">
+    android:background="@color/white"
+    tools:context=".BranchOverview">
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_blue"
+        android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -198,38 +207,23 @@
             android:textColor="@android:color/white"
             android:layout_marginTop="10dp"/>
 
-        <FrameLayout
-            android:id="@+id/auth_button_container"
+        <Button
+            android:id="@+id/logout_button"
+            android:text="LOG OUT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-
-            <!-- Login Button (Visible when user is NOT logged in) -->
-            <Button
-                android:id="@+id/login_button"
-                android:text="LOG IN"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/holo_green_light"
-                android:textColor="@android:color/black"
-                android:visibility="gone"/>
-
-            <Button
-                android:id="@+id/logout_button"
-                android:text="LOG OUT"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/error_red"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="20dp"/>
-        </FrameLayout>
-        <!-- Footer -->
-        <com.example.testversion.FooterBar
-            android:id="@+id/footer_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:background="@color/error_red"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp" />
     </LinearLayout>
 </ScrollView>
+
+    <!-- Footer -->
+    <com.example.testversion.FooterBar
+        android:id="@+id/footer_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

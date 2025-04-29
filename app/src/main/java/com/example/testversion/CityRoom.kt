@@ -92,6 +92,10 @@ class CityRoom : AppCompatActivity() {
             }
 
             val intent = Intent(this, SearchAvailableRoomActivity::class.java)
+            val branchName = "City Branch"
+
+            intent.putExtra("branchName", branchName)
+            intent.putExtra("roomType", title)
             intent.putExtra("userEmail", userEmail)
             startActivity(intent)
         }

@@ -126,7 +126,6 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun loadUserData() {
         val user = auth.currentUser ?: return
-        val loginButton = findViewById<Button>(R.id.login_button)
         val logoutButton = findViewById<Button>(R.id.logout_button)
 
         val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
@@ -212,21 +211,6 @@ class UserProfileActivity : AppCompatActivity() {
 
         phone.text = savedPhone.ifEmpty { "Not provided" }
         email.text = savedEmail.ifEmpty { "Not provided" }
-
-        //Show/Hide login/logout buttons based on authentication status
-        if (user != null) {
-            loginButton.visibility = View.GONE
-            logoutButton.visibility = View.VISIBLE
-            editProfilePicture.visibility = View.VISIBLE
-        } else {
-            loginButton.visibility = View.VISIBLE
-            logoutButton.visibility = View.GONE
-            editProfilePicture.visibility = View.GONE
-
-            loginButton.setOnClickListener {
-                startActivity(Intent(this, LoginActivity::class.java))
-            }
-        }
     }
 
     private fun updateProfilePicture(savedProfilePicturePath: String, savedGender: String) {

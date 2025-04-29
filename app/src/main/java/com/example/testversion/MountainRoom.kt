@@ -71,7 +71,6 @@ class MountainRoom : AppCompatActivity() {
         val roomPrice = cardView.findViewById<TextView>(R.id.room_price)
         val personNum = cardView.findViewById<TextView>(R.id.person_number)
         val roomDetailsRow = cardView.findViewById<LinearLayout>(R.id.room_details_row)
-        val bookNowButton = cardView.findViewById<Button>(R.id.bookingButton)
 
         roomImage.setImageResource(imageResId)
         roomTitle.text = title
@@ -92,6 +91,10 @@ class MountainRoom : AppCompatActivity() {
             }
 
             val intent = Intent(this, SearchAvailableRoomActivity::class.java)
+            val branchName = "Kundasang"
+
+            intent.putExtra("branchName", branchName)
+            intent.putExtra("roomType", title)
             intent.putExtra("userEmail", userEmail)
             startActivity(intent)
         }

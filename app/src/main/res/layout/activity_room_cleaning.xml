@@ -44,7 +44,7 @@
         android:id="@+id/infoTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Room cleaning is done automatically every day. This request is only for sudden cleaning needs. The first request is free, and subsequent requests will be charged RM15 per cleaning."
+        android:text="Room cleaning is done automatically every day. This request is only for sudden cleaning needs. Each request will be charged RM15."
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:padding="16dp"

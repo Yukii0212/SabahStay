@@ -40,6 +40,36 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_available_room)
 
+        //Handle auto-fill of branch and room type
+        val passedBranchName = intent.getStringExtra("branchName")
+        val passedRoomType = intent.getStringExtra("roomType")
+
+        if (!passedBranchName.isNullOrEmpty()) {
+            val branchEdit = findViewById<EditText>(R.id.edit_branch)
+            branchEdit.setText(passedBranchName)
+
+            lifecycleScope.launch {
+                val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
+                val branches = db.branchDao().getAllBranches()
+
+                val matchedBranch = branches.find { it.name == passedBranchName }
+                selectedBranchId = matchedBranch?.branchId ?: "kkcity"
+            }
+        }
+
+        if (!passedRoomType.isNullOrEmpty()) {
+            val roomTypeEdit = findViewById<EditText>(R.id.edit_room_type)
+            roomTypeEdit.setText(passedRoomType)
+            selectedRoomType = passedRoomType
+        }
+
+        val userEmail = intent.getStringExtra("userEmail")
+        if (userEmail.isNullOrEmpty()) {
+            Toast.makeText(this, "User email is missing", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         checkInEditText = findViewById(R.id.edit_check_in)
         checkOutEditText = findViewById(R.id.edit_check_out)
         roomGuestEditText = findViewById(R.id.edit_room_guest)
@@ -48,13 +78,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         searchButton = findViewById(R.id.button_search)
 
         selectedBranchId = intent.getStringExtra("branchId")
-
-        if (selectedBranchId == null) {
-            selectedBranchId = "kkcity"
-            selectedRoomType = "Single Room"
-            branchEditText.setText("Select Branch")
-            roomTypeEditText.setText("Room Type")
-        }
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }
@@ -75,17 +98,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
-                val userEmail = intent.getStringExtra("userEmail")
-                if (userEmail.isNullOrBlank()) {
-                    Toast.makeText(this@SearchAvailableRoomActivity, " User not found in database: $userEmail", Toast.LENGTH_LONG).show()
-                    return@launch
-                }
-                val user = db.userDao().getUserByEmail(userEmail)
-                if (user == null) {
-                    Toast.makeText(this@SearchAvailableRoomActivity, "User not found in database: $userEmail", Toast.LENGTH_LONG).show()
-                    return@launch
-                }
-
                 val roomDao = db.roomDao()
                 val bookingDao = db.bookingDao()
                 val finalizedBookingDao = db.finalizedBookingDao()
@@ -95,57 +107,31 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 val checkOut = org.threeten.bp.Instant.ofEpochMilli(checkOutDateMillis!!)
                     .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
 
+                // Get all rooms of the selected type in the branch
                 val allRooms = roomDao.getByBranch(selectedBranchId!!).filter { it.roomType == selectedRoomType }
-                val availableRooms = mutableListOf<HotelRoom>()
-                val (requestedRoomCount, adults, children) = parseRoomGuestInfo(roomGuestEditText.text.toString())
-                val unavailableDates = mutableSetOf<LocalDate>()
 
-                for (room in allRooms) {
-                    if (!room.isAvailable) continue
-
-                    val finalizedConflicts = finalizedBookingDao.getConflictingFinalizedBookings(room.roomId, checkIn, checkOut)
-                    val liveConflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut)
-
-                    if (finalizedConflicts.isEmpty() && liveConflicts.isEmpty()) {
-                        availableRooms.add(room)
-                    } else {
-                        finalizedConflicts.forEach { conflict ->
-                            var date = conflict.checkInDate
-                            while (date.isBefore(conflict.checkOutDate)) {
-                                unavailableDates.add(date)
-                                date = date.plusDays(1)
-                            }
-                        }
-                        liveConflicts.forEach { conflict ->
-                            var date = conflict.checkInDate
-                            while (date.isBefore(conflict.checkOutDate)) {
-                                unavailableDates.add(date)
-                                date = date.plusDays(1)
-                            }
-                        }
-                    }
-
+                // Calculate the total number of rooms booked (finalized and live bookings)
+                val totalBookedRooms = allRooms.sumOf { room ->
+                    val finalizedConflicts = finalizedBookingDao.getConflictingFinalizedBookings(room.roomId, checkIn, checkOut).size
+                    val liveConflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut).size
+                    finalizedConflicts + liveConflicts
                 }
 
-                if (availableRooms.size < requestedRoomCount) {
-                    Toast.makeText(this@SearchAvailableRoomActivity,
-                        "Only ${availableRooms.size} room(s) available. You requested $requestedRoomCount.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                // Calculate the number of available rooms
+                val availableRoomsCount = allRooms.size - totalBookedRooms
+
+                if (availableRoomsCount <= 0) {
+                    Toast.makeText(this@SearchAvailableRoomActivity, "No rooms available for the selected dates.", Toast.LENGTH_LONG).show()
                     return@launch
                 }
 
-                if (availableRooms.isEmpty()) {
-                    showUnavailableDatesDialog(unavailableDates)
-                } else {
-                    AlertDialog.Builder(this@SearchAvailableRoomActivity)
-                        .setTitle("Rooms Available")
-                        .setMessage("${availableRooms.size} room(s) are available for your selected dates.")
-                        .setPositiveButton("OK") { _, _ ->
-                            showBookingPromptDialog(availableRooms.size, userEmail)
-                        }
-                        .show()
-                }
+                AlertDialog.Builder(this@SearchAvailableRoomActivity)
+                    .setTitle("Rooms Available")
+                    .setMessage("$availableRoomsCount room(s) are available for your selected dates.")
+                    .setPositiveButton("OK") { _, _ ->
+                        showBookingPromptDialog(availableRoomsCount, userEmail)
+                    }
+                    .show()
             }
         }
     }

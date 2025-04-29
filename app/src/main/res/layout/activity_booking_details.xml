@@ -138,6 +138,7 @@
                         android:textSize="20sp"
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="8dp" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

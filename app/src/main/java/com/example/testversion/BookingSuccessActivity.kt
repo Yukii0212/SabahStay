@@ -17,22 +17,17 @@ import android.content.ContentValues
 import android.provider.MediaStore
 import android.os.Build
 import android.graphics.Bitmap
-
-
-
-
+import android.widget.ImageButton
 
 class BookingSuccessActivity : AppCompatActivity() {
     private var bookingNumber: Long = -1L
     private var totalPrice: Double = 0.0
-
     private var userName: String = ""
     private var userPhone: String = ""
     private var userEmail: String = ""
     private var userIc: String = ""
     private var branchName: String = ""
     private var roomType: String = ""
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +38,7 @@ class BookingSuccessActivity : AppCompatActivity() {
         userName = intent.getStringExtra("userName") ?: ""
         userPhone = intent.getStringExtra("userPhone") ?: ""
         userEmail = intent.getStringExtra("userEmail") ?: ""
-        userIc = intent.getStringExtra("userIc") ?: ""
+        userIc = intent.getStringExtra("userPassport") ?: ""
         branchName = intent.getStringExtra("branchName") ?: ""
         roomType = intent.getStringExtra("roomType") ?: ""
 
@@ -54,11 +49,10 @@ class BookingSuccessActivity : AppCompatActivity() {
             startActivity(Intent(this, BranchOverview::class.java))
             finish()
         }
-        findViewById<Button>(R.id.downloadReceiptButton)?.setOnClickListener {
-            generateReceiptPdf()
+        findViewById<ImageButton>(R.id.downloadReceiptButton)?.setOnClickListener {
+        generateReceiptPdf()
         }
     }
-
 
     private fun generateReceiptPdf() {
         val pdfDocument = PdfDocument()
