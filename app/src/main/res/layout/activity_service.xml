@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_blue">
+    android:background="@color/white">
 
     <!-- Header -->
     <include
@@ -38,7 +38,7 @@
                 android:background="#004C99"
                 android:gravity="left"
                 android:padding="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="10dp"
                 android:text="Selected Booking ID: "
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
@@ -52,8 +52,9 @@
                 android:background="#FFA500"
                 android:gravity="center"
                 android:padding="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="C O R E   S E R V I C E S"
+                android:layout_marginBottom="5dp"
+                android:text="CORE SERVICES"
+                android:fontFamily="@font/lato"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -86,6 +87,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Room Cleaning Request"
+                        android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:padding="8dp" />
                 </LinearLayout>
@@ -111,6 +113,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textStyle="bold"
                         android:text="Food and Drinks Ordering"
                         android:textColor="@android:color/white"
                         android:padding="8dp" />
@@ -124,8 +127,9 @@
                 android:background="#FFA500"
                 android:gravity="center"
                 android:padding="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="P R E M I U M   S E R V I C E S"
+                android:layout_marginBottom="5dp"
+                android:text="PREMIUM SERVICES"
+                android:fontFamily="@font/lato"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -156,6 +160,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textStyle="bold"
                         android:text="Taxi / Airport Shuttle Booking"
                         android:textColor="@android:color/white"
                         android:padding="8dp" />
@@ -183,6 +188,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Laundry Service Request"
+                        android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:padding="8dp" />
                 </LinearLayout>
@@ -195,8 +201,9 @@
                 android:background="#FFA500"
                 android:gravity="center"
                 android:padding="8dp"
-                android:layout_marginBottom="16dp"
-                android:text="B I L L I N G   S E C T I O N"
+                android:layout_marginBottom="5dp"
+                android:text="BILLING SECTION"
+                android:fontFamily="@font/lato"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -227,6 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textStyle="bold"
                         android:text="View Outstanding Bills"
                         android:textColor="@android:color/white"
                         android:padding="8dp" />
