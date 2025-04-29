@@ -16,6 +16,7 @@ import com.example.testversion.database.HotelRoom
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import android.content.Intent
+import android.widget.ImageView
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
@@ -43,6 +44,11 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         //Handle auto-fill of branch and room type
         val passedBranchName = intent.getStringExtra("branchName")
         val passedRoomType = intent.getStringExtra("roomType")
+
+        val backButton = findViewById<ImageView>(R.id.back_button)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         if (!passedBranchName.isNullOrEmpty()) {
             val branchEdit = findViewById<EditText>(R.id.edit_branch)
