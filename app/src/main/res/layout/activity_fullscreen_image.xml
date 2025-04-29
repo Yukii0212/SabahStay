@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".FullscreenImageActivity">
 
+    <!-- Fullscreen Image -->
     <ImageView
         android:id="@+id/fullscreen_image"
         android:layout_width="match_parent"
@@ -10,5 +14,19 @@
         android:scaleType="fitCenter"
         android:contentDescription="Full Screen Image"
         android:background="#000000" />
+
+    <!-- Back Button on top -->
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/arrow_back"
+        android:contentDescription="Back"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_gravity="start|top" />
 
 </FrameLayout>

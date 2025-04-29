@@ -12,6 +12,11 @@ class FullscreenImageActivity : AppCompatActivity() {
 
         val fullScreenImage = findViewById<ImageView>(R.id.fullscreen_image)
         val imageResId = intent.getIntExtra("imageResId", 0)
+        val backButton = findViewById<ImageView>(R.id.back_button)
+
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         if (imageResId != 0) {
             fullScreenImage.setImageResource(imageResId)
