@@ -155,8 +155,6 @@ class CartFragment : Fragment() {
         recyclerView = view.findViewById(R.id.cartRecyclerView)
         emptyCartMessage = view.findViewById(R.id.emptyCartMessage)
         cartTotalLabel = view.findViewById(R.id.cartTotalLabel)
-        taxLabel = view.findViewById(R.id.taxLabel)
-        subtotalLabel = view.findViewById(R.id.subtotalLabel)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

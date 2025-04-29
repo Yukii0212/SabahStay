@@ -40,6 +40,29 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_available_room)
 
+        //Handle auto-fill of branch and room type
+        val passedBranchName = intent.getStringExtra("branchName")
+        val passedRoomType = intent.getStringExtra("roomType")
+
+        if (!passedBranchName.isNullOrEmpty()) {
+            val branchEdit = findViewById<EditText>(R.id.edit_branch)
+            branchEdit.setText(passedBranchName)
+
+            lifecycleScope.launch {
+                val db = AppDatabase.getInstance(this@SearchAvailableRoomActivity)
+                val branches = db.branchDao().getAllBranches()
+
+                val matchedBranch = branches.find { it.name == passedBranchName }
+                selectedBranchId = matchedBranch?.branchId ?: "kkcity"
+            }
+        }
+
+        if (!passedRoomType.isNullOrEmpty()) {
+            val roomTypeEdit = findViewById<EditText>(R.id.edit_room_type)
+            roomTypeEdit.setText(passedRoomType)
+            selectedRoomType = passedRoomType
+        }
+
         val userEmail = intent.getStringExtra("userEmail")
         if (userEmail.isNullOrEmpty()) {
             Toast.makeText(this, "User email is missing", Toast.LENGTH_SHORT).show()
@@ -55,13 +78,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         searchButton = findViewById(R.id.button_search)
 
         selectedBranchId = intent.getStringExtra("branchId")
-
-        if (selectedBranchId == null) {
-            selectedBranchId = "kkcity"
-            selectedRoomType = "Single Room"
-            branchEditText.setText("Select Branch")
-            roomTypeEditText.setText("Room Type")
-        }
 
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }

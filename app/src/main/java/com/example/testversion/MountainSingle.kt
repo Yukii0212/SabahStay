@@ -33,6 +33,8 @@ class MountainSingle : AppCompatActivity() {
         bookingButton.setOnClickListener {
             val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
             val userEmail = sharedPreferences.getString("email", null)
+            val branchName = "Kundasang"
+            val roomType = "Single Room"
 
             if (userEmail.isNullOrEmpty()) {
                 Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
@@ -41,6 +43,8 @@ class MountainSingle : AppCompatActivity() {
 
             val intent = Intent(this, SearchAvailableRoomActivity::class.java)
             intent.putExtra("userEmail", userEmail)
+            intent.putExtra("branchName", branchName)
+            intent.putExtra("roomType", roomType)
             startActivity(intent)
         }
     }
