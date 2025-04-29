@@ -50,7 +50,7 @@ class MountainRoom : AppCompatActivity() {
         setupRoomCard(
             R.id.deluxe_suite_card,
             R.drawable.mountain_deluxe,
-            "Deluxe Suite",
+            "Mountain View Suite",
             "RM580 /per night",
             "3",
             MountainDeluxe::class.java
@@ -71,6 +71,7 @@ class MountainRoom : AppCompatActivity() {
         val roomPrice = cardView.findViewById<TextView>(R.id.room_price)
         val personNum = cardView.findViewById<TextView>(R.id.person_number)
         val roomDetailsRow = cardView.findViewById<LinearLayout>(R.id.room_details_row)
+        val bookNowButton = cardView.findViewById<Button>(R.id.bookingButton)
 
         roomImage.setImageResource(imageResId)
         roomTitle.text = title

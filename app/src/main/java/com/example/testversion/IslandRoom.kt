@@ -50,7 +50,7 @@ class IslandRoom : AppCompatActivity() {
         setupRoomCard(
             R.id.deluxe_suite_card,
             R.drawable.island_deluxe,
-            "Deluxe Suite",
+            "Beachfront Suite",
             "RM700 /per night",
             "3",
             IslandDeluxe::class.java
@@ -71,6 +71,7 @@ class IslandRoom : AppCompatActivity() {
         val roomPrice = cardView.findViewById<TextView>(R.id.room_price)
         val personNum = cardView.findViewById<TextView>(R.id.person_number)
         val roomDetailsRow = cardView.findViewById<LinearLayout>(R.id.room_details_row)
+        val bookNowButton = cardView.findViewById<Button>(R.id.bookingButton)
 
         roomImage.setImageResource(imageResId)
         roomTitle.text = title
