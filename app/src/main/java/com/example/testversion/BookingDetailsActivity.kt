@@ -39,7 +39,7 @@ class BookingDetailsActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.checkOutDateText).text = "Check-Out: ${it.checkOutDate}"
                     findViewById<TextView>(R.id.bookerNameText).text = "Booker: ${it.userEmail}"
                     findViewById<TextView>(R.id.numAdultsChildrenText).text = "Adults: ${it.numberOfAdults}, Children: ${it.numberOfChildren}"
-                    findViewById<TextView>(R.id.totalPriceText).text = "Total Price: $${"%.2f".format(it.totalPrice)}"
+                    findViewById<TextView>(R.id.totalPriceText).text = "Total Price: RM${"%.2f".format(it.totalPrice)}"
                     findViewById<TextView>(R.id.paymentMethodText).text = "Payment Method: ${it.paymentMethod}"
                 }
             }
