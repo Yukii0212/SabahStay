@@ -324,11 +324,7 @@ class CartFragment : Fragment() {
 
     private fun calculateCartSummary() {
         val total = cartItems.sumOf { it.price * it.quantityOrdered }
-        val tax = total * 0.1
-        val subtotal = total + tax
 
         cartTotalLabel.text = "Cart Total: RM %.2f".format(total)
-        taxLabel.text = "Tax: RM %.2f".format(tax)
-        subtotalLabel.text = "Subtotal: RM %.2f".format(subtotal)
     }
 }
