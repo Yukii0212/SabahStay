@@ -32,8 +32,6 @@ class CartFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyCartMessage: TextView
     private lateinit var cartTotalLabel: TextView
-    private lateinit var taxLabel: TextView
-    private lateinit var subtotalLabel: TextView
     private var cartItems: MutableList<CartItem> = mutableListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +40,6 @@ class CartFragment : Fragment() {
         val confirmOrderButton = view.findViewById<Button>(R.id.confirmOrderButton)
         val deliveryDateInput = view.findViewById<EditText>(R.id.deliveryDateInput)
         val deliveryTimeInput = view.findViewById<EditText>(R.id.deliveryTimeInput)
-
 
         // Retrieve bookingId from intent
         val bookingId = requireActivity().intent.getIntExtra("bookingId", -1)
@@ -92,7 +89,7 @@ class CartFragment : Fragment() {
                 },
                 hour,
                 minute,
-                false // Use analog clock
+                false
             ).show()
         }
 
@@ -113,7 +110,6 @@ class CartFragment : Fragment() {
                             // Clear the cart
                             foodDao.clearCart(1)
 
-                            // Insert into ServiceUsage
                             val serviceUsage = ServiceUsage(
                                 bookingId = bookingId.toString(),
                                 roomNumber = null.toString(),

@@ -6,7 +6,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
@@ -100,7 +99,6 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
             if (hasFocus) setupKeyboardScrolling(findViewById(R.id.scrollView), confirmNewPassword)
         }
 
-        //Show Password Toggle
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             val inputType = if (isChecked) {
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
@@ -110,15 +108,12 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
 
             val typeface = newPassword.typeface
 
-            //Apply to all password fields
             currentPassword.inputType = inputType
             newPassword.inputType = inputType
             confirmNewPassword.inputType = inputType
-
             currentPassword.typeface = typeface
             newPassword.typeface = typeface
             confirmNewPassword.typeface = typeface
-
             currentPassword.setSelection(currentPassword.text.length)
             newPassword.setSelection(newPassword.text.length)
             confirmNewPassword.setSelection(confirmNewPassword.text.length)
@@ -129,8 +124,6 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val userDao = UserDatabase.getDatabase(this@ChangeSensitiveInformationActivity).userDao()
             val localUser = userDao.getUserByEmail(user.email ?: "")
-            val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
-            val savedPhone = sharedPreferences.getString("phone", "") ?: ""
 
             withContext(Dispatchers.Main) {
                 if (localUser != null) {
@@ -188,7 +181,7 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
             return
         }
 
-        //Validate new password if changed
+        //Ask the user to enter a new password if they made any changes
         if (newPass.isNotEmpty() || confirmPass.isNotEmpty()) {
             if (!validatePassword(newPass)) {
                 Toast.makeText(this, "New password does not meet requirements.", Toast.LENGTH_SHORT).show()
@@ -244,7 +237,7 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     if (updatedUser != null) {
                         Toast.makeText(this@ChangeSensitiveInformationActivity, "Phone number updated successfully!", Toast.LENGTH_SHORT).show()
-                        originalPhone = fullPhone // ✅ Update `originalPhone` to prevent unnecessary re-authentication
+                        originalPhone = fullPhone
                         finish()
                     } else {
                         Toast.makeText(this@ChangeSensitiveInformationActivity, "Failed to update phone number.", Toast.LENGTH_SHORT).show()
@@ -292,19 +285,6 @@ class ChangeSensitiveInformationActivity : AppCompatActivity() {
 
         passwordRequirementsText.text = requirements.joinToString("\n") { (req, met) ->
             if (met) "✅ $req" else "❌ $req"
-        }
-    }
-
-    private fun sendVerificationEmail(newEmail: String) {
-        user.sendEmailVerification().addOnCompleteListener {
-            if (it.isSuccessful) {
-                Toast.makeText(this, "Verification email sent to $newEmail.", Toast.LENGTH_LONG).show()
-                val intent = Intent(this, EmailVerificationActivity::class.java)
-                intent.putExtra("email", newEmail)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Failed to send verification email.", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 

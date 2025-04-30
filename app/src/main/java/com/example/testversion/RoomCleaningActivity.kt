@@ -33,11 +33,9 @@ class RoomCleaningActivity : AppCompatActivity() {
         roomNumberEditText = findViewById(R.id.roomNumberEditText)
         confirmButton = findViewById(R.id.submitCleaningRequestButton)
 
-        // Get bookingId from intent
         bookingId = intent.getIntExtra("bookingId", 0)
         Log.d("RoomCleaningActivity", "Retrieved bookingId: $bookingId")
 
-        // Set up confirm button click listener
         confirmButton.setOnClickListener {
             Log.d("RoomCleaningActivity", "Submit button clicked")
             handleRoomCleaningRequest()
@@ -46,7 +44,6 @@ class RoomCleaningActivity : AppCompatActivity() {
         cleaningDateEditText = findViewById(R.id.cleaningDateEditText)
         cleaningTimeEditText = findViewById(R.id.cleaningTimeEditText)
 
-        // Show DatePickerDialog when cleaningDateEditText is clicked
         cleaningDateEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -64,12 +61,10 @@ class RoomCleaningActivity : AppCompatActivity() {
                 month,
                 day
             )
-            // Set minimum date to today
             datePickerDialog.datePicker.minDate = calendar.timeInMillis
             datePickerDialog.show()
         }
 
-        // Show TimePickerDialog when cleaningTimeEditText is clicked
         cleaningTimeEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -102,7 +97,6 @@ class RoomCleaningActivity : AppCompatActivity() {
         val cleaningDate = cleaningDateEditText.text.toString()
         val cleaningTime = cleaningTimeEditText.text.toString()
 
-        // Validate inputs
         if (roomNumber.isEmpty() || cleaningDate.isEmpty() || cleaningTime.isEmpty()) {
             Toast.makeText(this, "All fields are mandatory", Toast.LENGTH_SHORT).show()
             return

@@ -16,7 +16,6 @@ class IslandRoom : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // SINGLE ROOM SETUP
         setupRoomCard(
             R.id.single_room_card,
             R.drawable.island_single,
@@ -26,7 +25,6 @@ class IslandRoom : AppCompatActivity() {
             IslandSingle::class.java
         )
 
-        // DOUBLE ROOM SETUP
         setupRoomCard(
             R.id.double_room_card,
             R.drawable.island_double,
@@ -36,7 +34,6 @@ class IslandRoom : AppCompatActivity() {
             IslandDouble::class.java
         )
 
-        // QUEEN ROOM SETUP
         setupRoomCard(
             R.id.queen_room_card,
             R.drawable.island_queen,
@@ -46,7 +43,6 @@ class IslandRoom : AppCompatActivity() {
             IslandQueen::class.java
         )
 
-        // DELUXE SUITE SETUP
         setupRoomCard(
             R.id.deluxe_suite_card,
             R.drawable.island_deluxe,

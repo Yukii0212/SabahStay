@@ -6,6 +6,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 class SSApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        AndroidThreeTen.init(this) // ✅ Add only this line
+        AndroidThreeTen.init(this)
     }
 }

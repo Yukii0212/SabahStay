@@ -4,12 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
-import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.UserDatabase
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +36,6 @@ class UserProfileActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Initialize UI elements
         profilePicture = findViewById(R.id.profile_picture)
         editProfilePicture = findViewById(R.id.edit_profile_picture)
         usernameDisplay = findViewById(R.id.username_display)
@@ -49,7 +46,6 @@ class UserProfileActivity : AppCompatActivity() {
         phone = findViewById(R.id.phone)
         logoutButton = findViewById(R.id.logout_button)
 
-        // Clicking the pencil icon redirects to Change Settings
         editProfilePicture.setOnClickListener {
             if (auth.currentUser == null) {
                 redirectToLogin()
@@ -57,25 +53,20 @@ class UserProfileActivity : AppCompatActivity() {
                 startActivity(Intent(this, ChangeSettingsActivity::class.java))
             }
         }
-        // Load user data
         loadUserData()
 
-        // Logout functionality
         logoutButton.setOnClickListener {
             logoutButton.text = "Logging out..."
             auth.signOut()
 
-            // Clear stored user data
             val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
             sharedPreferences.edit().clear().apply()
 
-            // Delete saved profile picture
             val savedProfilePicture = File(filesDir, "profile_picture.jpg")
             if (savedProfilePicture.exists()) {
                 savedProfilePicture.delete()
             }
 
-            // Redirect to BranchOverview
             val intent = Intent(this, BranchOverview::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -126,7 +117,6 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun loadUserData() {
         val user = auth.currentUser ?: return
-        val logoutButton = findViewById<Button>(R.id.logout_button)
 
         val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
 
@@ -139,20 +129,17 @@ class UserProfileActivity : AppCompatActivity() {
         val savedEmail = sharedPreferences.getString("email", "") ?: ""
         var savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
 
-        //Load user details from Room Database & update UI in real-time
         val userDao = UserDatabase.getDatabase(this).userDao()
         lifecycleScope.launch(Dispatchers.IO) {
             val localUser = userDao.getUserByEmail(user.email ?: "")
 
             withContext(Dispatchers.Main) {
                 if (localUser != null) {
-                    //Load values from Room Database
                     savedNickname = localUser.nickname.ifEmpty { savedNickname }
                     savedProfilePicturePath = localUser.profilePicturePath.ifEmpty { savedProfilePicturePath }
                     savedPrefix = localUser.prefix.ifEmpty { savedPrefix }
                     savedGender = localUser.gender.ifEmpty { savedGender }
 
-                    //Save updated values to SharedPreferences for consistency
                     sharedPreferences.edit()
                         .putString("nickname", savedNickname)
                         .putString("profilePicturePath", savedProfilePicturePath)
@@ -161,21 +148,17 @@ class UserProfileActivity : AppCompatActivity() {
                         .apply()
                 }
 
-                //Update UI elements immediately
                 nickname.text = savedNickname.ifEmpty { "Not set" }
                 fullName.text = if (savedFullName.isNotEmpty()) savedFullName else "Not set"
                 gender.text = savedGender
                 prefix?.text = if (savedPrefix == "None") "" else savedPrefix
 
-                //Display Name Priority: Nickname > Full Name > "Guest User"
                 val displayName = savedNickname.ifEmpty { savedFullName.ifEmpty { "Guest User" } }
                 usernameDisplay.text = if (user != null) {
                     if (savedPrefix == "None") "Hello, $displayName" else "Hello, $savedPrefix $displayName"
                 } else {
                     "Hello, Guest User"
                 }
-
-                //Ensure Profile Picture Updates Instantly
                 updateProfilePicture(savedProfilePicturePath, savedGender)
             }
 
@@ -188,7 +171,6 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
 
-        //Assign Default Prefix if None Exists
         if (savedPrefix.isEmpty() || savedPrefix == "Other") {
             savedPrefix = when (savedGender) {
                 "Male" -> "Mr."
@@ -224,20 +206,5 @@ class UserProfileActivity : AppCompatActivity() {
             }
             profilePicture.setImageResource(defaultProfilePicture)
         }
-    }
-
-    private fun logoutUser() {
-        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        editor.putBoolean("is_logged_in", false)
-        editor.apply()
-
-        FirebaseAuth.getInstance().signOut()
-
-        val intent = Intent(this, BranchOverview::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
     }
 }

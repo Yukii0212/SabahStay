@@ -16,12 +16,10 @@ class MountainDouble : AppCompatActivity() {
         val backButton = findViewById<ImageView>(R.id.back_button)
         val roomImage = findViewById<ImageView>(R.id.room_image)
 
-        // Back button click
         backButton.setOnClickListener {
-            finish() // Go back to previous screen
+            finish()
         }
 
-        // Room image click to open in full screen
         roomImage.setOnClickListener {
             val intent = Intent(this, FullscreenImageActivity::class.java)
             intent.putExtra("imageResId", R.drawable.mountain_double)

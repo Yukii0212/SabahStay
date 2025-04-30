@@ -49,7 +49,6 @@ class IslandBranch : AppCompatActivity() {
         }
     }
 
-    // Move this function OUTSIDE of onCreate()
     private fun openFullScreen(imageResId: Int) {
         val intent = Intent(this, FullscreenImageActivity::class.java)
         intent.putExtra("imageResId", imageResId)

@@ -37,7 +37,6 @@ class RegistrationActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Initialize Views
         nameInput = findViewById(R.id.nameInput)
         passportInput = findViewById(R.id.passportInput)
         phoneInput = findViewById(R.id.phoneInput)
@@ -48,22 +47,16 @@ class RegistrationActivity : AppCompatActivity() {
         genderRadioGroup = findViewById(R.id.genderRadioGroup)
         registerButton = findViewById(R.id.registerButton)
         passwordRequirementsText = findViewById(R.id.passwordRequirementsText)
-
-        // Set register button to disabled immediately when page loads
         registerButton.isEnabled = false
         registerButton.alpha = 0.5f
         registerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey))
 
-        // Add Listeners to Fields
         val inputFields = listOf(nameInput, passportInput, phoneInput, emailInput, passwordInput, confirmPasswordInput)
         inputFields.forEach { it.addTextChangedListener(inputTextWatcher) }
         genderRadioGroup.setOnCheckedChangeListener { _, _ -> updateRegisterButtonState() }
-
-        // Watch password input to update requirements
         passwordInput.addTextChangedListener(passwordTextWatcher)
         confirmPasswordInput.addTextChangedListener(passwordTextWatcher)
 
-        // Show Password Toggle
         val showPasswordCheckBox = findViewById<CheckBox>(R.id.showPasswordCheckBox)
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             val inputType = if (isChecked) {
@@ -72,22 +65,16 @@ class RegistrationActivity : AppCompatActivity() {
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
 
-            // Store the current font style before changing inputType
             val typeface = passwordInput.typeface
 
             passwordInput.inputType = inputType
             confirmPasswordInput.inputType = inputType
-
-            // Restore the typeface to prevent size change on first click
             passwordInput.typeface = typeface
             confirmPasswordInput.typeface = typeface
-
-            // Keep cursor at the end
             passwordInput.setSelection(passwordInput.text.length)
             confirmPasswordInput.setSelection(confirmPasswordInput.text.length)
         }
 
-        // Allows greyed-out button to trigger showInputErrors()
         registerButton.setOnClickListener {
             hasAttemptedRegister = true
             if (validateInputs()) {
@@ -97,7 +84,6 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
 
-        // Limit max characters for IC/Passport & Phone Number
         passportInput.filters = arrayOf(InputFilter.LengthFilter(12))
         phoneInput.filters = arrayOf(
             InputFilter.LengthFilter(15),
@@ -106,7 +92,6 @@ class RegistrationActivity : AppCompatActivity() {
             }
         )
 
-        // Convert IC/Passport to Uppercase on Input
         passportInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s == null) return
@@ -138,14 +123,12 @@ class RegistrationActivity : AppCompatActivity() {
         setupKeyboardScrolling()
     }
 
-    // Watcher to Listen to Input Changes
     private val inputTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) { updateRegisterButtonState() }
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
-    // Watcher for password requirement updates
     private val passwordTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             updatePasswordRequirements(
@@ -158,7 +141,6 @@ class RegistrationActivity : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
-    // Function to Enable/Disable the Register Button Based on Valid Input
     private fun updateRegisterButtonState() {
         val isValid = validateInputs()
 
@@ -176,7 +158,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun showInputErrors() {
-        if (!hasAttemptedRegister) return  // Only show errors if user has attempted to register
+        if (!hasAttemptedRegister) return
 
         val missingFields = mutableListOf<String>()
         val viewsToHighlight = mutableListOf<EditText>()
@@ -225,12 +207,11 @@ class RegistrationActivity : AppCompatActivity() {
         // Gender Selection Validation
         if (genderRadioGroup.checkedRadioButtonId == -1) {
             missingFields.add("Gender Selection")
-            genderRadioGroup.setBackgroundResource(R.drawable.input_error_border) // Highlight gender selection
+            genderRadioGroup.setBackgroundResource(R.drawable.input_error_border)
         } else {
-            genderRadioGroup.setBackgroundResource(0) // Reset if valid
+            genderRadioGroup.setBackgroundResource(0)
         }
 
-        // Show error message in a small popup (Toast)
         if (missingFields.isNotEmpty()) {
             Toast.makeText(this, "Please fix: ${missingFields.joinToString(", ")}", Toast.LENGTH_LONG).show()
         }
@@ -247,8 +228,6 @@ class RegistrationActivity : AppCompatActivity() {
             viewsToHighlight.first().requestFocus()
             (viewsToHighlight.first().parent.parent as ScrollView).smoothScrollTo(0, viewsToHighlight.first().top)
         }
-
-        // Clear the error flag after showing errors so they don’t keep appearing automatically
         hasAttemptedRegister = false
     }
 
@@ -274,7 +253,6 @@ class RegistrationActivity : AppCompatActivity() {
 
     }
 
-    // Validate All Input Fields
     private fun validateInputs(): Boolean {
         val name = nameInput.text.toString().trim()
         val passport = passportInput.text.toString().trim()
@@ -301,16 +279,14 @@ class RegistrationActivity : AppCompatActivity() {
         return isValid
     }
 
-    // Validate Full Name
     private fun isValidName(name: String): Boolean {
         val regex = "^[a-zA-Z @'-]{3,}\$".toRegex()
         return regex.matches(name)
     }
 
-    // Validate IC/Passport (Now accepts lowercase input)
     private fun isValidPassport(passport: String): Boolean {
         val regex = "^[A-Z0-9]{6,12}\$".toRegex()
-        return regex.matches(passport.uppercase())  // Convert to uppercase
+        return regex.matches(passport.uppercase())
     }
 
     private fun setupKeyboardScrolling() {
@@ -328,12 +304,10 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-    // Validate Email Format
     private fun isValidEmail(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    // Validate Password Rules
     private fun isPasswordValid(password: String): Boolean {
         return password.length >= 6 &&
                 password.any { it.isUpperCase() } &&
@@ -341,7 +315,6 @@ class RegistrationActivity : AppCompatActivity() {
                 password.any { it.isDigit() }
     }
 
-    // Updates Password Requirements dynamically ✅/❌
     private fun updatePasswordRequirements(password: String, confirmPassword: String, textView: TextView) {
         val isPasswordEmpty = password.isEmpty()
         val isConfirmPasswordEmpty = confirmPassword.isEmpty()
@@ -403,13 +376,11 @@ class RegistrationActivity : AppCompatActivity() {
                                 if (verifyTask.isSuccessful) {
                                     val userDao = UserDatabase.getDatabase(this@RegistrationActivity).userDao()
 
-                                    //Delete old local user data (if any) before inserting new data
                                     val existingUser = userDao.getUserByEmail(email)
                                     if (existingUser != null) {
                                         userDao.delete(existingUser)
                                     }
 
-                                    //Save user data in local Room Database
                                     saveUserToDatabase(name, passport, phone, gender, email, password, defaultPrefix)
 
                                     val intent = Intent(this@RegistrationActivity, EmailVerificationActivity::class.java).apply {
@@ -463,39 +434,14 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-
-    // Utility function to reset button state
     private fun resetRegisterButton() {
         registerButton.isEnabled = true
         registerButton.text = "Register"
     }
 
-    // Utility function to show toasts safely on the main thread
     private fun showToast(message: String) {
         lifecycleScope.launch(Dispatchers.Main) {
             Toast.makeText(this@RegistrationActivity, message, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun saveUserData() {
-        val sharedPreferences = getSharedPreferences("UserProfile", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        // Save user details from registration
-        editor.putString("full_name", nameInput.text.toString().trim())
-        editor.putString("phone", phoneInput.text.toString().trim())
-        editor.putString("country_code", countryCodePicker.selectedCountryCodeWithPlus)
-        editor.putString("email", emailInput.text.toString().trim())
-
-        // Save gender
-        val selectedGenderId = genderRadioGroup.checkedRadioButtonId
-        val gender = if (selectedGenderId != -1) {
-            findViewById<RadioButton>(selectedGenderId).text.toString()
-        } else {
-            "Other" // Default if none selected
-        }
-        editor.putString("gender", gender)
-
-        editor.apply()
     }
 }

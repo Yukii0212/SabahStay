@@ -2,15 +2,8 @@ package com.example.testversion
 
 import android.os.Bundle
 import android.content.Intent
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.lifecycleScope
-import com.example.testversion.database.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class BranchOverview : AppCompatActivity() {
 

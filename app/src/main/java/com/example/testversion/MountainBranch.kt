@@ -27,17 +27,14 @@ class MountainBranch : AppCompatActivity() {
             .load(R.drawable.mount3)
             .into(binding.imageView3)
 
-        // Back button
         binding.backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Select Room button
         binding.btnSelectRoom.setOnClickListener {
             startActivity(Intent(this, MountainRoom::class.java))
         }
 
-        // Image click listeners
         binding.imageView1.setOnClickListener {
             openFullScreen(R.drawable.mount1)
         }
@@ -49,7 +46,6 @@ class MountainBranch : AppCompatActivity() {
         }
     }
 
-    // Move this function OUTSIDE of onCreate()
     private fun openFullScreen(imageResId: Int) {
         val intent = Intent(this, FullscreenImageActivity::class.java)
         intent.putExtra("imageResId", imageResId)

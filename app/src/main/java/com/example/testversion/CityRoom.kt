@@ -16,7 +16,6 @@ class CityRoom : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // SINGLE ROOM SETUP
         setupRoomCard(
             R.id.single_room_card,
             R.drawable.city_single,
@@ -26,7 +25,6 @@ class CityRoom : AppCompatActivity() {
             CitySingle::class.java
         )
 
-        // DOUBLE ROOM SETUP
         setupRoomCard(
             R.id.double_room_card,
             R.drawable.city_double,
@@ -36,7 +34,6 @@ class CityRoom : AppCompatActivity() {
             CityDouble::class.java
         )
 
-        // QUEEN ROOM SETUP
         setupRoomCard(
             R.id.queen_room_card,
             R.drawable.city_queen,
@@ -46,7 +43,6 @@ class CityRoom : AppCompatActivity() {
             CityQueen::class.java
         )
 
-        // DELUXE SUITE SETUP
         setupRoomCard(
             R.id.deluxe_suite_card,
             R.drawable.city_deluxe,

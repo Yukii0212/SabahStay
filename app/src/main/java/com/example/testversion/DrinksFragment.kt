@@ -29,12 +29,10 @@ class DrinksFragment : Fragment() {
             val database = AppDatabase.getInstance(requireContext())
             val foodDao = database.foodDao()
 
-            // Fetch all drink items with category 2
             val drinksList = withContext(Dispatchers.IO) {
                 foodDao.getFoodByCategory(2)
             }
 
-            // Set up the adapter
             val adapter = DrinksAdapter(drinksList) { drink ->
                 addToCart(drink, foodDao)
             }

@@ -9,29 +9,23 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.AppDatabase
-import com.example.testversion.database.Booking
 import com.example.testversion.database.Branch
 import com.example.testversion.database.HotelRoom
 import com.example.testversion.database.Service
-import com.example.testversion.database.User
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
 
 class OpenAnimation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_open_animation)
 
-
         val cloudMoveLeft = AnimationUtils.loadAnimation(this, R.anim.cloud_move_left)
         val cloudMoveRight = AnimationUtils.loadAnimation(this, R.anim.cloud_move_right)
         val mountainZoom = AnimationUtils.loadAnimation(this, R.anim.mountain_zoom)
         val textFadeIn = AnimationUtils.loadAnimation(this, R.anim.text_fade_in)
-
 
         val cloud1: ImageView = findViewById(R.id.cloud1)
         val cloud2: ImageView = findViewById(R.id.cloud2)
@@ -58,7 +52,6 @@ class OpenAnimation : AppCompatActivity() {
         cloud7.startAnimation(cloudMoveLeft)
         cloud8.startAnimation(cloudMoveRight)
 
-        // Ensure clouds fully disperse
         val cloudAnimationListener = object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {}
             override fun onAnimationEnd(animation: Animation?) {
@@ -77,10 +70,8 @@ class OpenAnimation : AppCompatActivity() {
         cloudMoveLeft.setAnimationListener(cloudAnimationListener)
         cloudMoveRight.setAnimationListener(cloudAnimationListener)
 
-        //  mountain zoom in animation
         mountainView.startAnimation(mountainZoom)
 
-        // Make text **visible** at the right time
         Handler(Looper.getMainLooper()).postDelayed({
             titleText.visibility = View.VISIBLE
             subtitleText.visibility = View.VISIBLE
@@ -88,7 +79,6 @@ class OpenAnimation : AppCompatActivity() {
             subtitleText.startAnimation(textFadeIn)
         }, (mountainZoom.duration * 0.6 - 1100).toLong())
 
-        // Transition to next activity after the animation
         mountainZoom.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {}
             override fun onAnimationEnd(animation: Animation?) {
@@ -113,7 +103,6 @@ class OpenAnimation : AppCompatActivity() {
             val roomDao = database.roomDao()
             val branchDao = database.branchDao()
 
-            //Insert the three branches
             val existingBranches = branchDao.getAllBranches()
             if (existingBranches.isEmpty()) {
                 branchDao.insert(
@@ -149,7 +138,6 @@ class OpenAnimation : AppCompatActivity() {
 
             val existingRooms = roomDao.getAll()
             if (existingRooms.isEmpty()) {
-                //Insert all the rooms
                 val roomsToInsert = listOf(
                     // KK City Branch
                     HotelRoom(
@@ -827,7 +815,6 @@ class OpenAnimation : AppCompatActivity() {
 
             val existingServices = serviceDao.getAllServices()
             if (existingServices.isEmpty()) {
-                //Insert all the services
                 serviceDao.insertService(
                     Service(
                         id = 1,

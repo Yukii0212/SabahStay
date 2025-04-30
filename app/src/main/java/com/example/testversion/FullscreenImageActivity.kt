@@ -22,7 +22,6 @@ class FullscreenImageActivity : AppCompatActivity() {
             fullScreenImage.setImageResource(imageResId)
         }
 
-        // Click image to exit
         fullScreenImage.setOnClickListener {
             finish()
         }

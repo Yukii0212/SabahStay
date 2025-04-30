@@ -1,4 +1,3 @@
-// PaymentFailedActivity.kt
 package com.example.testversion
 
 import android.content.Intent

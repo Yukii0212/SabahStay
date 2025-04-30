@@ -37,7 +37,6 @@ class ToHotelFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Existing code
         Log.d("ToHotelFragment", "onViewCreated called")
 
         val vehicleSpinner: Spinner = view.findViewById(R.id.vehicleSpinner)
@@ -61,11 +60,9 @@ class ToHotelFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // New functionality for pickup date and time
         val pickupDateEditText: EditText = view.findViewById(R.id.pickupDateEditText)
         val pickupTimeEditText: EditText = view.findViewById(R.id.pickupTimeEditText)
 
-        // Set up DatePickerDialog for pickup date
         pickupDateEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -87,7 +84,6 @@ class ToHotelFragment : Fragment() {
             datePickerDialog.show()
         }
 
-        // Set up TimePickerDialog for pickup time
         pickupTimeEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -108,7 +104,7 @@ class ToHotelFragment : Fragment() {
                 },
                 hour,
                 minute,
-                false // Use analog clock
+                false
             ).show()
         }
 

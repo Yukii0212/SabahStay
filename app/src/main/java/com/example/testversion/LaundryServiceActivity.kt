@@ -29,7 +29,6 @@ class LaundryServiceActivity : AppCompatActivity() {
 
         val calendar = Calendar.getInstance()
 
-        // Restrict date selection to current date or later
         val datePickerMinDate = calendar.timeInMillis
 
         pickupDateButton.setOnClickListener {

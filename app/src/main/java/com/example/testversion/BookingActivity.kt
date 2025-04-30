@@ -1,6 +1,5 @@
 package com.example.testversion
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
@@ -104,7 +103,6 @@ class BookingActivity : AppCompatActivity() {
             emailEditText.isEnabled = false
             phoneEditText.isEnabled = false
         }
-
 
         try {
             val checkInDate = LocalDate.parse(checkInRaw, formatter)
@@ -355,28 +353,5 @@ class BookingActivity : AppCompatActivity() {
         )
 
         costSummaryTextView.text = summary
-    }
-
-    private fun showBookingPromptDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Do you want to book a room?")
-            .setMessage("Tap 'Continue for Booking' to proceed.")
-            .setPositiveButton("Continue for Booking") { dialog, _ ->
-                dialog.dismiss()
-                val intent = Intent(this, PaymentDetailsActivity::class.java).apply {
-                    putExtra("totalCost", totalCost)
-                    putExtra("name", nameEditText.text.toString())
-                    putExtra("userEmail", emailEditText.text.toString())
-                    putExtra("phone", phoneEditText.text.toString())
-                    putExtra("branch", branchSpinner.selectedItem.toString())
-                    putExtra("roomType", roomTypeSpinner.selectedItem.toString())
-                    putExtra("checkIn", checkInTextView.text.toString())
-                    putExtra("checkOut", checkOutTextView.text.toString())
-                }
-                startActivity(intent)
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-            .setCancelable(false)
-            .show()
     }
 }

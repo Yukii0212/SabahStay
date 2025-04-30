@@ -48,15 +48,10 @@ class LoginActivity : AppCompatActivity() {
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
 
-            // Store the current font style before changing inputType
             val typeface = passwordEditText.typeface
 
             passwordEditText.inputType = inputType
-
-            // Restore the typeface to prevent size change on first click
             passwordEditText.typeface = typeface
-
-            // Keep cursor at the end
             passwordEditText.setSelection(passwordEditText.text.length)
         }
 
@@ -79,9 +74,7 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
                 }
         }
-
         setupKeyboardScrolling()
-
     }
 
     private fun authenticateUser(identifier: String, password: String) {
@@ -96,7 +89,6 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     if (user != null && user.isEmailVerified) {
-                        //Load user profile from local database
                         loadUserDataFromDatabase(user.email!!)
                     } else {
                         showToast("Please verify your email before logging in.")
@@ -125,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
                 editor.putString("phone", user.phone)
                 editor.putString("gender", user.gender)
                 editor.putString("email", user.email)
-                editor.putBoolean("is_logged_in", true)  // Mark as logged in
+                editor.putBoolean("is_logged_in", true)
                 editor.apply()
 
                 withContext(Dispatchers.Main) {

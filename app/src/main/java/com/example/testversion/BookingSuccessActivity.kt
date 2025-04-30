@@ -154,7 +154,5 @@ class BookingSuccessActivity : AppCompatActivity() {
             pdfDocument.close()
         }
     }
-
-
 }
 

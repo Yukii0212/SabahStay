@@ -8,9 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -90,7 +88,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
             profilePicture.setImageURI(Uri.parse(updatedProfilePicturePath))
         }
 
-        // Ensure prefix updates automatically when gender is changed, but respects manual selection
         genderRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val manuallyChanged = sharedPreferences.getBoolean("manualPrefixSet", false)
 
@@ -104,7 +101,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
             }
         }
 
-        // Set listener to detect manual prefix selection
         prefixSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (prefixSpinner.isPressed || prefixSpinner.hasFocus()) {
@@ -116,7 +112,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        loadUserData() //Load user data
+        loadUserData()
 
         discardButton.setOnClickListener { finish() }
         confirmButton.setOnClickListener { saveChanges() }
@@ -132,27 +128,21 @@ class ChangeSettingsActivity : AppCompatActivity() {
         var savedPrefix = sharedPreferences.getString("prefix", "None") ?: "None"
         var savedProfilePicturePath = sharedPreferences.getString("profilePicturePath", "") ?: ""
 
-        //Restore manual prefix selection flag
         userManuallyChangedPrefix = sharedPreferences.getBoolean("manualPrefixSet", false)
-
-        //Store the original profile picture path before allowing changes
         originalProfilePicturePath = savedProfilePicturePath
         profilePicturePath = savedProfilePicturePath
 
-        //Load user details from Room Database & update UI in real-time
         val userDao = UserDatabase.getDatabase(this).userDao()
         lifecycleScope.launch(Dispatchers.IO) {
             val localUser = userDao.getUserByEmail(user.email ?: "")
 
             if (localUser != null) {
                 withContext(Dispatchers.Main) {
-                    //Load values from Room Database
                     savedNickname = localUser.nickname.ifEmpty { savedNickname }
                     savedProfilePicturePath = localUser.profilePicturePath.ifEmpty { savedProfilePicturePath }
                     savedPrefix = localUser.prefix.ifEmpty { savedPrefix }
                     savedGender = localUser.gender.ifEmpty { savedGender }
 
-                    //Save updated values to SharedPreferences for consistency
                     sharedPreferences.edit()
                         .putString("nickname", savedNickname)
                         .putString("profilePicturePath", savedProfilePicturePath)
@@ -160,7 +150,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
                         .putString("gender", savedGender)
                         .apply()
 
-                    //Update UI elements immediately
                     nickname.setText(savedNickname)
                     fullName.setText(savedFullName)
                 }
@@ -181,7 +170,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
             else -> genderRadioGroup.check(R.id.genderOther)
         }
 
-        // Only update prefix if the user has NOT manually changed it
         if (!userManuallyChangedPrefix) {
             savedPrefix = when (savedGender) {
                 "Male" -> "Mr."
@@ -191,7 +179,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
         }
 
         updatePrefixSelection(savedPrefix)
-
         setupPrefixSpinner(savedPrefix)
     }
 
@@ -230,7 +217,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
                 editor.putBoolean("manualPrefixSet", true)
                 editor.apply()
 
-                //Send result back to UserProfileActivity to trigger refresh
                 val resultIntent = Intent()
                 resultIntent.putExtra("profileUpdated", true)
                 setResult(Activity.RESULT_OK, resultIntent)
@@ -246,39 +232,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
         resultIntent.putExtra("profileUpdated", true)
         setResult(Activity.RESULT_OK, resultIntent)
         super.onBackPressed()
-    }
-
-    private fun reauthenticateUser(password: String, newEmail: String, newPhone: String) {
-        val user = FirebaseAuth.getInstance().currentUser
-        val credential = EmailAuthProvider.getCredential(user?.email ?: "", password)
-
-        user?.reauthenticate(credential)?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                applyChanges(sharedPreferences.edit(), newEmail, newPhone)
-            } else {
-                Toast.makeText(this, "Incorrect password!", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun applyChanges(editor: SharedPreferences.Editor, newEmail: String? = null, newPhone: String? = null) {
-        editor.putString("nickname", nickname.text.toString())
-        editor.putString("full_name", fullName.text.toString())
-
-        if (!newPhone.isNullOrEmpty()) editor.putString("phone", newPhone)
-        if (!newEmail.isNullOrEmpty()) editor.putString("email", newEmail)
-
-        val selectedGender = when {
-            genderMale.isChecked -> "Male"
-            genderFemale.isChecked -> "Female"
-            else -> "Other"
-        }
-        editor.putString("gender", selectedGender)
-        editor.putString("prefix", prefixSpinner.selectedItem.toString())
-
-        editor.apply()
-        Toast.makeText(this, "Settings updated successfully!", Toast.LENGTH_SHORT).show()
-        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -310,11 +263,11 @@ class ChangeSettingsActivity : AppCompatActivity() {
             .setTitle("Edit Profile Picture")
             .setMessage("Would you like to crop your profile picture before applying it?")
             .setPositiveButton("Crop") { _, _ ->
-                startCrop(imageUri) //User chooses to crop
+                startCrop(imageUri)
             }
             .setNegativeButton("Use as-is") { _, _ ->
                 val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
-                applyProfilePicture(bitmap) //Use without cropping
+                applyProfilePicture(bitmap)
             }
             .setNeutralButton("Cancel", null)
             .show()
@@ -325,21 +278,18 @@ class ChangeSettingsActivity : AppCompatActivity() {
             profilePicture.setImageBitmap(bitmap)
         }
 
-        //Save cropped image to internal storage
         val imagePath = saveCroppedImageToLocal(bitmap)
         profilePicturePath = imagePath
 
-        //Save path persistently
         sharedPreferences.edit().putString("profilePicturePath", imagePath).apply()
 
         Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show()
 
-        //Ensure the result is set before redirection
         val resultIntent = Intent()
         resultIntent.putExtra("profilePicturePath", imagePath)
         setResult(Activity.RESULT_OK, resultIntent)
 
-        finish() //Redirect AFTER saving
+        finish()
     }
 
     private fun startCrop(imageUri: Uri) {
@@ -356,7 +306,6 @@ class ChangeSettingsActivity : AppCompatActivity() {
 
         startActivityForResult(cropIntent, REQUEST_IMAGE_CROP)
     }
-
 
     private fun saveCroppedImageToLocal(bitmap: Bitmap): String {
         val directory = File(filesDir, "profile_pictures")
@@ -381,7 +330,7 @@ class ChangeSettingsActivity : AppCompatActivity() {
 
         val newPosition = prefixOptions.indexOf(newPrefix)
         if (prefixSpinner.selectedItemPosition != newPosition) {
-            prefixSpinner.setSelection(newPosition, false) //Prevent unwanted triggers
+            prefixSpinner.setSelection(newPosition, false)
         }
     }
 
@@ -391,17 +340,16 @@ class ChangeSettingsActivity : AppCompatActivity() {
         val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, prefixOptions) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent) as TextView
-                view.setTextColor(Color.WHITE) //Ensure selected item is always white
+                view.setTextColor(Color.WHITE)
                 return view
             }
 
             override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getDropDownView(position, convertView, parent) as TextView
-                view.setTextColor(Color.WHITE) //Ensure dropdown items are white
+                view.setTextColor(Color.WHITE)
                 return view
             }
         }
-
         prefixSpinner.adapter = adapter
         prefixSpinner.setSelection(prefixOptions.indexOf(defaultPrefix), false)
     }

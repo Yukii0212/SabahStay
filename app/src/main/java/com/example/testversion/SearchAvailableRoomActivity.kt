@@ -12,7 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.testversion.database.AppDatabase
-import com.example.testversion.database.HotelRoom
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import android.content.Intent
@@ -29,7 +28,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
     private lateinit var roomTypeEditText: EditText
     private lateinit var branchEditText: EditText
     private lateinit var searchButton: Button
-    private lateinit var bookPromptButton: Button
 
     private var checkInDateMillis: Long? = null
     private var checkOutDateMillis: Long? = null
@@ -41,10 +39,8 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_available_room)
 
-        //Handle auto-fill of branch and room type
         val passedBranchName = intent.getStringExtra("branchName")
         val passedRoomType = intent.getStringExtra("roomType")
-
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -82,9 +78,7 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
         roomTypeEditText = findViewById(R.id.edit_room_type)
         branchEditText = findViewById(R.id.edit_branch)
         searchButton = findViewById(R.id.button_search)
-
         selectedBranchId = intent.getStringExtra("branchId")
-
         checkInEditText.setOnClickListener { showDatePicker(true) }
         checkOutEditText.setOnClickListener { showDatePicker(false) }
         roomGuestEditText.setOnClickListener { showRoomGuestDialog() }
@@ -108,22 +102,19 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 val bookingDao = db.bookingDao()
                 val finalizedBookingDao = db.finalizedBookingDao()
 
-                val checkIn = org.threeten.bp.Instant.ofEpochMilli(checkInDateMillis!!)
-                    .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
-                val checkOut = org.threeten.bp.Instant.ofEpochMilli(checkOutDateMillis!!)
-                    .atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
+                val checkIn = Instant.ofEpochMilli(checkInDateMillis!!)
+                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                val checkOut = Instant.ofEpochMilli(checkOutDateMillis!!)
+                    .atZone(ZoneId.systemDefault()).toLocalDate()
 
-                // Get all rooms of the selected type in the branch
                 val allRooms = roomDao.getByBranch(selectedBranchId!!).filter { it.roomType == selectedRoomType }
 
-                // Calculate the total number of rooms booked (finalized and live bookings)
                 val totalBookedRooms = allRooms.sumOf { room ->
                     val finalizedConflicts = finalizedBookingDao.getConflictingFinalizedBookings(room.roomId, checkIn, checkOut).size
                     val liveConflicts = bookingDao.getConflictingBookings(room.roomId, checkIn, checkOut).size
                     finalizedConflicts + liveConflicts
                 }
 
-                // Calculate the number of available rooms
                 val availableRoomsCount = allRooms.size - totalBookedRooms
 
                 if (availableRoomsCount <= 0) {
@@ -228,67 +219,13 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                     val selectedBranch = branches[which]
                     selectedBranchId = selectedBranch.branchId
                     branchEditText.setText(selectedBranch.name)
-                    selectedRoomType = null // reset roomType
+                    selectedRoomType = null
                     roomTypeEditText.setText("")
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
         }
-    }
-
-
-    private fun showUnavailableDatesDialog(conflictingDates: Set<LocalDate>) {
-        if (conflictingDates.isEmpty()) {
-            AlertDialog.Builder(this)
-                .setTitle("No Rooms Available")
-                .setMessage("No rooms are available for the selected dates.")
-                .setPositiveButton("OK", null)
-                .show()
-            return
-        }
-
-        val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy")
-        val sortedConflicts = conflictingDates.sorted()
-
-        val unavailableNights = sortedConflicts.joinToString("\n") {
-            "• ${it.format(formatter)}"
-        }
-
-        val nextCheckIn = sortedConflicts.last().plusDays(1).format(formatter)
-        val latestCheckout = sortedConflicts.first().format(formatter)
-
-        val userCheckIn = Instant.ofEpochMilli(checkInDateMillis!!)
-            .atZone(ZoneId.systemDefault()).toLocalDate()
-        val userCheckOut = Instant.ofEpochMilli(checkOutDateMillis!!)
-            .atZone(ZoneId.systemDefault()).toLocalDate()
-
-        val userCheckInBlocked = conflictingDates.contains(userCheckIn)
-        val userCheckOutBlocked = conflictingDates.contains(userCheckOut.minusDays(1))
-
-        val message = buildString {
-            appendLine("You cannot stay on these nights:")
-            appendLine(unavailableNights)
-            appendLine()
-
-
-            if (userCheckOutBlocked) {
-                appendLine("You may check out on:")
-                appendLine("• $latestCheckout")
-                appendLine()
-            }
-
-            if (userCheckInBlocked) {
-                appendLine("Next available check-in:")
-                appendLine("• $nextCheckIn")
-            }
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle("Unavailable Stay Dates")
-            .setMessage(message.trim())
-            .setPositiveButton("OK", null)
-            .show()
     }
 
     private fun showDatePicker(isCheckIn: Boolean) {
@@ -328,7 +265,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
 
         datePicker.show()
     }
-
 
     private fun showRoomGuestDialog() {
         val dialogView = this.layoutInflater.inflate(R.layout.dialog_room_guest, null)
@@ -391,9 +327,6 @@ class SearchAvailableRoomActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         }
-
         dialog.show()
     }
-
-
 }

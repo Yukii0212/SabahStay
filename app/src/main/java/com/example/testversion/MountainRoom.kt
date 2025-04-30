@@ -16,7 +16,6 @@ class MountainRoom : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // SINGLE ROOM SETUP
         setupRoomCard(
             R.id.single_room_card,
             R.drawable.mountain_single,
@@ -26,7 +25,6 @@ class MountainRoom : AppCompatActivity() {
             MountainSingle::class.java
         )
 
-        // DOUBLE ROOM SETUP
         setupRoomCard(
             R.id.double_room_card,
             R.drawable.mountain_double,
@@ -36,7 +34,6 @@ class MountainRoom : AppCompatActivity() {
             MountainDouble::class.java
         )
 
-        // QUEEN ROOM SETUP
         setupRoomCard(
             R.id.queen_room_card,
             R.drawable.mountain_queen,
@@ -46,7 +43,6 @@ class MountainRoom : AppCompatActivity() {
             MountainQueen::class.java
         )
 
-        // DELUXE SUITE SETUP
         setupRoomCard(
             R.id.deluxe_suite_card,
             R.drawable.mountain_deluxe,
